@@ -1,0 +1,28 @@
+# python
+.cache
+.eggs/
+.Python
+build/
+eggs/
+dist/
+sdist/
+wheels/
+*.egg-info/
+*.egg
+*.pyc
+**/__pycache__
+MANIFEST
+
+# python testing
+.coverage
+.coverage.*
+.hypothesis/
+.nox/
+.pytest_cache/
+.tox/
+coverage.xml
+htmlcov/
+cover/
+
+# node
+node_modules/
