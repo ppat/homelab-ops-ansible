@@ -1,0 +1,101 @@
+---
+name: Lint all
+
+# yamllint disable-line rule:truthy
+on:
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+    - name: Set package architecture based on runner architecture
+      run: |
+        [[ "$RUNNER_ARCH" == "ARM64" ]] && echo "PKG_ARCH=arm64" || echo "PKG_ARCH=amd64" >> $GITHUB_ENV
+      env:
+        RUNNER_ARCH: ${{ runner.arch }}
+
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Set up python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        cache: 'pip'
+        cache-dependency-path: |
+          requirements.txt
+
+    - name: Set up node
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+
+    - name: Install python requirements
+      run: python -m pip install -r requirements.txt
+
+    - name: Install node packages
+      run: npm ci
+
+    - name: Install pre-commit hooks
+      run: pre-commit install --install-hooks --hook-type pre-commit
+
+    - name: Install actionlint
+      run: |
+        wget --progress=dot:giga -c https://github.com/rhysd/actionlint/releases/download/v${ACTIONLINT_VERSION}/actionlint_${ACTIONLINT_VERSION}_linux_${PKG_ARCH}.tar.gz -O /tmp/actionlint.tar.gz
+        tar -xzvf /tmp/actionlint.tar.gz -C /tmp
+        sudo install -o root -g root -m 0755 /tmp/actionlint /usr/local/sbin/actionlint
+      working-directory: /tmp
+      env:
+        ACTIONLINT_VERSION: 1.6.26
+
+    - name: check-added-large-files
+      run: pre-commit run --all-files check-added-large-files
+
+    - name: check-executables-have-shebangs
+      run: pre-commit run --all-files check-executables-have-shebangs
+
+    - name: check-json
+      run: pre-commit run --all-files check-json
+
+    - name: check-shebang-scripts-are-executable
+      run: pre-commit run --all-files check-shebang-scripts-are-executable
+
+    - name: detect-private-key
+      run: pre-commit run --all-files detect-private-key
+
+    - name: end-of-file-fixer
+      run: pre-commit run --all-files end-of-file-fixer
+
+    - name: forbid-new-submodules
+      run: pre-commit run --all-files forbid-new-submodules
+
+    - name: mixed-line-ending
+      run: pre-commit run --all-files mixed-line-ending
+
+    - name: trailing-whitespace
+      run: pre-commit run --all-files trailing-whitespace
+
+    - name: shellcheck
+      run: pre-commit run --all-files shellcheck
+
+    - name: yamllint
+      run: yamllint -c .yamllint --strict --format github .
+
+    - name: actionlint
+      run: actionlint -shellcheck "shellcheck -c .shellcheckrc"
+
+    - name: ansible-lint
+      run: ansible-lint -c .ansible-lint -i .ansible-lint-ignore .
+
+    - name: commitlint
+      if: github.event_name == 'pull_request'
+      run: npx commitlint --from ${{ github.event.pull_request.head.sha }}~${{ github.event.pull_request.commits }} --to ${{ github.event.pull_request.head.sha }} --verbose

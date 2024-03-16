@@ -1,0 +1,24 @@
+---
+# .ansible-lint
+profile: safety
+
+exclude_paths:
+- .github/
+
+use_default_rules: true
+
+skip_list:
+- name[casing]
+- name[template]
+- package-latest
+- jinja[spacing]
+
+enable_list:
+- args
+- empty-string-compare  # opt-in
+- no-log-password  # opt-in
+- no-same-owner  # opt-in
+- name[prefix]  # opt-in
+
+warn_list:
+- var-naming[no-role-prefix]
