@@ -18,6 +18,7 @@ rules:
   comments:
     require-starting-space: true
     ignore-shebangs: true
+    min-spaces-from-content: 1
   comments-indentation: disable
   document-start:
     present: true
