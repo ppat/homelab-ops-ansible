@@ -1,0 +1,23 @@
+---
+namespace: homelab_ops
+name: archive
+version: 0.0.0
+readme: README.md
+authors:
+- homelab-ops@homelab-ops.com
+
+description: ""
+license:
+- AGPL-3.0-only
+tags: [homelab, os, archive]
+dependencies:
+  community.general: ">=6.5.0"
+  ansible.posix: ">1.5.0"
+
+repository: https://github.com/ppat/homelab-ops-ansible
+documentation: https://github.com/ppat/homelab-ops-ansible/blob/main/archive/README.md
+homepage: https://github.com/ppat/homelab-ops-ansible/blob/main/archive/README.md
+issues: https://github.com/ppat/homelab-ops-ansible/issues
+
+build_ignore:
+- molecule

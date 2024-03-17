@@ -1,0 +1,15 @@
+---
+- name: Converge
+  hosts: all
+  gather_facts: false
+  vars:
+    unpack_location: /tmp/unpack_location
+    archive_source: https://cdimage.ubuntu.com/ubuntu-base/releases/jammy/release/ubuntu-base-22.04-base-amd64.tar.gz
+  tasks:
+  - name: "Fetch and unpack archive"
+    ansible.builtin.include_role:
+      name: homelab_ops.archive.unpack
+    vars:
+      archive:
+        url: "{{ archive_source }}"
+        destination_path: "{{ unpack_location }}"
