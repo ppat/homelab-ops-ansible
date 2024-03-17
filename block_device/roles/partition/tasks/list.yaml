@@ -1,0 +1,27 @@
+---
+- name: "list | {{ disk }} | Load partitions"
+  ansible.builtin.command: "lsblk {{ disk }} --fs --paths --output NAME,PARTLABEL --json"
+  register: partition_lsblk_register
+  changed_when: false
+
+- name: "list | {{ disk }} | Partitions as List"
+  ansible.builtin.set_fact:
+    partition_list: "{{ partition_lsblk_register.stdout | from_json | community.general.json_query(partition_query) | flatten }}"
+  vars:
+    partition_query: "blockdevices[?name=='{{ disk }}'].children"
+
+- name: "list | {{ disk }} | Partitions as map keyed by NAME field"
+  ansible.builtin.set_fact:
+    partition_map: "{{ partition_map | default({}) | combine({ item['name']: item }) }}"
+  loop: "{{ partition_list }}"
+  loop_control:
+    label: "{{ item.name }}"
+
+- name: "list | {{ disk }} | Preserve partition state if known, otherwise set state based on most recent state action"
+  ansible.builtin.set_fact:
+    partition_state: "{{ partition_state | combine({ item.key: (item.value | combine({'state': partition_item_state})) }) }}"
+  vars:
+    partition_item_state: "{{ (item.key in partition_state) | ternary(partition_state[item.key].state, partition_state_change) }}"
+  loop: "{{ partition_map | default({}) | dict2items }}"
+  loop_control:
+    label: "{{ item.key }}"

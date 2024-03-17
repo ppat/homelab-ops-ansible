@@ -1,0 +1,7 @@
+---
+- name: "Remove tmp.fstab for ramdisk"
+  ansible.builtin.file:
+    path: "{{ ramdisk_tmpfstab_location }}"
+    state: absent
+  listen: remove-ramdisk-tmp.fstab
+  changed_when: false

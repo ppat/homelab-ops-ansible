@@ -1,0 +1,9 @@
+---
+partition_fields:
+- 'mountpoint'
+- 'fstype'
+- 'fssize'
+- 'parttype'
+- 'parttypename'
+- 'partlabel'
+- 'partuuid'

@@ -1,0 +1,15 @@
+---
+mount_option_defaults:
+  btrfs:
+  - rw
+  - noatime
+  - ssd
+  - compress=zstd
+  ext4:
+  - rw
+  - noatime
+  vfat:
+  - rw
+  - relatime
+
+filesystem_state: {}

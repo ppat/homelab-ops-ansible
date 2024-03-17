@@ -1,0 +1,35 @@
+---
+- name: "create | Set common parameters | {{ disk }} | {{ partition_item['name'] }}"
+  set_fact:
+    partition_derived_params:
+      device: "{{ disk }}"
+      # This is the disk label (i.e. one of [gpt, msdos, etc]), not partition label
+      label: "{{ partition_table_type }}"
+      # This is the partition label for gpt partitions
+      name: "{{ partition_item['name'] }}"
+      number: "{{ partition_item['number'] }}"
+      part_type: primary
+      state: present
+      unit: "{{ size_unit }}"
+
+- name: "create | Set partition flags | {{ disk }} | {{ partition_item['name'] }}"
+  set_fact:
+    partition_derived_params: "{{ partition_derived_params | combine({ 'flags': partition_item['flags'] }) }}"
+  when: "'flags' in partition_item and partition_item['flags']|length > 0"
+
+- name: "create | Set partition start | {{ disk }} | {{ partition_item['name'] }}"
+  set_fact:
+    partition_derived_params: "{{ partition_derived_params | combine({ 'part_start': (partition_boundaries[partition_item.number]['start'] + size_unit) }) }}"
+  when: not ansible_loop.first
+
+- name: "create | Set partition end | {{ disk }} | {{ partition_item['name'] }}"
+  set_fact:
+    partition_derived_params: "{{ partition_derived_params | combine({ 'part_end': (partition_boundaries[partition_item.number]['end'] + size_unit) }) }}"
+  when: not ansible_loop.last
+
+- name: "create | Show parted parameters before creation | {{ disk }} | {{ partition_item['name'] }}"
+  debug:
+    msg: "{{ partition_derived_params }}"
+
+- name: "create | Execute parted command | {{ disk }} | {{ partition_item['name'] }}"
+  community.general.parted: "{{ partition_derived_params }}"
