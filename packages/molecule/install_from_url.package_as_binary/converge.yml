@@ -1,0 +1,19 @@
+---
+- name: Converge
+  hosts: all
+  vars:
+    package_name: "yq"
+    package_version: "4.34.1"
+    package_suffix: "{{ ansible_system | lower }}_amd64"
+    package_binary_name: "yq_{{ package_suffix }}"
+    package_url: "https://github.com/mikefarah/yq/releases/download/v{{ package_version }}/yq_{{ package_suffix }}"
+  tasks:
+  - name: Install Package from URL (Package as Binary)
+    ansible.builtin.include_role:
+      name: "homelab_ops.packages.install_from_url"
+    vars:
+      package:
+        name: "{{ package_name }}"
+        url: "{{ package_url }}"
+        path: /usr/local/sbin
+        mode: '0750'

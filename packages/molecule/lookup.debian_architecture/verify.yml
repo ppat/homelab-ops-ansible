@@ -1,0 +1,21 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  vars:
+    results_file: /tmp/results
+    expected_content: "amd64"
+  tasks:
+  - name: Read the results file
+    ansible.builtin.slurp:
+      src: "{{ results_file }}"
+    register: results_file_register
+
+  - name: Decode file contents
+    ansible.builtin.set_fact:
+      results_file_content: "{{ results_file_register['content'] | b64decode }}"
+
+  - name: Assert that results file contains the expected debian architecture value for the machine architecture
+    ansible.builtin.assert:
+      that: results_file_content == expected_content
+      fail_msg: "Debian architecutre matching machine architecture is not as expected: {{ expected_content }}', actual: {{ results_file_content }}"

@@ -1,0 +1,29 @@
+---
+- name: "install-from-archive | {{ package_archive.name }} | Download and unarchive: {{ package_archive.url }}"
+  ansible.builtin.unarchive:
+    src: "{{ package_archive.url }}"
+    dest: "{{ package_archive.path }}"
+    owner: "{{ package_archive.owner | default('root') }}"
+    group: "{{ package_archive.group | default('root') }}"
+    mode: "{{ package_archive.mode | default('0644') }}"
+    extra_opts: "{{ package_archive.unarchive_extra_opts | default(omit) }}"
+    remote_src: true
+  become: true
+
+- name: "install-from-archive | {{ package_archive.name }} | Copy to {{ package_archive.name }}"
+  ansible.builtin.copy:
+    src: "{{ package_archive.path }}/{{ package_archive.archive_package_name }}"
+    dest: "{{ package_archive.path }}/{{ package_archive.name }}"
+    owner: "{{ package_archive.owner | default('root') }}"
+    group: "{{ package_archive.group | default('root') }}"
+    mode: "{{ package_archive.mode | default('0644') }}"
+    remote_src: true
+  become: true
+  when: package_archive.archive_package_name is defined
+
+- name: "install-from-archive | {{ package_archive.name }} | Remove temp file"
+  ansible.builtin.file:
+    path: "{{ package_archive.path }}/{{ package_archive.archive_package_name }}"
+    state: absent
+  become: true
+  when: package_archive.archive_package_name is defined

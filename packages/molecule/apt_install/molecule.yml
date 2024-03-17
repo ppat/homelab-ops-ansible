@@ -1,0 +1,13 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+platforms:
+- name: instance
+  image: ${MOLECULE_IMAGE:-"geerlingguy/docker-ubuntu2204-ansible:latest"}
+  pre_build_image: true
+provisioner:
+  name: ansible
+verifier:
+  name: ansible

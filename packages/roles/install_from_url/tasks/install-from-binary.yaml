@@ -1,0 +1,9 @@
+---
+- name: "install-from-binary | {{ package_binary.name }} | Download: {{ package_binary.url }}"
+  ansible.builtin.get_url:
+    url: "{{ package_binary.url }}"
+    dest: "{{ package_binary.path }}/{{ package_binary.name }}"
+    owner: "{{ package_binary.owner | default('root') }}"
+    group: "{{ package_binary.group | default('root') }}"
+    mode: "{{ package_binary.mode | default('0644') }}"
+  become: true

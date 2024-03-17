@@ -1,0 +1,12 @@
+---
+- name: "install | Synchronizing the package index w/ upstream sources"
+  ansible.builtin.apt:
+    update_cache: true
+
+- name: "install | Install latest versions of needed packages"
+  ansible.builtin.apt:
+    name: "{{ apt_install_selected }}"
+    autoclean: true
+    autoremove: true
+    install_recommends: false
+    state: latest

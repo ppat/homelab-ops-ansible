@@ -1,0 +1,16 @@
+---
+- name: Prepare
+  hosts: all
+  gather_facts: false
+  vars:
+    packages_uninstalled:
+    - curl
+    - postgresql
+    - ripgrep
+  tasks:
+  - name: "Prepare by ensuring that packages to be uninstalled are present"
+    ansible.builtin.apt:
+      update_cache: true
+      name: "{{ packages_uninstalled }}"
+      install_recommends: false
+      state: present

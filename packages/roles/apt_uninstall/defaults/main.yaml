@@ -1,0 +1,9 @@
+---
+apt_uninstall_package_defaults:
+  systemd_services: []
+  systemd_timers: []
+  directories: []
+  reinstall: 'allowed'
+
+# dict of package configurations (with defaults applied to missing fields in passed-in variables values)
+apt_uninstall_package_map: {}

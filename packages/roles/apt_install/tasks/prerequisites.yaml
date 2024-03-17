@@ -1,0 +1,12 @@
+---
+- name: "prerequisites | Synchronizing the package index w/ upstream sources"
+  ansible.builtin.apt:
+    update_cache: true
+
+- name: "prerequisites | Install prerequisite packages"
+  ansible.builtin.apt:
+    name: "{{ apt_install_prerequisites }}"
+    autoclean: true
+    autoremove: true
+    install_recommends: false
+    state: latest

@@ -1,0 +1,17 @@
+---
+- name: "uninstall | Show packages being removed..."
+  ansible.builtin.debug:
+    var: apt_uninstall_packages
+
+- name: "uninstall | Remove and purge packages"
+  ansible.builtin.apt:
+    name: "{{ apt_uninstall_packages }}"
+    autoclean: true
+    autoremove: true
+    purge: true
+    state: absent
+
+- name: "uninstall | Clean up after removed packages"
+  ansible.builtin.apt:
+    autoclean: true
+    autoremove: true
