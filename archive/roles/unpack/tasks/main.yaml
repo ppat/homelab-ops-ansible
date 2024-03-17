@@ -1,0 +1,33 @@
+---
+- name: "Ensure prerequisites"
+  assert:
+    that:
+    - archive is defined and archive|length > 0
+    - archive|list is ansible.builtin.subset(['url', 'destination_path', 'exclude_paths', 'quiet'])
+    - archive.url is url
+
+- name: "Check if unpack destination exists"
+  ansible.builtin.stat:
+    path: "{{ archive.destination_path }}"
+  register: unpack_destination_stat_register
+  failed_when: not unpack_destination_stat_register.stat.exists
+
+- name: "Check destination path for pre-existing contents"
+  ansible.builtin.find:
+    paths: "{{ archive.destination_path.rstrip('/') }}/"
+    recurse: true
+    depth: 1
+    file_type: any
+  register: unpack_destination_contents_register
+
+- name: "Download and unpack archive to {{ archive.destination_path }}"
+  ansible.builtin.shell: |
+    #!/bin/bash
+    set -eo pipefail
+    wget -qO- {{ archive.url }} | tar -x --preserve-permissions --same-owner {{ unpack_tar_parameter[unpack_file_ext] }} -C {{ archive.destination_path }}
+  args:
+    executable: /bin/bash
+  vars:
+    unpack_file_ext: "{{ archive.url | split('.') | last }}"
+  become: true
+  when: unpack_destination_contents_register.matched == 0

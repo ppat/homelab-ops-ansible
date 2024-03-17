@@ -1,0 +1,6 @@
+---
+unpack_tar_parameter:
+  gz: "--gzip"
+  zst: "--zstd"
+  xz: "--xz"
+  lz4: "--use-compress-program=lz4"
