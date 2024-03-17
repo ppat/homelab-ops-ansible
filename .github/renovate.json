@@ -6,6 +6,27 @@
   ],
   "packageRules": [
     {
+      "groupName": "all ansible-galaxy non-major dependencies",
+      "groupSlug": "ansible-galaxy-non-major-deps",
+      "matchManagers": [
+        "ansible-galaxy"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ]
+    },
+    {
+      "groupName": "all ansible-galaxy major dependencies",
+      "groupSlug": "ansible-galaxy-deps",
+      "matchManagers": [
+        "ansible-galaxy"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ]
+    },
+    {
       "groupName": "all github-action dependencies",
       "groupSlug": "github-actions-deps",
       "matchFileNames": [
@@ -55,6 +76,18 @@
       "matchUpdateTypes": [
         "major"
       ]
+    },
+    {
+      "matchPackageNames": [
+        "ansible-lint",
+        "molecule",
+        "molecule-plugins"
+      ],
+      "matchManagers": [
+        "pip_requirements",
+        "poetry"
+      ],
+      "allowedVersions": "<24"
     }
   ],
   "prHourlyLimit": 10,
