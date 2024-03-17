@@ -1,0 +1,50 @@
+---
+- name: "list | {{ disk }} | Load partitions"
+  ansible.builtin.command: "lsblk {{ disk }} --fs --paths --output NAME,UUID,LABEL --json"
+  register: filesystem_lsblk_register
+  changed_when: false
+
+- name: "list | {{ disk }} | Partitions as List"
+  ansible.builtin.set_fact:
+    # list filesystems, sorted by device_name (e.g. [{name: /dev/sda1, ...}, {name: /dev/sda2, ...}])
+    filesystem_list: "{{ filesystem_lsblk_register.stdout | from_json | community.general.json_query(filesystem_query) | flatten | sort(attribute='name') }}"
+  vars:
+    filesystem_query: "blockdevices[?name=='{{ disk }}'].children"
+
+- name: "list | {{ disk }} | Partitions as map keyed by number"
+  ansible.builtin.set_fact:
+    filesystem_state: "{{ filesystem_state | default({}) | combine({ ansible_loop.index|string: (item | combine({'number':ansible_loop.index})) }) }}"
+  loop: "{{ filesystem_list }}"
+  loop_control:
+    label: "{{ item.name }}"
+    extended: true
+    extended_allitems: false
+
+- name: "list | {{ disk }} | Read filesystem types of partitions"
+  ansible.builtin.shell: |
+    #!/bin/bash
+    set -eo pipefail
+    parted --machine {{ disk }} unit MiB print | grep '^[[:digit:]]\:.*;'
+  args:
+    executable: /bin/bash
+  become: true
+  register: filesystem_parted_register
+  changed_when: false
+
+# join the output from parted and lsblk, giving preference to information from parted
+- name: "list | {{ disk }} | Augment filesystem_states with current filesystem types"
+  ansible.builtin.set_fact:
+    # note: homelab_ops.raspberry_pi.provision depends on this setting uuid,fstype,partlabel fields in filesystem_state
+    # yamllint disable-line rule:line-length
+    filesystem_state: "{{ filesystem_state | default({}) | combine({ filesystem_number|string: ({'fstype': filesystem_type, 'partlabel': filesystem_label, 'partflags': filesystem_flags, 'create': filesystem_create} | combine(filesystem_state[filesystem_number|string])) }) }}"
+  vars:
+    filesystem_number: "{{ item.split(':')[0] }}"
+    filesystem_type: "{{ item.split(':')[4] | replace('fat32', 'vfat') }}"
+    filesystem_label: "{{ item.split(':')[5] }}"
+    filesystem_flags: "{{ item.split(':')[6][:-1] }}"
+    filesystem_create: "{{ item.split(':')[4] | default('unset', true) == 'unset' }}"
+  loop: "{{ filesystem_parted_register.stdout_lines }}"
+
+- name: "list | {{ disk }} | Show filesystem state"
+  debug:
+    var: filesystem_state

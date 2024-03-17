@@ -1,0 +1,56 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  vars:
+    block_device_file: /tmp/test_block_device.img
+    expected_filesystem_types:
+      "boot": "vfat"
+      "root": "btrfs"
+      "data": "ext4"
+  tasks:
+  - name: Detect loopback device by file (for when it already exists)
+    ansible.builtin.shell: |
+      #!/bin/bash
+      set -eo pipefail
+      losetup --associated {{ block_device_file }} | cut -d':' -f1
+    args:
+      executable: /bin/bash
+    become: true
+    register: loopback_device_detect_register
+    changed_when: false
+
+  - name: Extract detected loopback device
+    ansible.builtin.set_fact:
+      loopback_device: "{{ loopback_device_detect_register.stdout }}"
+
+  - name: Read partitions of loopback_device
+    ansible.builtin.shell: |
+      #!/bin/bash
+      set -eo pipefail
+      parted --machine {{ loopback_device | mandatory }} unit MiB print | grep '^[[:digit:]]\:.*;'
+    args:
+      executable: /bin/bash
+    become: true
+    register: filesystem_parted_register
+    changed_when: false
+
+  - name: Extract filesystem information into map by name
+    ansible.builtin.set_fact:
+      filesystems: "{{ filesystems | default({}) | combine({ filesystem_label: {'fstype': filesystem_type} }) }}"
+    vars:
+      filesystem_type: "{{ item.split(':')[4] | replace('fat32', 'vfat') }}"
+      filesystem_label: "{{ item.split(':')[5] }}"
+    loop: "{{ filesystem_parted_register.stdout_lines }}"
+
+  - name: Assert that actual filesystem type matches expected filesystem type
+    ansible.builtin.assert:
+      that: actual_type == expected_type
+      fail_msg: "{{ item.key }} filesystem type: Actual ({{ actual_type }}) does NOT match expected ({{ expected_type }})"
+      success_msg: "{{ item.key }} filesystem type: Actual ({{ actual_type }}) matches expected ({{ expected_type }})"
+    vars:
+      expected_type: "{{ item.value }}"
+      actual_type: "{{ filesystems[item.key].fstype }}"
+    loop: "{{ expected_filesystem_types | dict2items }}"
+    loop_control:
+      label: "{{ item.key }}"

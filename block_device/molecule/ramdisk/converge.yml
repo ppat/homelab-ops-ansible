@@ -1,0 +1,23 @@
+---
+- name: Converge
+  hosts: all
+  gather_facts: false
+  vars:
+    mount_location: /tmp/mount_ramdisk
+    test_file_on_ramdisk: "{{ mount_location }}/test"
+  tasks:
+  - name: Mount ramdisk
+    ansible.builtin.include_role:
+      name: homelab_ops.block_device.ramdisk
+    vars:
+      ramdisk:
+        mount_location: "{{ mount_location }}"
+        size: "10M"
+        state: mounted
+
+  - name: Create a file on ramdisk for verify
+    ansible.builtin.file:
+      path: "{{ test_file_on_ramdisk }}"
+      state: touch
+      mode: u=rw,g=r,o=r
+    changed_when: false

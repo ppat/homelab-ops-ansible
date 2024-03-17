@@ -1,0 +1,25 @@
+---
+- name: "vfat | {{ fs.device_path }} | Create filesystem"
+  community.general.filesystem:
+    dev: "{{ fs.device_path }}"
+    fstype: vfat
+    opts: "-F32"
+    force: false
+    state: present
+
+- name: "vfat | {{ fs.device_path }} | Create mountpoint"
+  ansible.builtin.file:
+    path: "{{ fs.mount_path }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "755"
+
+- name: "vfat | {{ fs.device_path }} | Mount on {{ fs.mount_path }}"
+  ansible.posix.mount:
+    path: "{{ fs.mount_path }}"
+    src: "{{ fs.device_path }}"
+    fstab: "{{ tmp_fstab_file.path }}"
+    fstype: vfat
+    state: mounted
+    opts: "{{ fs.mount_options | join(',') }}"

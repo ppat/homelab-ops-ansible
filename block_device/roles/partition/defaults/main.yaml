@@ -1,0 +1,8 @@
+---
+# Init partition boundaries to phantom 0th partition to enable setting the boundary of
+# the 1st partition dynamically (i.e. part1_start = part0_end)
+partition_boundaries:
+  0:
+    end: 0
+
+partition_state: {}

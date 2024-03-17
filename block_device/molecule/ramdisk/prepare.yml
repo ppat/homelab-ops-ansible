@@ -1,0 +1,20 @@
+---
+- name: Prepare
+  hosts: all
+  gather_facts: false
+  vars:
+    mount_location: /tmp/mount_ramdisk
+    test_file_on_ramdisk: "{{ mount_location }}/test"
+  tasks:
+  - name: Create mount location
+    ansible.builtin.file:
+      path: "{{ mount_location }}"
+      state: directory
+      mode: '0600'
+    become: true
+
+  - name: Confirm that the test file does NOT exist on ramdisk
+    ansible.builtin.stat:
+      path: "{{ test_file_on_ramdisk }}"
+    register: ramdisk_testfile_stat
+    failed_when: ramdisk_testfile_stat.stat.exists

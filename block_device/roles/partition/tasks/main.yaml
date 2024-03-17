@@ -1,0 +1,45 @@
+---
+- name: "Ensure prerequisites"
+  ansible.builtin.import_tasks: prerequisites.yaml
+
+- name: "{{ disk }} | Load existing partitions on target disk"
+  ansible.builtin.import_tasks: list.yaml
+  vars:
+    partition_state_change: "existing"
+
+- name: "{{ disk }} | Count existing partitions"
+  ansible.builtin.set_fact:
+    partition_existing_count: "{{ partition_state_fields | map('regex_search', 'existing') | select('string') | length }}"
+  vars:
+    partition_state_fields: "{{ partition_state | community.general.json_query('*[].state') }}"
+
+- name: "{{ disk }} | Detect if partitions should be created"
+  ansible.builtin.set_fact:
+    partition_should_create: "{{ partition_existing_count|int == 0 and partitions|length > 0 }}"
+
+- name: "{{ disk }} | Determine partition boundaries"
+  ansible.builtin.set_fact:
+    partition_boundaries: "{{ partition_boundaries | combine({ item.number: partition_boundary }) }}"
+  vars:
+    partition_boundary:
+      start: "{{ partition_boundaries[item.number-1].end|int }}"
+      end: "{{ (item.size is number) | ternary(partition_boundaries[item.number-1].end|int + item.size|int, omit) }}"
+  loop: "{{ partitions }}"
+  loop_control:
+    label: "{{ item.name }}"
+  when: partition_should_create
+
+- name: "{{ disk }} | Create Partitions"
+  ansible.builtin.include_tasks: create.yaml
+  loop: "{{ partitions }}"
+  loop_control:
+    extended: true
+    label: "{{ partition_item.name }}"
+    loop_var: partition_item
+  when: partition_should_create
+
+- name: "{{ disk }} | Reload partitions after creation"
+  ansible.builtin.include_tasks: list.yaml
+  vars:
+    partition_state_change: "created"
+  when: partition_should_create

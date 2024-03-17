@@ -1,0 +1,33 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  vars:
+    mount_location: /tmp/mount_ramdisk
+    test_file_on_ramdisk: "{{ mount_location }}/test"
+  tasks:
+  - name: Confirm that fstype of filesystem at mount location is tmpfs
+    ansible.builtin.command: "findmnt --mtab --json {{ mount_location }}"
+    register: ramdisk_findmnt_register
+    changed_when: false
+    failed_when: (ramdisk_findmnt_register.stdout | from_json)['filesystems'][0].fstype != 'tmpfs'
+
+  - name: Confirm that the test file exists on ramdisk
+    ansible.builtin.stat:
+      path: "{{ test_file_on_ramdisk }}"
+    register: ramdisk_testfile_stat
+    failed_when: not ramdisk_testfile_stat.stat.exists
+
+  - name: Unmount ramdisk
+    ansible.builtin.include_role:
+      name: homelab_ops.block_device.ramdisk
+    vars:
+      ramdisk:
+        mount_location: "{{ mount_location }}"
+        state: unmounted
+
+  - name: Confirm that the test file no longer exists on ramdisk
+    ansible.builtin.stat:
+      path: "{{ test_file_on_ramdisk }}"
+    register: ramdisk_unmount_testfile_stat
+    failed_when: ramdisk_unmount_testfile_stat.stat.exists

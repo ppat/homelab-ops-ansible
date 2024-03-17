@@ -1,0 +1,50 @@
+---
+- name: Converge
+  hosts: all
+  vars:
+    block_device_file: /tmp/test_block_device.img
+  tasks:
+  - name: Detect loopback device by file
+    ansible.builtin.shell: |
+      #!/bin/bash
+      set -eo pipefail
+      losetup --associated {{ block_device_file }} | cut -d':' -f1
+    args:
+      executable: /bin/bash
+    become: true
+    register: loopback_device_detect_register
+    changed_when: false
+
+  - name: Extract detected loopback device
+    ansible.builtin.set_fact:
+      loopback_device: "{{ loopback_device_detect_register.stdout }}"
+
+  - name: Create filesystems on newly created partitions
+    ansible.builtin.include_role:
+      name: homelab_ops.block_device.filesystem
+    vars:
+      disk: "{{ loopback_device | mandatory }}"
+      partitions:
+      - name: boot
+        number: 1
+        filesystem_type: vfat
+        mount_path: /mnt/1
+      - name: root
+        number: 2
+        filesystem_type: btrfs
+        mount_path: /mnt/2
+        filesystem_options:
+          subvolumes:
+          - name: copy_on_write_test
+            path: copy_on_write_test
+            copy_on_write: true
+          - name: snapshots_test
+            path: .snapshots_test
+            copy_on_write: true
+          - name: no_copy_on_write_test
+            path: no_copy_on_write_test
+            copy_on_write: false
+      - name: data
+        number: 3
+        filesystem_type: ext4
+        mount_path: /mnt/3
