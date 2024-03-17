@@ -1,0 +1,95 @@
+---
+- name: "Ensure prerequisites"
+  assert:
+    that:
+    - archive is defined and archive|length > 0
+    - archive|list is ansible.builtin.subset(['url', 'destination_path', 'exclude_paths', 'extracted_size', 'quiet'])
+    - archive.url is defined and archive.url is url
+
+- name: "Check if sync destination exists"
+  ansible.builtin.stat:
+    path: "{{ archive.destination_path }}"
+  register: sync_destination_stat_register
+  failed_when: not sync_destination_stat_register.stat.exists
+
+# we don't directly unpack to the target filesystem, but rather unpack to ramdisk and then rsync only the
+# different files (based on checksums) on to the target filesystem. This will allow us to release updates from
+# archive while also making using target filesystem's btrfs features.
+- name: "Create temp location to mount ramdisk"
+  ansible.builtin.tempfile:
+    path: /tmp
+    state: directory
+    prefix: "tmp.ramdisk.mount."
+  register: sync_ramdisk_location_register
+  changed_when: false
+
+- name: "Create temp fstab for ramdisk"
+  ansible.builtin.tempfile:
+    path: /tmp
+    state: file
+    prefix: "tmp.ramdisk.fstab."
+  register: sync_ramdisk_fstab_register
+  changed_when: false
+
+- name: "Create ramdisk"
+  ansible.posix.mount:
+    path: "{{ sync_ramdisk_location_register.path }}"
+    src: tmpfs
+    fstab: "{{ sync_ramdisk_fstab_register.path }}"
+    fstype: tmpfs
+    opts: "rw,size={{ archive.extracted_size }}"
+    state: mounted
+  changed_when: false
+
+- name: "Fetch and unpack archive onto ramdisk"
+  # yamllint disable rule:line-length
+  ansible.builtin.shell: |
+    #!/bin/bash
+    set -eo pipefail
+    wget -qO- {{ archive.url }} | tar -x --preserve-permissions --same-owner {{ unpack_tar_parameter[unpack_file_ext] }} -C {{ sync_ramdisk_location_register.path }}
+  args:
+    executable: /bin/bash
+  # yamllint disable rule:line-length
+  vars:
+    unpack_file_ext: "{{ archive.url | split('.') | last }}"
+  become: true
+  changed_when: false
+
+- name: "Set excludes list"
+  ansible.builtin.set_fact:
+    all_excludes: "{{ (all_excludes | default([])) + ['--exclude=' + item.lstrip('/')] }}"
+  loop: "{{ default_exclude_paths + (archive.exclude_paths | default([])) }}"
+
+- name: "Rsync the files w/ different checksums to the destination"
+  ansible.posix.synchronize:
+    # archive includes rsync features: --recursive, --links, --perms, --times, --group, --owner, --devices, --specials
+    archive: true
+    checksum: true
+    compress: false
+    # trailing slash instructs the copying of contents within src dir instead of src dir itself
+    src: "{{ sync_ramdisk_location_register.path }}/"
+    dest: "{{ archive.destination_path }}"
+    rsync_opts: "{{ all_excludes + rsync_opts }}"
+  delegate_to: "{{ inventory_hostname }}"
+  register: sync_rsync_register
+  changed_when: "'Total transferred file size: 0 bytes' not in sync_rsync_register.stdout_lines"
+  no_log: "{{ archive.quiet|default(true)|bool }}"
+
+- name: "Unmount ramdisk from temp location"
+  ansible.posix.mount:
+    path: "{{ sync_ramdisk_location_register.path }}"
+    fstype: tmpfs
+    state: unmounted
+  changed_when: false
+
+- name: "Remove temp location"
+  ansible.builtin.file:
+    path: "{{ sync_ramdisk_location_register.path }}"
+    state: absent
+  changed_when: false
+
+- name: "Remove tmp.fstab for ramdisk"
+  ansible.builtin.file:
+    path: "{{ sync_ramdisk_fstab_register.path }}"
+    state: absent
+  changed_when: false

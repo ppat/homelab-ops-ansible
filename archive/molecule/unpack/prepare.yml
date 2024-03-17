@@ -1,0 +1,21 @@
+---
+- name: Prepare
+  hosts: all
+  gather_facts: false
+  vars:
+    unpack_location: /tmp/unpack_location
+  tasks:
+  - name: Install prerequisite apt packages
+    ansible.builtin.apt:
+      name:
+      - wget
+      state: present
+      update_cache: true
+      cache_valid_time: 3600
+
+  - name: "Create unpack location if it does not exist"
+    ansible.builtin.file:
+      path: "{{ unpack_location }}"
+      state: directory
+      mode: '0600'
+    become: true

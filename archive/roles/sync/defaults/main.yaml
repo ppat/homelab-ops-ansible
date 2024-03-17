@@ -1,0 +1,21 @@
+---
+unpack_tar_parameter:
+  gz: "--gzip"
+  zst: "--zstd"
+  xz: "--xz"
+  lz4: "--use-compress-program=lz4"
+
+rsync_opts:
+- "--stats"
+
+default_exclude_paths:
+- "dev/*"
+- "mnt/*"
+- "proc/*"
+- "srv/*"
+- "sys/*"
+- "run/*"
+- "tmp/*"
+- "var/tmp/*"
+- "var/log/*"
+- "*~"

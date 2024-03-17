@@ -1,0 +1,24 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  vars:
+    unpack_location: /tmp/unpack_location
+  tasks:
+  - name: Stat a few files from archive used in test at expected destination paths
+    ansible.builtin.stat:
+      path: "{{ item }}"
+    loop:
+    - "{{ unpack_location }}/bin/bash"
+    - "{{ unpack_location }}/etc/sysctl.conf"
+    - "{{ unpack_location }}/usr/share"
+    register: unpack_stat_register
+
+  - name: Assert that files from archive exists in destination
+    ansible.builtin.assert:
+      that: "{{ item.stat.exists }}"
+      fail_msg: "{{ item.item }}: file from archive does NOT exist at destination"
+      success_msg: "{{ item.item }}: file from archive exists at destination"
+    loop: "{{ unpack_stat_register.results }}"
+    loop_control:
+      label: "{{ item.item }}"
