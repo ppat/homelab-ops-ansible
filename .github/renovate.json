@@ -1,0 +1,65 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:best-practices",
+    "group:linters"
+  ],
+  "packageRules": [
+    {
+      "groupName": "all github-action dependencies",
+      "groupSlug": "github-actions-deps",
+      "matchFileNames": [
+        ".github/workflows/**"
+      ]
+    },
+    {
+      "groupName": "all npm non-major dependencies",
+      "groupSlug": "npm-non-major-deps",
+      "matchManagers": [
+        "npm"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ]
+    },
+    {
+      "groupName": "all npm major dependencies",
+      "groupSlug": "npm-deps",
+      "matchManagers": [
+        "npm"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ]
+    },
+    {
+      "groupName": "all python non-major dependencies",
+      "groupSlug": "python-non-major-deps",
+      "matchManagers": [
+        "pip_requirements",
+        "poetry"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ]
+    },
+    {
+      "groupName": "all python major dependencies",
+      "groupSlug": "python-deps",
+      "matchManagers": [
+        "pip_requirements",
+        "poetry"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ]
+    }
+  ],
+  "prHourlyLimit": 10,
+  "prConcurrentLimit": 20,
+  "semanticCommits": "enabled",
+  "separateMajorMinor": true,
+  "separateMultipleMajor": false
+}
