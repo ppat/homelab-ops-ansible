@@ -1,0 +1,51 @@
+---
+- name: "Check for mandatory variables definitions"
+  assert:
+    that:
+    - ramdisk.mount_location is defined
+    - ramdisk.state is defined
+    - (ramdisk.state == 'mounted') | ternary(ramdisk.size is defined, ramdisk.size is not defined)
+
+- name: "Check if ramdisk mount location exists"
+  ansible.builtin.stat:
+    path: "{{ ramdisk.mount_location }}"
+  register: ramdisk_mount_stat_register
+  failed_when: not ramdisk_mount_stat_register.stat.exists
+
+- name: "Check if any device is mounted at requested location"
+  ansible.builtin.command: "findmnt --mtab --json {{ ramdisk.mount_location }}"
+  register: ramdisk_findmnt_register
+  changed_when: false
+  failed_when: false
+
+- name: "Create temp fstab"
+  ansible.builtin.tempfile:
+    path: /tmp
+    state: file
+    prefix: "tmp.ramdisk.fstab."
+  register: sync_ramdisk_fstab_register
+  changed_when: false
+  when: ramdisk.state == 'mounted' and ramdisk_findmnt_register.rc == 1
+
+- name: "Set ramdisk fstab location"
+  ansible.builtin.set_fact:
+    ramdisk_tmpfstab_location: "{{ sync_ramdisk_fstab_register.path }}"
+  when: ramdisk.state == 'mounted' and ramdisk_findmnt_register.rc == 1
+
+- name: "Mount ramdisk at mount_location"
+  ansible.posix.mount:
+    path: "{{ ramdisk.mount_location }}"
+    src: tmpfs
+    fstab: "{{ ramdisk_tmpfstab_location }}"
+    fstype: tmpfs
+    opts: "rw,size={{ ramdisk.size }}"
+    state: mounted
+  notify: remove-ramdisk-tmp.fstab
+  when: ramdisk.state == 'mounted' and ramdisk_findmnt_register.rc == 1
+
+- name: "Unmount ramdisk at mount_location"
+  ansible.posix.mount:
+    path: "{{ ramdisk.mount_location }}"
+    fstype: tmpfs
+    state: unmounted
+  when: ramdisk.state == 'unmounted' and (ramdisk_findmnt_register.stdout | from_json)['filesystems'][0].fstype == 'tmpfs'

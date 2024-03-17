@@ -1,0 +1,25 @@
+---
+- name: "ext4 | {{ fs.device_path }} | Create filesystem"
+  community.general.filesystem:
+    dev: "{{ fs.device_path }}"
+    fstype: ext4
+    opts: "-L {{ fs.name }}"
+    force: false
+    state: present
+
+- name: "ext4 | {{ fs.device_path }} | Create mountpoint"
+  ansible.builtin.file:
+    path: "{{ fs.mount_path }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "755"
+
+- name: "ext4 | {{ fs.device_path }} | Mount on {{ fs.mount_path }}"
+  ansible.posix.mount:
+    path: "{{ fs.mount_path }}"
+    src: "{{ fs.device_path }}"
+    fstab: "{{ tmp_fstab_file.path }}"
+    fstype: ext4
+    state: mounted
+    opts: "{{ fs.mount_options | join(',') }}"

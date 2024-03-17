@@ -1,0 +1,63 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  vars:
+    block_device_file: /tmp/test_block_device.img
+    expected_partition_sizes:
+      "boot": 10.0
+      "root": 40.0
+      "data": 50.0
+  tasks:
+  - name: Detect loopback device by file (for when it already exists)
+    ansible.builtin.shell: |
+      #!/bin/bash
+      set -eo pipefail
+      losetup --associated {{ block_device_file }} | cut -d':' -f1
+    args:
+      executable: /bin/bash
+    become: true
+    register: loopback_device_detect_register
+    changed_when: false
+
+  - name: Extract detected loopback device
+    ansible.builtin.set_fact:
+      loopback_device: "{{ loopback_device_detect_register.stdout }}"
+
+  - name: Read partitions of loopback_device
+    ansible.builtin.shell: |
+      #!/bin/bash
+      set -eo pipefail
+      parted --machine {{ loopback_device | mandatory }} unit MiB print | grep '^[[:digit:]]\:.*;'
+    args:
+      executable: /bin/bash
+    become: true
+    register: partition_parted_register
+    changed_when: false
+
+  - name: Extract partition information into map by name
+    ansible.builtin.set_fact:
+      partitions: "{{ partitions | default({}) | combine({ partition_label: {'size': partition_size} }) }}"
+    vars:
+      partition_size: "{{ item.split(':')[3] | regex_replace('^(.*)MiB$', '\\1') }}"
+      partition_label: "{{ item.split(':')[5] }}"
+    loop: "{{ partition_parted_register.stdout_lines }}"
+
+  - name: Assert that all expected partitions have been created
+    ansible.builtin.assert:
+      that: item.key in partitions
+      fail_msg: "Partition {{ item.key }} has not been created!"
+    loop: "{{ expected_partition_sizes | dict2items }}"
+    loop_control:
+      label: "{{ item.key }}"
+
+  - name: Assert that actual partition sizes are in range of expected_partition_sizes
+    ansible.builtin.assert:
+      that: size_difference|float < 0.1|float
+      fail_msg: "{{ item.key }} partition size: Actual ({{ partitions[item.key].size }}) is NOT within +/- 0.1MiB range of expected ({{ item.value }})!"
+      success_msg: "{{ item.key }} partition size: Actual ({{ partitions[item.key].size }}) is within +/- 0.1MiB range of expected ({{ item.value }})"
+    vars:
+      size_difference: "{{ (item.value|float - partitions[item.key].size|float) | abs }}"
+    loop: "{{ expected_partition_sizes | dict2items }}"
+    loop_control:
+      label: "{{ item.key }}"

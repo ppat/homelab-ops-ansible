@@ -1,0 +1,53 @@
+---
+- name: "{{ disk }} | Load existing filesystems on target disk"
+  ansible.builtin.import_tasks: list.yaml
+
+- name: "{{ disk }} | Create temp fstab file"
+  ansible.builtin.tempfile:
+    state: file
+  register: tmp_fstab_file
+  changed_when: false
+
+- name: "{{ disk }} | Select filesystem configuration"
+  ansible.builtin.set_fact:
+    filesystem_derived_params: "{{ filesystem_derived_params | default({}) | combine({item.name: filesystem}) }}"
+  vars:
+    filesystem:
+      name: "{{ item.name }}"
+      number: "{{ item.number }}"
+      device_path: "{{ filesystem_state[item.number|string].name }}"
+      filesystem_type: "{{ item.filesystem_type | mandatory }}"
+      mount_path: "{{ item.mount_path | mandatory }}"
+      mount_options: "{{ item.mount_options | default(mount_option_defaults[item.filesystem_type]) }}"
+      filesystem_options: "{{ item.filesystem_options | default({}) }}"
+      should_create: "{{ filesystem_state[item.number|string].create }}"
+  loop: "{{ partitions }}"
+  loop_control:
+    label: "{{ item.name }}"
+
+- name: "{{ disk }} | Select filesystem creation order"
+  # root must be created first as the others will be mounted under it
+  ansible.builtin.set_fact:
+    filesystem_creation_order: "{{ ['root'] + (filesystem_derived_params.keys() | difference(['root'])) }}"
+
+- name: "{{ disk }} | Show full derived filesystem parameters (before creation)"
+  debug:
+    var: filesystem_derived_params
+
+- name: "{{ disk }} | Create filesystem"
+  ansible.builtin.include_tasks: "{{ filesystem_derived_params[filesystem_name].filesystem_type }}.yaml"
+  vars:
+    fs: "{{ filesystem_derived_params[filesystem_name] }}"
+  when: filesystem_derived_params[filesystem_name].should_create
+  loop: "{{ filesystem_creation_order }}"
+  loop_control:
+    loop_var: filesystem_name
+
+- name: "{{ disk }} | Remove temporary fstab"
+  ansible.builtin.file:
+    path: "{{ tmp_fstab_file.path }}"
+    state: absent
+  changed_when: false
+
+- name: "{{ disk }} | Reload filesystems after creation"
+  import_tasks: list.yaml

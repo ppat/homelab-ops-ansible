@@ -1,0 +1,73 @@
+---
+- name: "btrfs | {{ fs.device_path }} | Create filesystem"
+  community.general.filesystem:
+    dev: "{{ fs.device_path }}"
+    fstype: btrfs
+    opts: "--data single --metadata single --label {{ fs.name }}"
+    force: false
+    state: present
+
+- name: "btrfs | {{ fs.device_path }} | Mount partition on {{ fs.mount_path }}"
+  ansible.posix.mount:
+    path: "{{ fs.mount_path }}"
+    src: "{{ fs.device_path }}"
+    fstab: "{{ tmp_fstab_file.path }}"
+    fstype: btrfs
+    state: mounted
+
+- name: "btrfs | {{ fs.device_path }} | Create parent subvolume @{{ fs.name }}"
+  ansible.builtin.command: "btrfs subvolume create {{ fs.mount_path }}/@{{ fs.name }}"
+
+- name: "btrfs | {{ fs.device_path }} | Create other subvolumes"
+  ansible.builtin.command: "btrfs subvolume create {{ fs.mount_path }}/@{{ item.name }}"
+  loop: "{{ fs.filesystem_options.subvolumes }}"
+  loop_control:
+    label: "{{ item.name }}"
+
+- name: "btrfs | {{ fs.device_path }} | Unmount partition from {{ fs.mount_path }}"
+  ansible.posix.mount:
+    path: "{{ fs.mount_path }}"
+    state: unmounted
+  register: parent_volume_unmount_register
+  retries: 3
+  delay: 10
+  until: parent_volume_unmount_register is not failed
+
+- name: "btrfs | {{ fs.device_path }} | Mount parent subvolume (instead of partition) on {{ fs.mount_path }}"
+  ansible.posix.mount:
+    path: "{{ fs.mount_path }}"
+    src: "{{ fs.device_path }}"
+    fstab: "{{ tmp_fstab_file.path }}"
+    fstype: btrfs
+    opts: "{{ fs.mount_options | join(',') }},subvol=@{{ fs.name }}"
+    state: mounted
+
+- name: "btrfs | {{ fs.device_path }} | Create mount points for other subvolumes"
+  ansible.builtin.file:
+    path: "{{ fs.mount_path }}/{{ item.path }}"
+    state: directory
+    mode: '0755'
+  loop: "{{ fs.filesystem_options.subvolumes }}"
+  loop_control:
+    label: "{{ item.name }}"
+
+- name: "btrfs | {{ fs.device_path }} | Mount other subvolumes under parent subvolume on {{ fs.mount_path }}"
+  ansible.posix.mount:
+    path: "{{ fs.mount_path }}/{{ item.path }}"
+    src: "{{ fs.device_path }}"
+    fstab: "{{ tmp_fstab_file.path }}"
+    fstype: btrfs
+    opts: "{{ fs.mount_options | join(',') }},subvol=@{{ item.name }}"
+    state: mounted
+  loop: "{{ fs.filesystem_options.subvolumes }}"
+  loop_control:
+    label: "{{ item.name }}"
+
+- name: "btrfs | {{ fs.device_path }} | Disable Copy-on-Write for specific subvolumes"
+  file:
+    path: "{{ fs.mount_path }}/{{ item.path }}"
+    attributes: C
+  when: not item.copy_on_write
+  loop: "{{ fs.filesystem_options.subvolumes }}"
+  loop_control:
+    label: "{{ item.name }}"

@@ -1,0 +1,26 @@
+---
+- name: Converge
+  hosts: all
+  gather_facts: false
+  vars:
+    mount_location: /tmp/mount_ramdisk
+    test_file_on_ramdisk: "{{ mount_location }}/test"
+  tasks:
+  - name: Select block device with existing partitions with none of those mounted at root
+    ansible.builtin.include_role:
+      name: homelab_ops.block_device.select
+    vars:
+      device:
+        include:
+          type: disk
+        exclude:
+          mountpoint: "/"
+
+  - name: Select block device with no existing partitions
+    ansible.builtin.include_role:
+      name: homelab_ops.block_device.select
+    vars:
+      device:
+        include:
+          type: loop
+        no_partitions: true

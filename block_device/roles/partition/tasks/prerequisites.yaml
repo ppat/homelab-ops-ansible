@@ -1,0 +1,11 @@
+---
+- name: "prerequisites | Gather installed package facts"
+  ansible.builtin.package_facts:
+    manager: apt
+  when: not 'packages' in ansible_facts
+  no_log: true
+
+- name: "prerequisites | assert that required packages are available"
+  ansible.builtin.assert:
+    that: "'parted' in ansible_facts.packages"
+    fail_msg: "Required package 'parted' is not installed!"

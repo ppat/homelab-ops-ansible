@@ -1,0 +1,90 @@
+---
+- name: "Ensure prerequisites"
+  assert:
+    that: device is defined and ('include' in device or 'exclude' in device)
+
+- name: "Set or reset defaults"
+  ansible.builtin.set_fact:
+    select_device_filters: []
+    select_partition_filters: []
+    select_no_partition_devices: "{{ ('no_partitions' in device and device['no_partitions'] == true) }}"
+
+- name: Build filters to select block device by matching device fields
+  ansible.builtin.set_fact:
+    select_device_filters: "{{ select_device_filters + [select_include_filter] }}"
+  vars:
+    select_include_filter: "{{ item.key }}=='{{ item.value }}'"
+  loop: "{{ device.include | default({}) | dict2items }}"
+  when: item.key not in partition_fields
+
+- name: Build filters to select block device by non-matching device fields
+  ansible.builtin.set_fact:
+    select_device_filters: "{{ select_device_filters + [select_exclude_filter] }}"
+  vars:
+    select_exclude_filter: "{{ item.key }}!='{{ item.value }}'"
+  loop: "{{ device.exclude | default({}) | dict2items }}"
+  when: item.key not in partition_fields
+
+- name: Build filters to select block device by matching partition fields
+  ansible.builtin.set_fact:
+    select_partition_filters: "{{ select_partition_filters + [select_include_filter] }}"
+  vars:
+    select_include_filter: "{{ item.key }}=='{{ item.value }}'"
+  loop: "{{ device.include | default({}) | dict2items }}"
+  when: item.key in partition_fields
+
+- name: Build filters to select block device by non-matching partition fields
+  ansible.builtin.set_fact:
+    select_partition_filters: "{{ select_partition_filters + [select_exclude_filter] }}"
+  vars:
+    select_exclude_filter: "{{ item.key }}!='{{ item.value }}'"
+  loop: "{{ device.exclude | default({}) | dict2items }}"
+  when: item.key in partition_fields
+
+- name: Fail when no include or exclude filters provided
+  ansible.builtin.fail:
+    msg: "Zero applicable include or exclude filters. At least 1 must be specified."
+  when: (select_device_filters|length + (select_no_partition_devices | ternary(0, select_partition_filters|length))) == 0
+
+- name: Combine device filters
+  ansible.builtin.set_fact:
+    select_device_filters_combined: "{{ select_device_filters | reject('match', '^$') | join(' && ') }}"
+
+- name: Combine partition filters (no partitions = true)
+  ansible.builtin.set_fact:
+    select_partition_filters_combined: "!children"
+  when: select_no_partition_devices
+
+- name: Combine partition filters (no partitions = false, partition filters present)
+  ansible.builtin.set_fact:
+    select_partition_filters_combined: "children[?{{ select_partition_filters | reject('match', '^$') | join(' && ') }}]"
+  when: not select_no_partition_devices and select_partition_filters|length > 0
+
+- name: Combine partition filters (no partitions = false, partition filters absent)
+  ansible.builtin.set_fact:
+    select_partition_filters_combined: ""
+  when: not select_no_partition_devices and select_partition_filters|length == 0
+
+- name: Combine all filter queries into one
+  ansible.builtin.set_fact:
+    select_all_filters: "{{ filters | reject('match', '^$') | join(' && ') }}"
+  vars:
+    filters:
+    - "{{ select_device_filters_combined }}"
+    - "{{ select_partition_filters_combined }}"
+
+- name: Load available block devices
+  ansible.builtin.command: lsblk --output-all --bytes --json
+  register: select_available_disks_register
+  changed_when: false
+
+- name: Select matching block devices
+  ansible.builtin.set_fact:
+    select_block_device_results: "{{ select_available_disks_register.stdout | from_json | community.general.json_query(target_disk_query) }}"
+  vars:
+    target_disk_query: "blockdevices[?{{ select_all_filters }}]"
+
+- name: Fail if no matches
+  ansible.builtin.fail:
+    msg: "{{ item }}"
+  when: select_block_device_results|length == 0
