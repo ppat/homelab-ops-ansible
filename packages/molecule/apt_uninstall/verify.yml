@@ -1,0 +1,45 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  vars:
+    packages_uninstalled:
+    - curl
+    - postgresql
+    - ripgrep
+    reinstall_prevented:
+    - ripgrep
+    reinstall_allowed:
+    - curl
+  tasks:
+  - name: "Gather installed package facts"
+    ansible.builtin.package_facts:
+      manager: apt
+    no_log: true
+
+  - name: Find the intersection of currently installed packages and packages that should have been uninstalled
+    ansible.builtin.set_fact:
+      uninstalled_installed_intersection: "{{ packages_uninstalled | intersect(ansible_facts.packages.keys()) }}"
+
+  - name: Assert that package to be uninstalled have been uninstalled
+    ansible.builtin.assert:
+      that:
+      - uninstalled_installed_intersection|length == 0
+      fail_msg: "Requested uninstallation did not happen!"
+
+  - name: Confirm that re-installation prevention works as intended
+    ansible.builtin.apt:
+      update_cache: true
+      name: "{{ reinstall_prevented }}"
+      install_recommends: false
+      state: present
+    register: reinstall_prevent_check_register
+    failed_when: not reinstall_prevent_check_register.failed
+
+  - name: Confirm that re-installation works for others whose reinstallation is allowed
+    ansible.builtin.apt:
+      update_cache: true
+      name: "{{ reinstall_allowed }}"
+      install_recommends: false
+      state: present
+    register: reinstall_prevent_check_register

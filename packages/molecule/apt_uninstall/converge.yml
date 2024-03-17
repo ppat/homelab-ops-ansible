@@ -1,0 +1,16 @@
+---
+- name: Converge
+  hosts: all
+  vars:
+    packages_uninstalled:
+    - name: curl
+    - name: postgresql
+      systemd_services: [postgresql]
+    - name: ripgrep
+      reinstall: prevent
+  tasks:
+  - name: Uninstall APT packages
+    ansible.builtin.include_role:
+      name: "homelab_ops.packages.apt_uninstall"
+    vars:
+      packages: "{{ packages_uninstalled }}"

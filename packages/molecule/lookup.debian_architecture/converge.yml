@@ -1,0 +1,17 @@
+---
+- name: Converge
+  hosts: all
+  vars:
+    results_file: /tmp/results
+  tasks:
+  - name: Check if results file exists
+    ansible.builtin.stat:
+      path: "{{ results_file }}"
+    register: results_file_register
+
+  - name: Record debian architecture to results file
+    ansible.builtin.copy:
+      content: "{{ lookup('homelab_ops.packages.debian_architecture', ansible_architecture) }}"
+      dest: "{{ results_file }}"
+      mode: '0644'
+    when: not results_file_register.stat.exists

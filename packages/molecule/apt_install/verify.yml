@@ -1,0 +1,20 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  vars:
+    package_path: "/usr/local/sbin/yq"
+    expected_permissions: '0750'
+  tasks:
+  - name: "Gather installed package facts"
+    ansible.builtin.package_facts:
+      manager: apt
+    no_log: true
+
+  - name: Assert that requested package now exists
+    ansible.builtin.assert:
+      that:
+      - "'docker-ce' in ansible_facts.packages"
+      - "'docker-ce-cli' in ansible_facts.packages"
+      - "'docker-compose-plugin' in ansible_facts.packages"
+      fail_msg: "Request package not installed!"

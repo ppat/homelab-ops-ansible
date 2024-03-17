@@ -1,0 +1,38 @@
+---
+- name: "Check for mandatory variables definitions"
+  assert:
+    that:
+    - packages is defined
+    - packages|length > 0
+
+- name: "Gather installed package facts"
+  ansible.builtin.package_facts:
+    manager: apt
+  when: not 'packages' in ansible_facts
+  no_log: true
+
+- name: "Select packages to install"
+  ansible.builtin.set_fact:
+    apt_install_selected: "{{ packages | difference(ansible_facts.packages.keys()) }}"
+    apt_install_prerequisites: "{{ repository_prequisites | difference(ansible_facts.packages.keys()) }}"
+
+- name: "Install | Show packages selected for installation..."
+  ansible.builtin.debug:
+    var: apt_install_selected
+  when: apt_install_selected|length > 0
+
+- name: "Install prerequisites"
+  ansible.builtin.include_tasks: prerequisites.yaml
+  when: apt_install_prerequisites|length > 0 and repositories|length > 0
+
+- name: "Add repositories"
+  ansible.builtin.include_tasks: repository.yaml
+  loop: "{{ repositories }}"
+  loop_control:
+    label: "{{ repository.name }}"
+    loop_var: repository
+  when: apt_install_selected|length > 0 and repositories|length > 0
+
+- name: "Install packages"
+  ansible.builtin.include_tasks: install.yaml
+  when: apt_install_selected|length > 0

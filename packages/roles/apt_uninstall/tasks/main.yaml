@@ -1,0 +1,51 @@
+---
+- name: "Check for mandatory variables definitions"
+  assert:
+    that:
+    - packages is defined
+    - packages|length > 0
+
+- name: "Gather installed package facts"
+  ansible.builtin.package_facts:
+    manager: apt
+  when: not 'packages' in ansible_facts
+  no_log: true
+
+- name: "Select packages to perform uninstallation steps on"
+  ansible.builtin.set_fact:
+    # Use defaults for missing configuration fields
+    apt_uninstall_package_map: "{{ apt_uninstall_package_map | combine({item['name']: apt_uninstall_package_defaults | combine(item)}) }}"
+  when: item['name'] in ansible_facts.packages
+  loop: "{{ packages }}"
+  loop_control:
+    label: "{{ item.name }}"
+
+- name: "Disable underlying services"
+  ansible.builtin.include_tasks: disable-services.yaml
+  vars:
+    apt_uninstall_services: "{{ apt_uninstall_package_map | community.general.json_query('*.systemd_services') | flatten }}"
+    apt_uninstall_timers:  "{{ apt_uninstall_package_map | community.general.json_query('*.systemd_timers') | flatten }}"
+  when: apt_uninstall_package_map|length > 0
+
+- name: "Uninstall packages"
+  ansible.builtin.include_tasks: uninstall.yaml
+  vars:
+    apt_uninstall_packages: "{{ apt_uninstall_package_map.keys() }}"
+  when: apt_uninstall_package_map|length > 0
+
+- name: "Prevent re-installation of packages"
+  ansible.builtin.template:
+    src: apt-no-install.pref.j2
+    dest: "/etc/apt/preferences.d/no-install-{{ item }}.pref"
+    owner: root
+    group: root
+    mode: '0644'
+  loop: "{{ apt_uninstall_package_map.values() | selectattr('reinstall', '==', 'prevent') | map(attribute='name') }}"
+  when: apt_uninstall_package_map|length > 0
+
+- name: "Remove directories associated with packages"
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  loop: "{{ apt_uninstall_package_map | community.general.json_query('*.directories') | flatten }}"
+  when: apt_uninstall_package_map|length > 0

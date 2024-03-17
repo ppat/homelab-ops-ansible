@@ -1,0 +1,22 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  vars:
+    package_path: "/usr/local/sbin/yq"
+    expected_permissions: '0750'
+  tasks:
+  - name: "Check for package at expected location"
+    ansible.builtin.stat:
+      path: "{{ package_path }}"
+    register: package_stat
+
+  - name: Assert that package exists
+    ansible.builtin.assert:
+      that: package_stat.stat.exists
+      fail_msg: "Package not installed! Not found at expected location: {{ package_path }}"
+
+  - name: Assert that package permissions are set
+    ansible.builtin.assert:
+      that: package_stat.stat.mode == expected_permissions
+      fail_msg: "Package permissions are not as expected: {{ expected_permissions }}', actual: {{ package_stat.stat.mode }}"

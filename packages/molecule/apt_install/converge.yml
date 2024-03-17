@@ -1,0 +1,16 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+  - name: Install APT packages from custom repository
+    ansible.builtin.include_role:
+      name: "homelab_ops.packages.apt_install"
+    vars:
+      packages:
+      - docker-ce
+      - docker-ce-cli
+      - docker-compose-plugin
+      repositories:
+      - name: docker
+        key_url: https://download.docker.com/linux/ubuntu/gpg
+        url: https://download.docker.com/linux/ubuntu

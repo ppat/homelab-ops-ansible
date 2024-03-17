@@ -1,0 +1,4 @@
+---
+repositories: []
+repository_prequisites:
+- gnupg

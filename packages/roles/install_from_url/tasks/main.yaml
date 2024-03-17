@@ -1,0 +1,21 @@
+---
+- name: "Check if {{ package.name }} exists"
+  ansible.builtin.stat:
+    path: "{{ package.path }}/{{ package.name }}"
+  register: stat_package
+
+- name: "Determine file extension"
+  ansible.builtin.set_fact:
+    install_from_url_file_ext: "{{ package.url | basename | split('.') | last }}"
+
+- name: "Package is an archive"
+  ansible.builtin.include_tasks: install-from-archive.yaml
+  vars:
+    package_archive: "{{ package }}"
+  when: not stat_package.stat.exists and install_from_url_file_ext in archive_types
+
+- name: "Package is a binary"
+  ansible.builtin.include_tasks: install-from-binary.yaml
+  vars:
+    package_binary: "{{ package }}"
+  when: not stat_package.stat.exists and not install_from_url_file_ext in archive_types

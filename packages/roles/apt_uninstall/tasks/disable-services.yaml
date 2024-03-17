@@ -1,0 +1,15 @@
+---
+- name: "disable-services | Stop systemd services of packages being removed"
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    state: stopped
+  loop: "{{ apt_uninstall_services }}"
+  register: apt_uninstall_systemd_stop_register
+  failed_when: apt_uninstall_systemd_stop_register.msg != "Service is in unknown state" and apt_uninstall_systemd_stop_register.failed
+  when: not ansible_is_chroot
+
+- name: "disable-services | Disable systemd services + timers of packages being removed"
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    enabled: false
+  loop: "{{ apt_uninstall_timers + apt_uninstall_services }}"

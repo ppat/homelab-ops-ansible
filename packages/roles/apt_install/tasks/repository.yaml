@@ -1,0 +1,27 @@
+---
+- name: "repository | Check for mandatory variables definitions"
+  assert:
+    that:
+    - repository is defined
+    - repository.name is defined
+    - repository.key_url is defined
+    - repository.url is defined
+
+- name: "repository | Create directory for keyrings if not exists"
+  ansible.builtin.file:
+    path: /usr/share/keyrings
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: "repository | Add repository key to keyring"
+  ansible.builtin.apt_key:
+    url: "{{ repository.key_url }}"
+    keyring: "/usr/share/keyrings/{{ repository.name }}.gpg"
+
+- name: "repository | Add into sources list"
+  ansible.builtin.apt_repository:
+    repo: "deb [signed-by=/usr/share/keyrings/{{ repository.name }}.gpg] {{ repository.url }} {{ ansible_lsb.codename }} stable"
+    filename: "{{ repository.name }}.list"
+    state: present
