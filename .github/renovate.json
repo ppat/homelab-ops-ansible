@@ -92,6 +92,7 @@
   ],
   "prHourlyLimit": 10,
   "prConcurrentLimit": 20,
+  "rebaseWhen": "behind-base-branch",
   "semanticCommits": "enabled",
   "separateMajorMinor": true,
   "separateMultipleMajor": false
