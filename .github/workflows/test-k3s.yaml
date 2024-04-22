@@ -106,7 +106,7 @@ jobs:
     - name: Create molecule vars file
       # yamllint disable-line rule:indentation
       run: |
-        set -eo pipefail
+        set -exo pipefail
 
         echo "Detecting latest stable versions..."
         export K3S_VERSION="$(curl -fsSL https://raw.githubusercontent.com/k3s-io/k3s/master/channel.yaml | yq '.channels[] | select(.name == "stable") | .latest' | cut -d'v' -f2)"
@@ -114,11 +114,18 @@ jobs:
         export KUSTOMIZE_VERSION="5.4.1"
 
         echo "Setting branch..."
-        set -x
+        env | sort
+        echo
         if [[ "$GITHUB_EVENT_NAME" == "pull_request" ]]; then
+          echo 1
           BRANCH="$GITHUB_HEAD_REF"
+          echo 2
         else
+          echo 3
           BRANCH="$GITHUB_REF"
+          echo 4
+
+        echo 5
 
         cat > $MOLECULE_VARS_FILE << EOF
         k3s_version: $K3S_VERSION
