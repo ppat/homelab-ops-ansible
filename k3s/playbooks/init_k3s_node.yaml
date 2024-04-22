@@ -10,8 +10,10 @@
       that:
       - k3s_version is defined and k3s_version|length > 0
       - flux_version is defined and flux_version|length > 0
+      - kustomize_version is defined and kustomize_version|length > 0
       - k3s_server_cidr is defined and k3s_server_cidr|length > 0
       - k3s_server_port is defined and k3s_server_port|length > 0
+      - cluster_domain_name is defined and cluster_domain_name|length > 0
       - node_type_by_hostname is defined and node_type_by_hostname|length > 0
 
   - name: "Detect node type by hostname"
@@ -40,10 +42,12 @@
     vars:
       cluster_url: "{{ k3s_server_url | default('') }}"
       disabled_components: [local-storage, servicelb, traefik]
-      templated_configuration:
-        tls-san: "{% raw %}kubernetes-api.{{ cluster_bootstrap_conf['DOMAIN_NAME'] }}{% endraw %}"
-        flannel-backend: wireguard-native
       config:
-        cluster_bootstrap_secrets: "/root/.secrets/cluster-bootstrap-secrets"
-        flux_bootstrap_conf: "/root/.secrets/flux-bootstrap-conf"
-        flux_bootstrap_secrets: "/root/.secrets/flux-bootstrap-secrets"
+        bootstrap_secrets:
+          server_token: $k3s_server_token
+          agent_token: $k3s_agent_token
+        k3s:
+          custom:
+            tls-san: "kubernetes-api.{{ cluster_domain_name }}"
+            flannel-backend: wireguard-native
+          disabled_components: [local-storage, servicelb, traefik]
