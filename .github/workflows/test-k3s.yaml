@@ -37,22 +37,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-    - name: Show
-      run: |
-        echo ${{ github.event_name }}
-        echo
-        echo ${{ github.event }}
-        echo
-        echo ${{ github.head_ref }}
-        echo
-        echo ${{ github.ref }}
-        echo
-        echo ${{ github.ref_name }}
-        echo
-        echo ${{ github.ref_type }}
-        echo
-        echo ${{ github.sha }}
-
     - name: Checkout
       uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
 
@@ -130,6 +114,7 @@ jobs:
         export KUSTOMIZE_VERSION="5.4.1"
 
         echo "Setting branch..."
+        set -x
         if [[ "$GITHUB_EVENT_NAME" == "pull_request" ]]; then
           BRANCH="$GITHUB_HEAD_REF"
         else
