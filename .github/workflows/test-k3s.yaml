@@ -54,8 +54,10 @@ jobs:
 
     - name: Install ansible collections
       run: |
-        ansible-galaxy collection install ./packages/
         ansible-galaxy collection install ./k3s/
+
+        # install dependent homelab-ops packages from same branch (overriding version specified in galaxy.yml of homelab_ops.k3s collection)
+        ansible-galaxy collection install ./packages/
 
     - name: Install sysbox
       run: |
