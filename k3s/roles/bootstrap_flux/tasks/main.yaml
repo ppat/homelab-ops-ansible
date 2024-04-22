@@ -59,14 +59,21 @@
     set -eo pipefail
     export FLUX_GIT_BRANCH="{{ repo_branch | default('') }}"
     kustomize build {{ git_repository.flux_source_root }}/ | envsubst > /tmp/flux_root.yaml
-    echo
-    cat /tmp/flux_root.yaml
-    echo
     cat /tmp/flux_root.yaml | kubectl apply --kubeconfig {{ kubeconfig_location }} -f -
   args:
     executable: /bin/bash
   register: bootstrap_flux_flux_root_status
   changed_when: bootstrap_flux_flux_root_status.stdout_lines | community.general.json_query("[?ends_with(@, 'unchanged')]") | length != 2
+
+- name: "Show"
+  when: bootstrap_flux_git_secret.resources|length == 0
+  ansible.builtin.shell: |
+    #!/bin/bash
+    set -eo pipefail
+    kubectl get --kubeconfig {{ kubeconfig_location }} -n flux-system gitrepository.source.toolkit.fluxcd.io flux-system-git-source -o yaml
+  args:
+    executable: /bin/bash
+  changed_when: false
 
 - name: "Cleanup temp directories and files"
   ansible.builtin.file:
