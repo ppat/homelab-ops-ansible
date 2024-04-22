@@ -64,6 +64,7 @@ provisioner:
         k3s_version: $k3s_version
         flux_version: $flux_version
         kustomize_version: $kustomize_version
+        SELF_GIT_REF: $repo_git_ref
         config:
           cluster_bootstrap_secrets: "/tmp/bootstrap/cluster-bootstrap-secrets"
           flux_bootstrap_conf: "/tmp/bootstrap/flux-bootstrap-conf"
