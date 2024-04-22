@@ -42,9 +42,14 @@
 - name: "Show env"
   when: bootstrap_flux_git_secret.resources|length == 0
   ansible.builtin.shell: >
+    #!/bin/bash
+    set -eo pipefail
     env | sort
     echo
     echo "${FLUX_GIT_REF:=FOOD}" | /usr/local/bin/envsubst
+  args:
+    executable: /bin/bash
+  changed_when: false
 
 - name: "Configure flux with git repository as a source"
   when: bootstrap_flux_git_secret.resources|length == 0
