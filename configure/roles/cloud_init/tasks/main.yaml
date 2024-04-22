@@ -1,0 +1,16 @@
+---
+- name: "Check for mandatory variables definitions"
+  assert:
+    that:
+    - cloudinit is defined and cloudinit|length > 0
+    - cloudinit.data_source_path is defined
+    - cloudinit.local_hostname is defined
+    - cloudinit.instance_id is defined
+    - cloudinit.users is defined and cloudinit.users|length > 0
+
+- name: "Create configuration"
+  ansible.builtin.include_tasks: configure.yaml
+  loop:
+  - user-data
+  - meta-data
+  - vendor-data

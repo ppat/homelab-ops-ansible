@@ -1,0 +1,67 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  vars:
+    generated_fstab: "/mnt/fs.root/etc/fstab"
+    expected_mounts:
+      "/boot":
+        src: /dev/loop3p1
+        type: vfat
+      "/":
+        src: /dev/loop3p2
+        type: btrfs
+      "/bind_mnt":
+        src: /dev/loop3p2
+        type: btrfs
+      "/bind_mnt/target":
+        src: /srv/source
+        type: none
+      "/srv":
+        src: /dev/loop3p3
+        type: ext4
+  tasks:
+  - name: Stat for generated fstab
+    ansible.builtin.stat:
+      path: "{{ generated_fstab }}"
+    register: fstab_stat
+
+  - name: Assert that fstab exists at destination
+    ansible.builtin.assert:
+      that:
+      - "{{ fstab_stat.stat.exists }}"
+      fail_msg: "{{ generated_fstab }} does NOT exist at expected location"
+      success_msg: "{{ generated_fstab }} has been generated"
+
+  - name: "Read generated fstab"
+    ansible.builtin.slurp:
+      src: "{{ generated_fstab }}"
+    register: fstab_generated
+
+  - name: "Display generated fstab"
+    ansible.builtin.debug:
+      msg: "{{ fstab_generated['content'] | b64decode }}"
+
+  - name: "Assert that source devices configured in fstab match expected values"
+    ansible.builtin.assert:
+      that:
+      - expected_mounts[mountpoint].src == actual_source
+      fail_msg: "{{ mountpoint }} filesystem type: Actual ({{ actual_source }}) does NOT match expected ({{ expected_mounts[mountpoint].src }})"
+      success_msg: "{{ mountpoint }} filesystem type: Actual ({{ actual_source }}) matches expected ({{ expected_mounts[mountpoint].src }})"
+    vars:
+      actual_source: "{{ item.split()[0] }}"
+      mountpoint: "{{ item.split()[1] }}"
+    when: item|length > 0 and mountpoint != "none"
+    loop: "{{ fstab_generated['content'] | b64decode | split('\n') }}"
+
+  - name: "Assert that filesystem types configured in fstab match expected values"
+    ansible.builtin.assert:
+      that:
+      - expected_mounts[mountpoint].type == actual_fstype
+      fail_msg: "{{ mountpoint }} filesystem type: Actual ({{ actual_fstype }}) does NOT match expected ({{ expected_mounts[mountpoint].type }})"
+      success_msg: "{{ mountpoint }} filesystem type: Actual ({{ actual_fstype }}) matches expected ({{ expected_mounts[mountpoint].type }})"
+    vars:
+      actual_fstype: "{{ item.split()[2] }}"
+      mountpoint: "{{ item.split()[1] }}"
+    when: item|length > 0 and mountpoint != "none"
+    loop: "{{ fstab_generated['content'] | b64decode | split('\n') }}"

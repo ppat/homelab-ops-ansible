@@ -1,0 +1,14 @@
+---
+- name: Prepare
+  hosts: all
+  gather_facts: false
+  vars:
+    cloudinit_seed_path: "/mnt/cloudinit"
+  tasks:
+  - name: "Create needed directories"
+    ansible.builtin.file:
+      path: "{{ cloudinit_seed_path }}"
+      owner: root
+      group: root
+      mode: '0750'
+      state: directory

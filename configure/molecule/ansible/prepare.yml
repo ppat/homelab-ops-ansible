@@ -1,0 +1,15 @@
+---
+- name: Prepare
+  hosts: all
+  gather_facts: false
+  tasks:
+  - name: "Remove ansible binaries from molecule docker image"
+    ansible.builtin.shell: "rm /usr/local/bin/ansible*"
+
+  - name: "Install pipx"
+    ansible.builtin.apt:
+      name: pipx
+      state: present
+      install_recommends: false
+      update_cache: true
+      cache_valid_time: 3600

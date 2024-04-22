@@ -1,0 +1,81 @@
+---
+- name: "Check for mandatory variables definitions"
+  assert:
+    that:
+    - system_root_mount_path is defined
+
+- name: "Create temp location for fstab generator"
+  ansible.builtin.tempfile:
+    state: directory
+  register: fstab_generator_dir
+  changed_when: false
+
+- name: "Fetch fstab generator"
+  ansible.builtin.get_url:
+    url: "http://mirrors.kernel.org/ubuntu/pool/universe/a/arch-install-scripts/arch-install-scripts_24-1_all.deb"
+    dest: "{{ fstab_generator_dir.path }}/arch-install-scripts.deb"
+    owner: root
+    group: root
+    mode: '0644'
+  changed_when: false
+
+# we don't install arch-install-scripts package (or the genfstab script from it) permanently, we just use it
+# to generate the fstab
+- name: "Extract fstab generator"
+  ansible.builtin.shell: |
+    #!/bin/bash
+    set -eo pipefail
+    ar -x arch-install-scripts.deb
+    tar -axvf data.tar.zst
+    chmod 755 {{ fstab_generator_dir.path }}/usr/bin/genfstab
+  args:
+    chdir: "{{ fstab_generator_dir.path }}"
+    executable: /bin/bash
+  changed_when: false
+
+- name: "Generate fstab from mounted filesystems"
+  ansible.builtin.shell: |
+    #!/bin/bash
+    set -eo pipefail
+    export PATH=$PATH:{{ fstab_generator_dir.path }}/usr/bin
+    export FSTAB_FILE={{ fstab_generator_dir.path }}/fstab.generated
+    export TAG={{ source_partition_identifier | upper }}
+    genfstab -t $TAG -f {{ system_root_mount_path }} {{ system_root_mount_path }} > $FSTAB_FILE
+  args:
+    executable: /bin/bash
+  become: true
+  changed_when: false
+
+- name: "Remove system root path prefix for mounts"
+  ansible.builtin.replace:
+    path: "{{ fstab_generator_dir.path }}/fstab.generated"
+    regexp: "^{{ system_root_mount_path.rstrip('/') }}(.+)$"
+    replace: '\1'
+  changed_when: false
+
+- name: "Format fstab for readability"
+  ansible.builtin.shell: |
+    #!/bin/bash
+    set -eo pipefail
+    export FSTAB_GENERATED={{ fstab_generator_dir.path }}/fstab.generated
+    export FSTAB_FORMATTED={{ fstab_generator_dir.path }}/fstab.formatted
+    cat $FSTAB_GENERATED | grep -v '^#' | column -t > $FSTAB_FORMATTED
+  args:
+    executable: /bin/bash
+  changed_when: false
+
+- name: "Replace current fstab w/ generated fstab file"
+  ansible.builtin.copy:
+    src: "{{ fstab_generator_dir.path }}/fstab.formatted"
+    dest: "{{ system_root_mount_path }}/etc/fstab"
+    owner: root
+    group: root
+    mode: "644"
+    remote_src: true
+  become: true
+
+- name: "Deleted temp file(s)"
+  ansible.builtin.file:
+    path: "{{ fstab_generator_dir.path }}"
+    state: absent
+  changed_when: false
