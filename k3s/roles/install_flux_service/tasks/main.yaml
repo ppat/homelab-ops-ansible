@@ -5,6 +5,7 @@
     - flux is defined and flux|length > 0
     - flux.version is defined
     - flux.kubeconfig_location is defined
+    - kustomize.version is defined
 
 - name: "Check for flux initialization"
   ansible.builtin.stat:

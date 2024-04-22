@@ -39,12 +39,19 @@
     --private-key-file {{ git_repository.private_ssh_key }}
     --kubeconfig {{ kubeconfig_location }}
 
+- name: "Show env"
+  when: bootstrap_flux_git_secret.resources|length == 0
+  ansible.builtin.shell: >
+    env | sort
+    echo
+    echo "${FLUX_GIT_REF:=FOOD}" | /usr/local/bin/envsubst
+
 - name: "Configure flux with git repository as a source"
   when: bootstrap_flux_git_secret.resources|length == 0
   ansible.builtin.shell: |
     #!/bin/bash
     set -eo pipefail
-    kustomize build {{ git_repository.flux_source_root }}/ | envsubst > /tmp/flux_root.yaml
+    kustomize build {{ git_repository.flux_source_root }}/ | /usr/local/bin/envsubst > /tmp/flux_root.yaml
     echo
     cat /tmp/flux_root.yaml
     echo

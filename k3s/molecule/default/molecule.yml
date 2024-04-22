@@ -14,13 +14,13 @@ platforms:
   docker_networks:
   - name: k3s-cluster
   env:
-    SELF_GIT_REF: $repo_git_ref
+    FLUX_GIT_REF: $repo_git_ref
   networks:
   - name: k3s-cluster
   volumes:
   - /tmp/bootstrap:/tmp/bootstrap
   - ${MOLECULE_SCENARIO_DIRECTORY}/flux-root:/tmp/flux-root
-  - ~/go/bin/envsubst:/usr/bin/envsubst
+  - ~/go/bin/envsubst:/usr/local/bin/envsubst
   command: /usr/sbin/init
   runtime: sysbox-runc
   user: root
@@ -33,12 +33,12 @@ platforms:
   docker_networks:
   - name: k3s-cluster
   env:
-    SELF_GIT_REF: $repo_git_ref
+    FLUX_GIT_REF: $repo_git_ref
   networks:
   - name: k3s-cluster
   volumes:
   - /tmp/bootstrap:/tmp/bootstrap
-  - ~/go/bin/envsubst:/usr/bin/envsubst
+  - ~/go/bin/envsubst:/usr/local/bin/envsubst
   command: /usr/sbin/init
   runtime: sysbox-runc
   user: root
