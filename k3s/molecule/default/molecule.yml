@@ -17,7 +17,7 @@ platforms:
   - name: k3s-cluster
   volumes:
   - /tmp/bootstrap:/tmp/bootstrap
-  - ${MOLECULE_SCENARIO_DIRECTORY}/flux-root:/tmp/flux-root
+  - ${MOLECULE_SCENARIO_DIRECTORY}/flux-gitrepo:/tmp/flux-gitrepo
   - ~/go/bin/envsubst:/usr/local/bin/envsubst
   command: /usr/sbin/init
   runtime: sysbox-runc

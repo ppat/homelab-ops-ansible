@@ -44,7 +44,7 @@
   ansible.builtin.shell: |
     #!/bin/bash
     set -eo pipefail
-    export FLUX_GIT_BRANCH="{{ repo_branch | default('') }}"
+    export FLUX_GIT_BRANCH="{{ git_repository.branch | default('') }}"
     kustomize build {{ git_repository.flux_source_root }}/ | envsubst > /tmp/flux_build.yaml
     kubectl apply --kubeconfig {{ kubeconfig_location }} --server-side -f /tmp/flux_build.yaml
   args:

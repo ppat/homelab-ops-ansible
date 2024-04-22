@@ -44,4 +44,5 @@
       git_repository:
         url: ssh://git@github.com/ppat/homelab-ops-ansible.git
         private_ssh_key: "/tmp/bootstrap/git_ssh_key"
-        flux_source_root: /tmp/flux-root
+        branch: "{{ repo_branch }}"
+        flux_source_root: /tmp/flux-gitrepo
