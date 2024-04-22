@@ -47,4 +47,6 @@
     flux:  # noqa: var-naming[no-role-prefix]
       version: "{{ flux_version }}"
       kubeconfig_location: "{{ rendered_configuration.kubeconfig | default(kubeconfig_default_location) }}"
+    kustomize:  # noqa: var-naming[no-role-prefix]
+      version: "{{ kustomize_version }}"
   when: node_type == 'server'

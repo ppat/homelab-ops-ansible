@@ -41,10 +41,8 @@
 
 - name: "Configure flux with git repository as a source"
   when: bootstrap_flux_git_secret.resources|length == 0
-  ansible.builtin.command: >
-    kubectl apply
-    --kubeconfig {{ kubeconfig_location }}
-    --kustomize {{ git_repository.flux_source_root }}/
+  ansible.builtin.shell: >
+    kustomize build {{ git_repository.flux_source_root }}/ | envsubst | kubectl apply --kubeconfig {{ kubeconfig_location }} -f -
   register: bootstrap_flux_flux_root_status
   changed_when: bootstrap_flux_flux_root_status.stdout_lines | community.general.json_query("[?ends_with(@, 'unchanged')]") | length != 2
 

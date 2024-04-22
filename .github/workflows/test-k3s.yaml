@@ -48,6 +48,11 @@ jobs:
         cache-dependency-path: |
           requirements.txt
 
+    - name: Set up go
+      uses: actions/setup-go@v5
+      with:
+        go-version: 'stable'
+
     - name: Install python requirements
       run: |
         python -m pip install -r requirements.txt
@@ -58,6 +63,17 @@ jobs:
 
         # install dependent homelab-ops packages from same branch (overriding version specified in galaxy.yml of homelab_ops.k3s collection)
         ansible-galaxy collection install ./packages/
+
+    - name: Build envsubst binary
+      run: |
+        go install github.com/drone/envsubst/cmd/envsubst@latest
+        echo "~/go/bin:"
+        ls -al ~/go/bin
+        echo
+        echo "go env:"
+        env | grep ^GO
+        echo
+        exit 1
 
     - name: Install sysbox
       run: |
@@ -94,20 +110,23 @@ jobs:
       env:
         LOG_VERBOSITY: ${{ github.event.inputs.log_verbosity || env.non_workflow_dispatch_log_verbosity }}
 
-    - name: Detect latest stable versions
+    - name: Create molecule vars file
       run: |
         set -eo pipefail
 
+        echo "Detecting latest stable versions..."
         export K3S_VERSION="$(curl -fsSL https://raw.githubusercontent.com/k3s-io/k3s/master/channel.yaml | yq '.channels[] | select(.name == "stable") | .latest' | cut -d'v' -f2)"
         export FLUX_VERSION="$(curl -fsSL https://api.github.com/repos/fluxcd/flux2/releases/latest | jq -r '.tag_name' | cut -d'v' -f2)"
 
         cat > $MOLECULE_VARS_FILE << EOF
         k3s_version: $K3S_VERSION
         flux_version: $FLUX_VERSION
+        repo_git_ref: $SELF_GIT_REF
         EOF
       shell: bash
       env:
         MOLECULE_VARS_FILE: ${{ env.molecule_vars_file }}
+        SELF_GIT_REF: ${{ github.ref }}
 
     - name: Generate sample bootstrap config
       run: |

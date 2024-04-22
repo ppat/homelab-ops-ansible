@@ -42,13 +42,15 @@ required_api:
 - version: v1
   kind: Service
 # ---------- flux api's ----------
-- version: helm.toolkit.fluxcd.io/v2beta1
+- version: helm.toolkit.fluxcd.io/v2beta2
   kind: HelmRelease
 - version: kustomize.toolkit.fluxcd.io/v1
   kind: Kustomization
-- version: notification.toolkit.fluxcd.io/v1beta2
+- version: notification.toolkit.fluxcd.io/v1
+  kind: Receiver
+- version: notification.toolkit.fluxcd.io/v1beta3
   kind: Provider
-- version: notification.toolkit.fluxcd.io/v1beta2
+- version: notification.toolkit.fluxcd.io/v1beta3
   kind: Alert
 - version: source.toolkit.fluxcd.io/v1
   kind: GitRepository
