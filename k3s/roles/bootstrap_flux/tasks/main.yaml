@@ -41,7 +41,7 @@
 
 - name: "Show env"
   when: bootstrap_flux_git_secret.resources|length == 0
-  ansible.builtin.shell: >
+  ansible.builtin.shell: |
     #!/bin/bash
     set -eo pipefail
     env | sort
