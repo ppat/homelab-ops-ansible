@@ -42,6 +42,6 @@
     vars:
       kubeconfig_location: /etc/rancher/k3s/k3s.yaml
       git_repository:
-        url: git@github.com:ppat/homelab-ops-ansible.git
+        url: ssh://git@github.com:ppat/homelab-ops-ansible.git
         private_ssh_key: "/tmp/bootstrap/git_ssh_key"
         flux_source_root: /tmp/flux-root
