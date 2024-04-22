@@ -116,12 +116,12 @@ jobs:
         k3s_version: $K3S_VERSION
         flux_version: $FLUX_VERSION
         kustomize_version: $KUSTOMIZE_VERSION
-        repo_git_ref: $SELF_GIT_REF
+        repo_git_sha: $SELF_GIT_REF
         EOF
       shell: bash
       env:
         MOLECULE_VARS_FILE: ${{ env.molecule_vars_file }}
-        SELF_GIT_REF: ${{ github.ref }}
+        SELF_GIT_REF: ${{ github.sha }}
 
     - name: Generate sample bootstrap config
       run: |
