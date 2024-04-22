@@ -1,0 +1,22 @@
+---
+namespace: homelab_ops
+name: configure
+version: 0.0.0
+readme: README.md
+authors:
+- homelab-ops@homelab-ops.com
+
+description: ""
+license:
+- AGPL-3.0-only
+tags: [homelab, configure, fstab, cloud-init, ubuntu]
+dependencies:
+  community.general: ">8.1.0"
+
+repository: https://github.com/ppat/homelab-ops-ansible
+documentation: https://github.com/ppat/homelab-ops-ansible/blob/main/configure/README.md
+homepage: https://github.com/ppat/homelab-ops-ansible/blob/main/configure/README.md
+issues: https://github.com/ppat/homelab-ops-ansible/issues
+
+build_ignore:
+- molecule

@@ -1,0 +1,3 @@
+---
+pipx_home: /opt/pipx
+pipx_bin_dir: /usr/local/bin

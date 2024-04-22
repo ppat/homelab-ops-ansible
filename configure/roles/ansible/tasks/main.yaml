@@ -1,0 +1,29 @@
+---
+- name: "Install ansible-core"
+  community.general.pipx:
+    name: ansible-core
+    source: ansible-core=={{ ansible_config.ansible_core_version | mandatory }}
+    state: present
+  environment:
+    PIPX_HOME: "{{ pipx_home }}"
+    PIPX_BIN_DIR: "{{ pipx_bin_dir }}"
+  become: true
+
+- name: "Inject python dependencies for ansible-core pipx package"
+  community.general.pipx:
+    name: ansible-core
+    inject_packages: ["{{ item.name }}=={{ item.version }}"]
+    install_apps: "{{ item.params | default([]) is ansible.builtin.contains('include-apps') }}"
+    state: inject
+  loop: "{{ ansible_config.dependencies | default([]) }}"
+  environment:
+    PIPX_HOME: "{{ pipx_home }}"
+    PIPX_BIN_DIR: "{{ pipx_bin_dir }}"
+  become: true
+
+- name: "Install ansible collections"
+  community.general.ansible_galaxy_install:
+    type: collection
+    requirements_file: "{{ ansible_config.collections_requirements_file }}"
+    dest: "/usr/share/ansible/collections"
+  become: true

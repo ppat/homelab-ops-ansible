@@ -1,0 +1,12 @@
+---
+- name: Converge
+  hosts: all
+  gather_facts: false
+  vars:
+    filesystem_root: "/mnt/fs.root"
+  tasks:
+  - name: "Configure fstab"
+    ansible.builtin.include_role:
+      name: homelab_ops.configure.fstab
+    vars:
+      system_root_mount_path: "{{ filesystem_root }}"
