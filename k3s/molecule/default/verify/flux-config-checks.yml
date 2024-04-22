@@ -38,14 +38,6 @@
   debug:
     msg: "{{ flux_config_map }}"
 
-- name: "flux-config-checks | Show flux-system-git-source"
-  debug:
-    msg: "{{ item.item }}"
-  loop: "{{ flux_config_state.results }}"
-  loop_control:
-    label: "{{ item.item.name }}"
-  when: item.item.name == "flux-system-git-source"
-
 - name: "flux-config-checks | Assert that required resources are ready"
   ansible.builtin.assert:
     that: "{{ not flux_config_map[item].status or 'Ready=True' in flux_config_map[item].status or 'Available=True' in flux_config_map[item].status }}"
