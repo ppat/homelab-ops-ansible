@@ -116,15 +116,15 @@ jobs:
         echo "Setting branch..."
         env | sort
         echo
-        if [[ "$GITHUB_EVENT_NAME" == "pull_request" ]]; then
+        if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
           echo 1
-          BRANCH="$GITHUB_HEAD_REF"
+          BRANCH="${GITHUB_HEAD_REF}"
           echo 2
         else
           echo 3
-          BRANCH="$GITHUB_REF"
+          BRANCH="${GITHUB_REF}"
           echo 4
-
+        fi
         echo 5
 
         cat > $MOLECULE_VARS_FILE << EOF
@@ -136,9 +136,6 @@ jobs:
       shell: bash
       env:
         MOLECULE_VARS_FILE: ${{ env.molecule_vars_file }}
-        GITHUB_EVENT_NAME: ${{ github.event_name }}
-        GITHUB_HEAD_REF: ${{ github.head_ref }}
-        GITHUB_REF: ${{ github.ref }}
 
     - name: Generate sample bootstrap config
       run: |
