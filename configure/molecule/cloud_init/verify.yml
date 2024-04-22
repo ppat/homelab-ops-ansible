@@ -1,0 +1,35 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  vars:
+    cloudinit_seed_path: "/mnt/cloudinit"
+    cloud_init_files:
+    - "{{ cloudinit_seed_path }}/user-data"
+    - "{{ cloudinit_seed_path }}/meta-data"
+    - "{{ cloudinit_seed_path }}/vendor-data"
+  tasks:
+  - name: Stat for generated cloud_init files
+    ansible.builtin.stat:
+      path: "{{ item }}"
+    loop: "{{ cloud_init_files }}"
+    register: cloudinit_stat
+
+  - name: Assert that cloudinit exists at destination
+    ansible.builtin.assert:
+      that:
+      - "{{ item.stat.exists }}"
+      fail_msg: "{{ item.item }} does NOT exist at expected location"
+      success_msg: "{{ item.item }} has been generated"
+    loop: "{{ cloudinit_stat.results }}"
+
+  - name: "Read generated cloudinit files"
+    ansible.builtin.slurp:
+      src: "{{ item }}"
+    register: cloudinit_generated
+    loop: "{{ cloud_init_files }}"
+
+  - name: "Display generated cloud init file"
+    ansible.builtin.debug:
+      msg: "{{ item['content'] | b64decode }}"
+    loop: "{{ cloudinit_generated.results }}"

@@ -1,0 +1,109 @@
+---
+- name: Prepare
+  hosts: all
+  gather_facts: true
+  vars:
+    filesystem_root: "/mnt/fs.root"
+    block_device_file: /tmp/test_block_device.img
+  tasks:
+  - name: Install prerequisite apt packages
+    ansible.builtin.apt:
+      name:
+      - dosfstools
+      - bsdextrautils
+      - btrfs-progs
+      - e2fsprogs
+      - parted
+      - zstd
+      state: present
+      update_cache: true
+      cache_valid_time: 3600
+
+  - name: Stat block device image
+    ansible.builtin.stat:
+      path: "{{ block_device_file }}"
+    register: block_device_file_stat_register
+
+  - name: Select next available loopback device
+    ansible.builtin.command: losetup -f
+    become: true
+    register: loopback_device_select_register
+    when: not block_device_file_stat_register.stat.exists
+
+  - name: Extract selected loopback device
+    ansible.builtin.set_fact:
+      loopback_device: "{{ loopback_device_select_register.stdout }}"
+    when: not block_device_file_stat_register.stat.exists
+
+  - name: Create file to back the test block device
+    ansible.builtin.command: "dd if=/dev/zero of={{ block_device_file }} bs=1M count=100"
+    become: true
+    when: not block_device_file_stat_register.stat.exists
+
+  - name: Create loopback device for the test block device
+    ansible.builtin.command: "losetup -P {{ loopback_device | mandatory }} {{ block_device_file }}"
+    become: true
+    when: not block_device_file_stat_register.stat.exists
+
+  - name: Create partition on block device
+    ansible.builtin.include_role:
+      name: homelab_ops.block_device.partition
+    vars:
+      disk: "{{ loopback_device | mandatory }}"
+      size_unit: MiB
+      partition_table_type: gpt
+      partitions:
+      - name: boot
+        number: 1
+        size: 10
+        flags: ['boot', 'esp']
+      - name: root
+        number: 2
+        size: 70
+      - name: data
+        number: 3
+        size: ~
+
+  - name: Create filesystems on block device
+    ansible.builtin.include_role:
+      name: homelab_ops.block_device.filesystem
+    vars:
+      disk: "{{ loopback_device | mandatory }}"
+      partitions:
+      - name: boot
+        number: 1
+        filesystem_type: vfat
+        mount_path: "{{ filesystem_root }}/boot"
+      - name: root
+        number: 2
+        filesystem_type: btrfs
+        mount_path: "{{ filesystem_root }}"
+        filesystem_options:
+          subvolumes:
+          - name: bind_mnt
+            path: bind_mnt
+            copy_on_write: false
+      - name: data
+        number: 3
+        filesystem_type: ext4
+        mount_path: "{{ filesystem_root }}/srv"
+
+  - name: "Create needed directories"
+    ansible.builtin.file:
+      path: "{{ item }}"
+      owner: root
+      group: root
+      mode: '0750'
+      state: directory
+    loop:
+    - "{{ filesystem_root }}/etc"
+    - "{{ filesystem_root }}/srv/source"
+
+  - name: "Bind-mount one directory into another within filesystem root to test that genfstab handles bind mounts"
+    ansible.posix.mount:
+      path: "{{ filesystem_root }}/bind_mnt/target"
+      src: "{{ filesystem_root }}/srv/source"
+      fstab: /tmp/fstab.no_etc_update
+      opts: bind
+      state: mounted
+      fstype: none

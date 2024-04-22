@@ -1,0 +1,44 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  vars:
+    pipx_home: /opt/pipx
+    pipx_bin_dir: /usr/local/bin
+    ansible_home: /opt/ansible
+  tasks:
+  - name: Read pipx packages
+    community.general.pipx_info:
+      include_injected: true
+    environment:
+      PIPX_HOME: "{{ pipx_home }}"
+      PIPX_BIN_DIR: "{{ pipx_bin_dir }}"
+    register: pipx_output
+
+  - name: Show pipx packages
+    ansible.builtin.debug:
+      msg: "{{ pipx_output.application }}"
+
+  - name: Read ansible collections
+    ansible.builtin.command: "ansible-galaxy collection list --format json"
+    register: collections_output
+
+  - name: Set installed ansible collections
+    ansible.builtin.set_fact:
+      installed_collections: "{{ collections_output.stdout | from_json }}"
+      expected_collections: ["ansible.posix", "community.general"]
+
+  - name: Show installed ansible collections
+    ansible.builtin.debug:
+      msg: "{{ installed_collections }}"
+
+  - name: Assert that actual filesystem type matches expected filesystem type
+    ansible.builtin.assert:
+      that: item in actual_collections_list
+      fail_msg: "expected collection {{ item }} is not found among actual ({{ actual_collections_list }})"
+      success_msg: "expected collection {{ item }} found among actual ({{ actual_collections_list }})"
+    vars:
+      actual_collections_list: "{{ installed_collections['/usr/share/ansible/collections/ansible_collections'] }}"
+    loop: "{{ expected_collections }}"
+    loop_control:
+      label: "{{ item }}"

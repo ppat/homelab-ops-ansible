@@ -1,0 +1,83 @@
+---
+name: "test collection: configure"
+
+# yamllint disable-line rule:truthy
+on:
+  pull_request:
+    paths:
+    - 'configure/**'
+    - 'requirements.txt'
+    - '.github/workflows/test-configure.yaml'
+  workflow_dispatch:
+    inputs:
+      log_verbosity:
+        description: 'Log Verbosity'
+        required: true
+        default: 2
+        type: choice
+        options:
+        - '0'
+        - '1'
+        - '2'
+        - '3'
+        - '4'
+  schedule:
+  - cron: '0 10 */30 * *'
+
+env:
+  non_workflow_dispatch_log_verbosity: 0
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+    - name: Checkout
+      uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+
+    - name: Set up python
+      uses: actions/setup-python@0a5c61591373683505ea898e09a3ea4f39ef2b9c # v5
+      with:
+        python-version: '3.11'
+        cache: 'pip'
+        cache-dependency-path: |
+          requirements.txt
+
+    - name: Install python requirements
+      run: |
+        python -m pip install -r requirements.txt
+
+    - name: Install ansible collections
+      run: |
+        ansible-galaxy collection install ./block_device/
+        ansible-galaxy collection install ./configure/
+
+    - name: Determine molecule verbosity
+      # yamllint disable-line rule:indentation
+      run: |
+        set -eo pipefail
+
+        MOLECULE_PARAMS="--no-debug"
+        if [[ $LOG_VERBOSITY -gt 2 ]]; then
+          MOLECULE_PARAMS="--debug"
+        fi
+        if [[ $LOG_VERBOSITY -gt 0 ]]; then
+          VERBOSE_FLAG=$(printf "v"'%.s' $(eval "echo {1.."$(($LOG_VERBOSITY))"}"))
+          MOLECULE_PARAMS="$MOLECULE_PARAMS -$VERBOSE_FLAG"
+        fi
+        echo "Setting molecule params to [$MOLECULE_PARAMS]..."
+        echo "MOLECULE_PARAMS=$MOLECULE_PARAMS" >> $GITHUB_ENV
+      shell: bash
+      env:
+        LOG_VERBOSITY: ${{ github.event.inputs.log_verbosity || env.non_workflow_dispatch_log_verbosity }}
+
+    - name: Molecule Test
+      run: molecule $MOLECULE_PARAMS test --all --no-parallel
+      working-directory: ./configure
+      env:
+        ANSIBLE_FORCE_COLOR: 1
+        PY_COLORS: 1

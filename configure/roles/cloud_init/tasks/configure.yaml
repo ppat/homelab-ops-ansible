@@ -1,0 +1,15 @@
+---
+- name: "configure | {{ item }} | check if exists"
+  ansible.builtin.stat:
+    path: "{{ cloudinit.data_source_path }}/{{ item }}"
+  register: cloud_init_item_register
+
+- name: "configure | {{ item }}"
+  ansible.builtin.template:
+    src: "{{ item }}.j2"
+    dest: "{{ cloudinit.data_source_path }}/{{ item }}"
+    owner: root
+    group: root
+    mode: "644"
+  when: not cloud_init_item_register.stat.exists
+  become: true
