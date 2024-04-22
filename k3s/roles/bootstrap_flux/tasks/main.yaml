@@ -3,7 +3,7 @@
   assert:
     that:
     - config is defined and config|length > 0
-    - config.flux is defined config.flux|length > 0
+    - config.flux is defined and config.flux|length > 0
     - config.flux.bootstrap is defined
     - git_repository is defined
     - git_repository.url is defined and git_repository.url is url(schemes=['ssh'])

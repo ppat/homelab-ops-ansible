@@ -62,9 +62,9 @@ provisioner:
   inventory:
     group_vars:
       all:
-        k3s_version: $k3s_version
-        flux_version: $flux_version
-        kustomize_version: $kustomize_version
+        k3s_version: "1.29.3+k3s1"
+        flux_version: "2.2.3"
+        kustomize_version: "5.4.1"
         repo_branch: $repo_branch
         config:
           bootstrap_secrets:

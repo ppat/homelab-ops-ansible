@@ -108,11 +108,6 @@ jobs:
       run: |
         set -eo pipefail
 
-        echo "Detecting latest stable versions..."
-        export K3S_VERSION="$(curl -fsSL https://raw.githubusercontent.com/k3s-io/k3s/master/channel.yaml | yq '.channels[] | select(.name == "stable") | .latest' | cut -d'v' -f2)"
-        export FLUX_VERSION="$(curl -fsSL https://api.github.com/repos/fluxcd/flux2/releases/latest | jq -r '.tag_name' | cut -d'v' -f2)"
-        export KUSTOMIZE_VERSION="5.4.1"
-
         echo "Setting branch..."
         if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
           BRANCH="${GITHUB_HEAD_REF}"
@@ -127,9 +122,6 @@ jobs:
         echo "... Done"
 
         cat > $MOLECULE_VARS_FILE << EOF
-        k3s_version: $K3S_VERSION
-        flux_version: $FLUX_VERSION
-        kustomize_version: $KUSTOMIZE_VERSION
         repo_branch: $BRANCH
         k3s_server_token: $SERVER_TOKEN
         k3s_agent_token: $AGENT_TOKEN
