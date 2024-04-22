@@ -52,7 +52,6 @@ jobs:
         echo ${{ github.ref_type }}
         echo
         echo ${{ github.sha }}
-        exit 1
 
     - name: Checkout
       uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
@@ -133,12 +132,12 @@ jobs:
         k3s_version: $K3S_VERSION
         flux_version: $FLUX_VERSION
         kustomize_version: $KUSTOMIZE_VERSION
-        repo_git_sha: $SELF_GIT_REF
+        repo_branch: $SELF_GIT_BRANCH
         EOF
       shell: bash
       env:
         MOLECULE_VARS_FILE: ${{ env.molecule_vars_file }}
-        SELF_GIT_REF: ${{ github.ref_name }}
+        SELF_GIT_BRANCH: ${{ github.event_name == "pull_request" && github.head_ref || github.ref }}
 
     - name: Generate sample bootstrap config
       run: |

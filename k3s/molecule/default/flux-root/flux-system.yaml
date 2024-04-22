@@ -7,7 +7,7 @@ metadata:
 spec:
   interval: 1m0s
   ref:
-    commit: ${FLUX_GIT_SHA}
+    branch: ${FLUX_GIT_BRANCH:=main}
   secretRef:
     name: flux-system-git-secret
   url: ssh://git@github.com/ppat/homelab-ops-ansible
