@@ -37,6 +37,23 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
+    - name: Show
+      run: |
+        echo ${{ github.event_name }}
+        echo
+        echo ${{ github.event }}
+        echo
+        echo ${{ github.head_ref }}
+        echo
+        echo ${{ github.ref }}
+        echo
+        echo ${{ github.ref_name }}
+        echo
+        echo ${{ github.ref_type }}
+        echo
+        echo ${{ github.sha }}
+        exit 1
+
     - name: Checkout
       uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
 
@@ -121,7 +138,7 @@ jobs:
       shell: bash
       env:
         MOLECULE_VARS_FILE: ${{ env.molecule_vars_file }}
-        SELF_GIT_REF: ${{ github.sha }}
+        SELF_GIT_REF: ${{ github.ref_name }}
 
     - name: Generate sample bootstrap config
       run: |
