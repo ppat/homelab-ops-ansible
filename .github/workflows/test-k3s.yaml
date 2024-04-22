@@ -120,6 +120,7 @@ jobs:
         LOG_VERBOSITY: ${{ github.event.inputs.log_verbosity || env.non_workflow_dispatch_log_verbosity }}
 
     - name: Create molecule vars file
+      # yamllint disable-line rule:indentation
       run: |
         set -eo pipefail
 
@@ -128,16 +129,24 @@ jobs:
         export FLUX_VERSION="$(curl -fsSL https://api.github.com/repos/fluxcd/flux2/releases/latest | jq -r '.tag_name' | cut -d'v' -f2)"
         export KUSTOMIZE_VERSION="5.4.1"
 
+        echo "Setting branch..."
+        if [[ "$GITHUB_EVENT_NAME" == "pull_request" ]]; then
+          BRANCH="$GITHUB_HEAD_REF"
+        else
+          BRANCH="$GITHUB_REF"
+
         cat > $MOLECULE_VARS_FILE << EOF
         k3s_version: $K3S_VERSION
         flux_version: $FLUX_VERSION
         kustomize_version: $KUSTOMIZE_VERSION
-        repo_branch: $SELF_GIT_BRANCH
+        repo_branch: $BRANCH
         EOF
       shell: bash
       env:
         MOLECULE_VARS_FILE: ${{ env.molecule_vars_file }}
-        SELF_GIT_BRANCH: ${{ github.event_name == "pull_request" && github.head_ref || github.ref }}
+        GITHUB_EVENT_NAME: ${{ github.event_name }}
+        GITHUB_HEAD_REF: ${{ github.head_ref }}
+        GITHUB_REF: ${{ github.ref }}
 
     - name: Generate sample bootstrap config
       run: |
