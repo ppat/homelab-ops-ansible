@@ -10,7 +10,7 @@ spec:
     branch: ${FLUX_GIT_BRANCH:=main}
   secretRef:
     name: flux-system-git-secret
-  url: ssh://git@github.com/ppat/homelab-ops-ansible
+  url: ssh://git@github.com/ppat/homelab-ops-ansible.git
   ignore: |
     # exclude all
     /*
