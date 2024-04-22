@@ -13,6 +13,8 @@ platforms:
   - 6443/tcp
   docker_networks:
   - name: k3s-cluster
+  env:
+    SELF_GIT_REF: $repo_git_ref
   networks:
   - name: k3s-cluster
   volumes:
@@ -30,6 +32,8 @@ platforms:
   - 6443/tcp
   docker_networks:
   - name: k3s-cluster
+  env:
+    SELF_GIT_REF: $repo_git_ref
   networks:
   - name: k3s-cluster
   volumes:
@@ -64,7 +68,6 @@ provisioner:
         k3s_version: $k3s_version
         flux_version: $flux_version
         kustomize_version: $kustomize_version
-        SELF_GIT_REF: $repo_git_ref
         config:
           cluster_bootstrap_secrets: "/tmp/bootstrap/cluster-bootstrap-secrets"
           flux_bootstrap_conf: "/tmp/bootstrap/flux-bootstrap-conf"
