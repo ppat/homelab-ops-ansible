@@ -122,8 +122,8 @@ jobs:
         echo "... to ${BRANCH}"
 
         echo "Generating k3s tokens..."
-        export SERVER_TOKEN="$(tr -dc 'A-Za-z0-9' < /dev/urandom | head -c 16)"
-        export AGENT_TOKEN="$(tr -dc 'A-Za-z0-9' < /dev/urandom | head -c 16)"
+        export SERVER_TOKEN="$(cat /dev/urandom | tr -dc A-Za-z0-9 | head -c 16)"
+        export AGENT_TOKEN="$(cat /dev/urandom | tr -dc A-Za-z0-9 | head -c 16)"
         echo "... Done"
 
         cat > $MOLECULE_VARS_FILE << EOF
