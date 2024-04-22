@@ -44,9 +44,10 @@
   ansible.builtin.shell: |
     #!/bin/bash
     set -eo pipefail
+    export FLUX_GIT_REF="{{ repo_git_ref | default('') }}"
     env | sort
     echo
-    echo "${FLUX_GIT_REF:=FOOD}" | /usr/local/bin/envsubst
+    echo "${FLUX_GIT_REF:=FOOD}" | envsubst
   args:
     executable: /bin/bash
   changed_when: false
@@ -56,7 +57,8 @@
   ansible.builtin.shell: |
     #!/bin/bash
     set -eo pipefail
-    kustomize build {{ git_repository.flux_source_root }}/ | /usr/local/bin/envsubst > /tmp/flux_root.yaml
+    export FLUX_GIT_REF="{{ repo_git_ref | default('') }}"
+    kustomize build {{ git_repository.flux_source_root }}/ | envsubst > /tmp/flux_root.yaml
     echo
     cat /tmp/flux_root.yaml
     echo
