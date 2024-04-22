@@ -136,6 +136,7 @@ jobs:
         set -eo pipefail
 
         # prepare ssh key needed for flux bootstrap
+        mkdir -p /tmp/bootstrap
         echo "${GIT_SSH_KEY}" | base64 -d | sudo tee /tmp/bootstrap/git_ssh_key > /dev/null
 
         molecule $MOLECULE_PARAMS --env-file $MOLECULE_VARS_FILE test --all --no-parallel
