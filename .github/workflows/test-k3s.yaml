@@ -67,13 +67,6 @@ jobs:
     - name: Build envsubst binary
       run: |
         go install github.com/drone/envsubst/cmd/envsubst@latest
-        echo "~/go/bin:"
-        ls -al ~/go/bin
-        echo
-        echo "go env:"
-        env | grep ^GO
-        echo
-        exit 1
 
     - name: Install sysbox
       run: |

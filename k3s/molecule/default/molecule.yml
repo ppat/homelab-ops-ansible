@@ -18,6 +18,7 @@ platforms:
   volumes:
   - /tmp/bootstrap:/tmp/bootstrap
   - ${MOLECULE_SCENARIO_DIRECTORY}/flux-root:/tmp/flux-root
+  - ~/go/bin/envsubst:/usr/bin/envsubst
   command: /usr/sbin/init
   runtime: sysbox-runc
   user: root
@@ -33,6 +34,7 @@ platforms:
   - name: k3s-cluster
   volumes:
   - /tmp/bootstrap:/tmp/bootstrap
+  - ~/go/bin/envsubst:/usr/bin/envsubst
   command: /usr/sbin/init
   runtime: sysbox-runc
   user: root
