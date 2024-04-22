@@ -131,14 +131,6 @@ jobs:
       env:
         MOLECULE_VARS_FILE: ${{ env.molecule_vars_file }}
 
-    - name: Generate sample bootstrap config
-      run: |
-        ansible-playbook homelab_ops.k3s.generate_test_config.yaml -c local -e target=localhost -e output_path=/tmp/bootstrap
-      working-directory: ./k3s
-      env:
-        ANSIBLE_FORCE_COLOR: 1
-        PY_COLORS: 1
-
     - name: Molecule Test
       run: |
         set -eo pipefail

@@ -17,6 +17,7 @@ platforms:
   - name: k3s-cluster
   volumes:
   - /tmp/bootstrap:/tmp/bootstrap
+  - ${MOLECULE_SCENARIO_DIRECTORY}/flux-bootstrap:/tmp/flux-bootstrap
   - ${MOLECULE_SCENARIO_DIRECTORY}/flux-gitrepo:/tmp/flux-gitrepo
   - ~/go/bin/envsubst:/usr/local/bin/envsubst
   command: /usr/sbin/init
@@ -66,13 +67,16 @@ provisioner:
         kustomize_version: $kustomize_version
         repo_branch: $repo_branch
         config:
-          cluster_bootstrap_secrets: "/tmp/bootstrap/cluster-bootstrap-secrets"
-          flux_bootstrap_conf: "/tmp/bootstrap/flux-bootstrap-conf"
-          flux_bootstrap_secrets: "/tmp/bootstrap/flux-bootstrap-secrets"
-        disabled_components: [local-storage, servicelb, traefik]
-        templated_configuration:
-          tls-san: "{% raw %}kubernetes-api.{{ cluster_bootstrap_secrets['DOMAIN_NAME'] }}{% endraw %}"
-          flannel-backend: wireguard-native
+          bootstrap_secrets:
+            server_token: "{{ lookup('ansible.builtin.password', '/dev/null', chars=['ascii_lowercase', 'digits'], length=16) }}"
+            agent_token: "{{ lookup('ansible.builtin.password', '/dev/null', chars=['ascii_lowercase', 'digits'], length=16) }}"
+          flux:
+            bootstrap: "/tmp/flux-bootstrap"
+          k3s:
+            custom:
+              tls-san: "kubernetes-api.example.net"
+              flannel-backend: wireguard-native
+            disabled_components: [local-storage, servicelb, traefik]
 
 verifier:
   name: ansible

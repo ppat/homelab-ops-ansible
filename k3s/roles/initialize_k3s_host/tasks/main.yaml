@@ -4,22 +4,12 @@
     that:
     - k3s_version is defined
     - flux_version is defined
+    - kustomize_version is defined
     - node_type is defined and node_type in ['agent', 'server']
     - config is defined and config|length > 0
-    - config.cluster_bootstrap_secrets is defined and config.cluster_bootstrap_secrets is file
-
-- name: "Read cluster configuration"
-  ansible.builtin.import_tasks: load-config.yaml
-
-- name: "Render templated configuration"
-  ansible.builtin.set_fact:
-    rendered_configuration: "{{ rendered_configuration | default({}) | combine({item.key: rendered_value}) }}"
-  vars:
-    # render the template in item.value with variable expansion
-    rendered_value: "{{ item.value }}"
-  loop: "{{ templated_configuration | default({}) | dict2items }}"
-  loop_control:
-    label: "{{ item.key }}"
+    - config.bootstrap_secrets is defined and config.bootstrap_secrets|length > 0
+    - config.k3s.custom is defined and config.k3s.custom|length > 0
+    - config.k3s is defined and config.k3s|length > 0
 
 - name: "install k3s service"
   ansible.builtin.include_role:
@@ -33,12 +23,12 @@
         labels: []
         taints: "{{ (node_type == 'server') | ternary(['node-role.kubernetes.io/control-plane=true:NoSchedule'], []) }}"
       tokens:
-        server: "{{ cluster_bootstrap_secrets['K3S_SERVER_TOKEN'] | mandatory }}"
-        agent: "{{ cluster_bootstrap_secrets['K3S_AGENT_TOKEN'] | mandatory }}"
-      registry: "{{ private_registry | default({}) }}"
-      disabled_components: "{{ disabled_components | default([]) }}"
-      config: "{{ rendered_configuration | default({}) | dict2items }}"
-      kubeconfig_location: "{{ rendered_configuration.kubeconfig | default(kubeconfig_default_location) }}"
+        server: "{{ config.bootstrap_secrets.server_token | mandatory }}"
+        agent: "{{ config.bootstrap_secrets.agent_token | mandatory }}"
+      registry: "{{ config.k3s.private_registry | default({}) }}"
+      disabled_components: "{{ config.k3s.disabled_components | default([]) }}"
+      config: "{{ config.k3s.custom | default({}) | dict2items }}"
+      kubeconfig_location: "{{ config.k3s.custom.kubeconfig | default(kubeconfig_default_location) }}"
 
 - name: "install flux service"
   ansible.builtin.include_role:
@@ -46,7 +36,7 @@
   vars:
     flux:  # noqa: var-naming[no-role-prefix]
       version: "{{ flux_version }}"
-      kubeconfig_location: "{{ rendered_configuration.kubeconfig | default(kubeconfig_default_location) }}"
+      kubeconfig_location: "{{ config.k3s.custom.kubeconfig | default(kubeconfig_default_location) }}"
     kustomize:  # noqa: var-naming[no-role-prefix]
       version: "{{ kustomize_version }}"
   when: node_type == 'server'

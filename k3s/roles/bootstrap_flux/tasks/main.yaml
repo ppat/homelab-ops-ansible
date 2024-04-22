@@ -3,16 +3,13 @@
   assert:
     that:
     - config is defined and config|length > 0
-    - config.flux_bootstrap_conf is defined and config.flux_bootstrap_conf is file
-    - config.flux_bootstrap_secrets is defined and config.flux_bootstrap_secrets is file
+    - config.flux is defined config.flux|length > 0
+    - config.flux.bootstrap is defined
     - git_repository is defined
     - git_repository.url is defined and git_repository.url is url(schemes=['ssh'])
     - git_repository.private_ssh_key is defined
     - git_repository.flux_source_root is defined
     - kubeconfig_location is defined
-
-- name: "Prepare bootstrap settings files"
-  ansible.builtin.import_tasks: prepare.yaml
 
 - name: "Check if flux git secret exists"
   kubernetes.core.k8s_info:
@@ -27,7 +24,7 @@
   ansible.builtin.command: >
     kubectl apply
     --kubeconfig {{ kubeconfig_location }}
-    --kustomize {{ bootstrap_flux_tempdir.path }}/
+    --kustomize {{ config.flux.bootstrap }}/
   register: bootstrap_flux_config_status
   changed_when: bootstrap_flux_config_status.stdout_lines | community.general.json_query("[?ends_with(@, 'unchanged')]") | length != 2
 
@@ -51,11 +48,3 @@
     executable: /bin/bash
   register: bootstrap_flux_flux_root_status
   changed_when: bootstrap_flux_flux_root_status.stdout_lines | community.general.json_query("[?ends_with(@, 'unchanged')]") | length != 2
-
-- name: "Cleanup temp directories and files"
-  ansible.builtin.file:
-    path: "{{ item }}"
-    state: absent
-  loop:
-  - "{{ bootstrap_flux_tempdir.path }}"
-  changed_when: false
