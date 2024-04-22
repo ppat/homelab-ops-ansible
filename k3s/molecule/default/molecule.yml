@@ -68,8 +68,8 @@ provisioner:
         repo_branch: $repo_branch
         config:
           bootstrap_secrets:
-            server_token: "{{ lookup('ansible.builtin.password', '/dev/null', chars=['ascii_lowercase', 'digits'], length=16) }}"
-            agent_token: "{{ lookup('ansible.builtin.password', '/dev/null', chars=['ascii_lowercase', 'digits'], length=16) }}"
+            server_token: $k3s_server_token
+            agent_token: $k3s_agent_token
           flux:
             bootstrap: "/tmp/flux-bootstrap"
           k3s:

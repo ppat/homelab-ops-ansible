@@ -121,12 +121,21 @@ jobs:
         fi
         echo "... to ${BRANCH}"
 
+        echo "Generating k3s tokens..."
+        export SERVER_TOKEN="$(tr -dc 'A-Za-z0-9' < /dev/urandom | head -c 16)"
+        export AGENT_TOKEN="$(tr -dc 'A-Za-z0-9' < /dev/urandom | head -c 16)"
+        echo "... Done"
+
         cat > $MOLECULE_VARS_FILE << EOF
         k3s_version: $K3S_VERSION
         flux_version: $FLUX_VERSION
         kustomize_version: $KUSTOMIZE_VERSION
         repo_branch: $BRANCH
+        k3s_server_token: $SERVER_TOKEN
+        k3s_agent_token: $AGENT_TOKEN
         EOF
+
+        echo "Created vars file: $MOLECULE_VARS_FILE"
       shell: bash
       env:
         MOLECULE_VARS_FILE: ${{ env.molecule_vars_file }}
