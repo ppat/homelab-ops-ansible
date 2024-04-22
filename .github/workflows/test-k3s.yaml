@@ -110,10 +110,12 @@ jobs:
         echo "Detecting latest stable versions..."
         export K3S_VERSION="$(curl -fsSL https://raw.githubusercontent.com/k3s-io/k3s/master/channel.yaml | yq '.channels[] | select(.name == "stable") | .latest' | cut -d'v' -f2)"
         export FLUX_VERSION="$(curl -fsSL https://api.github.com/repos/fluxcd/flux2/releases/latest | jq -r '.tag_name' | cut -d'v' -f2)"
+        export KUSTOMIZE_VERSION="5.4.1"
 
         cat > $MOLECULE_VARS_FILE << EOF
         k3s_version: $K3S_VERSION
         flux_version: $FLUX_VERSION
+        kustomize_version: $KUSTOMIZE_VERSION
         repo_git_ref: $SELF_GIT_REF
         EOF
       shell: bash
