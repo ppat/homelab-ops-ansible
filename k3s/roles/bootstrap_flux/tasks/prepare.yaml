@@ -1,0 +1,31 @@
+---
+- name: "prepare | Create temp directory for flux bootstrap"
+  ansible.builtin.tempfile:
+    state: directory
+    suffix: -flux-bootstrap
+  register: bootstrap_flux_tempdir
+  changed_when: false
+
+- name: "prepare | Copy bootstrap setting file"
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "{{ bootstrap_flux_tempdir.path }}/{{ item | basename }}"
+    owner: root
+    group: root
+    mode: '0600'
+    remote_src: true
+  loop:
+  - "{{ config.flux_bootstrap_conf }}"
+  - "{{ config.flux_bootstrap_secrets }}"
+  loop_control:
+    label: "{{ item | basename }}"
+  changed_when: false
+
+- name: "prepare | Copy bootstrap settings kustomization"
+  ansible.builtin.template:
+    src: "kustomization.yaml.j2"
+    dest: "{{ bootstrap_flux_tempdir.path }}/kustomization.yaml"
+    owner: root
+    group: root
+    mode: '0600'
+  changed_when: false

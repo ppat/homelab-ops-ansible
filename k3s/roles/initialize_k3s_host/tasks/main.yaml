@@ -1,0 +1,50 @@
+---
+- name: "Check for mandatory variables definitions"
+  assert:
+    that:
+    - k3s_version is defined
+    - flux_version is defined
+    - node_type is defined and node_type in ['agent', 'server']
+    - config is defined and config|length > 0
+    - config.cluster_bootstrap_secrets is defined and config.cluster_bootstrap_secrets is file
+
+- name: "Read cluster configuration"
+  ansible.builtin.import_tasks: load-config.yaml
+
+- name: "Render templated configuration"
+  ansible.builtin.set_fact:
+    rendered_configuration: "{{ rendered_configuration | default({}) | combine({item.key: rendered_value}) }}"
+  vars:
+    # render the template in item.value with variable expansion
+    rendered_value: "{{ item.value }}"
+  loop: "{{ templated_configuration | default({}) | dict2items }}"
+  loop_control:
+    label: "{{ item.key }}"
+
+- name: "install k3s service"
+  ansible.builtin.include_role:
+    name: homelab_ops.k3s.install_k3s_service
+  vars:
+    k3s:  # noqa: var-naming[no-role-prefix]
+      version: "{{ k3s_version }}"
+      discovery_url: "{{ cluster_url | default('') }}"
+      node:
+        type: "{{ node_type }}"
+        labels: []
+        taints: "{{ (node_type == 'server') | ternary(['node-role.kubernetes.io/control-plane=true:NoSchedule'], []) }}"
+      tokens:
+        server: "{{ cluster_bootstrap_secrets['K3S_SERVER_TOKEN'] | mandatory }}"
+        agent: "{{ cluster_bootstrap_secrets['K3S_AGENT_TOKEN'] | mandatory }}"
+      registry: "{{ private_registry | default({}) }}"
+      disabled_components: "{{ disabled_components | default([]) }}"
+      config: "{{ rendered_configuration | default({}) | dict2items }}"
+      kubeconfig_location: "{{ rendered_configuration.kubeconfig | default(kubeconfig_default_location) }}"
+
+- name: "install flux service"
+  ansible.builtin.include_role:
+    name: homelab_ops.k3s.install_flux_service
+  vars:
+    flux:  # noqa: var-naming[no-role-prefix]
+      version: "{{ flux_version }}"
+      kubeconfig_location: "{{ rendered_configuration.kubeconfig | default(kubeconfig_default_location) }}"
+  when: node_type == 'server'

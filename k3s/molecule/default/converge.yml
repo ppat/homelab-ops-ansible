@@ -1,0 +1,47 @@
+---
+- name: create first cluster node
+  hosts: node1-server
+  become: true
+  gather_facts: true
+  tasks:
+  - name: install k3s as server
+    ansible.builtin.include_role:
+      name: homelab_ops.k3s.initialize_k3s_host
+    vars:
+      node_type: server
+      cluster_url: ~
+
+- name: create the remaining cluster nodes
+  hosts:
+  - node2-server
+  - node3-agent
+  become: true
+  gather_facts: true
+  collections:
+  - homelab_ops.k3s
+  - homelab_ops.packages
+  tasks:
+  - name: install k3s on node
+    ansible.builtin.include_role:
+      name: homelab_ops.k3s.initialize_k3s_host
+    vars:
+      node_type: "{{ inventory_hostname | split('-') | last }}"
+      cluster_url: https://node1-server:6443
+
+- name: bootstrap cluster with flux
+  hosts: node1-server
+  become: true
+  gather_facts: true
+  collections:
+  - homelab_ops.k3s
+  - homelab_ops.packages
+  tasks:
+  - name: bootstrap flux on cluster
+    ansible.builtin.include_role:
+      name: homelab_ops.k3s.bootstrap_flux
+    vars:
+      kubeconfig_location: /etc/rancher/k3s/k3s.yaml
+      git_repository:
+        url: git@github.com:ppat/homelab-ops-ansible.git
+        private_ssh_key: "/tmp/bootstrap/git_ssh_key"
+        flux_source_root: /tmp/flux-root

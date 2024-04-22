@@ -1,0 +1,14 @@
+---
+required_pods:
+- name: kube-dns
+  namespace: kube-system
+- name: metrics-server
+  namespace: kube-system
+- name: helm-controller
+  namespace: flux-system
+- name: kustomize-controller
+  namespace: flux-system
+- name: source-controller
+  namespace: flux-system
+- name: notification-controller
+  namespace: flux-system

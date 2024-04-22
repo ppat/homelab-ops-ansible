@@ -1,0 +1,4 @@
+---
+node_architecture: "{{ 'arm64' if ansible_architecture == 'aarch64' else 'amd64' }}"
+# yamllint disable-line rule:line-length
+flux_url: "https://github.com/fluxcd/flux2/releases/download/v{{ flux.version }}/flux_{{ flux.version }}_{{ ansible_system | lower }}_{{ node_architecture }}.tar.gz"

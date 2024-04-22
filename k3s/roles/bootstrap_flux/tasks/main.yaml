@@ -1,0 +1,57 @@
+---
+- name: "Check for mandatory variables definitions"
+  assert:
+    that:
+    - config is defined and config|length > 0
+    - config.flux_bootstrap_conf is defined and config.flux_bootstrap_conf is file
+    - config.flux_bootstrap_secrets is defined and config.flux_bootstrap_secrets is file
+    - git_repository is defined
+    - git_repository.url is defined and git_repository.url is url(schemes=['ssh'])
+    - git_repository.private_ssh_key is defined
+    - git_repository.flux_source_root is defined
+    - kubeconfig_location is defined
+
+- name: "Prepare bootstrap settings files"
+  ansible.builtin.import_tasks: prepare.yaml
+
+- name: "Check if flux git secret exists"
+  kubernetes.core.k8s_info:
+    kubeconfig: "{{ kubeconfig_location }}"
+    namespace: flux-system
+    kind: Secret
+    name: flux-system-git-secret
+  register: bootstrap_flux_git_secret
+
+- name: "Load configmaps + secrets needed for flux bootstrap"
+  when: bootstrap_flux_git_secret.resources|length == 0
+  ansible.builtin.command: >
+    kubectl apply
+    --kubeconfig {{ kubeconfig_location }}
+    --kustomize {{ bootstrap_flux_tempdir.path }}/
+  register: bootstrap_flux_config_status
+  changed_when: bootstrap_flux_config_status.stdout_lines | community.general.json_query("[?ends_with(@, 'unchanged')]") | length != 2
+
+- name: "Create secret with git ssh key for flux"
+  when: bootstrap_flux_git_secret.resources|length == 0
+  ansible.builtin.command: >
+    flux create secret git flux-system-git-secret
+    --url {{ git_repository.url }}
+    --private-key-file {{ git_repository.private_ssh_key }}
+    --kubeconfig {{ kubeconfig_location }}
+
+- name: "Configure flux with git repository as a source"
+  when: bootstrap_flux_git_secret.resources|length == 0
+  ansible.builtin.command: >
+    kubectl apply
+    --kubeconfig {{ kubeconfig_location }}
+    --kustomize {{ git_repository.flux_source_root }}/
+  register: bootstrap_flux_flux_root_status
+  changed_when: bootstrap_flux_flux_root_status.stdout_lines | community.general.json_query("[?ends_with(@, 'unchanged')]") | length != 2
+
+- name: "Cleanup temp directories and files"
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+  - "{{ bootstrap_flux_tempdir.path }}"
+  changed_when: false

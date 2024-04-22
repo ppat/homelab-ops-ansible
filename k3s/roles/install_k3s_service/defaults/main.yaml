@@ -1,0 +1,29 @@
+---
+verbose: 1
+
+# agent node-types support far fewer configuration options (see: https://docs.k3s.io/cli/agent)
+agent_config_fields: [
+  "debug",
+  # Data
+  "data-dir",
+  # Node
+  "node-name",
+  "with-node-id",
+  "protect-kernel-defaults",
+  "selinux",
+  "lb-server-port",
+  # Runtime
+  "container-runtime-endpoint",
+  "docker",
+  "pause-image",
+  "snapshotter",
+  # Networking
+  "node-ip",
+  "node-external-ip",
+  "resolv-conf",
+  "flannel-iface",
+  "flannel-conf",
+  "flannel-cni-conf",
+  # Experimental
+  "rootless"
+]

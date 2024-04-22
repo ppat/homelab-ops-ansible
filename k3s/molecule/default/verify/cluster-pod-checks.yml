@@ -1,0 +1,38 @@
+---
+# ----------------------------------------------------------------------------------------------------------
+# cluster pod checks
+# ----------------------------------------------------------------------------------------------------------
+- name: "cluster-pod-checks | Get cluster pods"
+  kubernetes.core.k8s_info:
+    kubeconfig: /etc/rancher/k3s/k3s.yaml
+    kind: Pod
+  register: cluster_pod_state
+
+- name: "cluster-pod-checks | Extract pod facts into list"
+  ansible.builtin.set_fact:
+    cluster_pod_list: "{{ cluster_pod_state | community.general.json_query(query) | flatten }}"
+  vars:
+    # yamllint disable-line rule:line-length
+    query: "resources[*].{created: metadata.creationTimestamp, name: metadata.name, namespace: metadata.namespace, labels: metadata.labels, status: status.conditions[*].join('=', [type,status]), tolerations: spec.tolerations[*].join(' / ', [key,operator])}"  # noqa: var-naming[no-role-prefix]
+
+- name: "cluster-pod-checks | Extract pod facts into map keyed by pod name"
+  ansible.builtin.set_fact:
+    cluster_pod_map: "{{ cluster_pod_map | default({}) | combine({ pod_name: item }) }}"
+  vars:
+    pod_name: "{{ item.namespace }}/{{ item.labels['app'] | default(item.labels['k8s-app']) }}"
+  loop: "{{ cluster_pod_list }}"
+  loop_control:
+    label: "{{ pod_name }}"
+
+- name: "cluster-pod-checks | Show pods"
+  ansible.builtin.debug:
+    msg: "{{ cluster_pod_map }}"
+
+- name: "cluster-pod-checks | Assert that required pods are ready"
+  ansible.builtin.assert:
+    that: "{{ 'Ready=True' in cluster_pod_map[pod_name].status }}"
+  vars:
+    pod_name: "{{ item.namespace }}/{{ item.name }}"
+  loop: "{{ required_pods }}"
+  loop_control:
+    label: "{{ pod_name }}"

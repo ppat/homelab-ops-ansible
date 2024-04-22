@@ -1,0 +1,44 @@
+---
+# ----------------------------------------------------------------------------------------------------------
+# flux configuration
+# ----------------------------------------------------------------------------------------------------------
+- name: "flux-config-checks | Fetch flux configuration from cluster"
+  kubernetes.core.k8s_info:
+    kubeconfig: /etc/rancher/k3s/k3s.yaml
+    namespace: "{{ item.namespace }}"
+    kind: "{{ item.kind }}"
+    name: "{{ item.name }}"
+  register: flux_config_state
+  loop:
+  - name: flux-system-git-secret
+    kind: Secret
+    namespace: flux-system
+  - name: flux-system-git-source
+    kind: GitRepository
+    namespace: flux-system
+  - name: flux-system-root
+    kind: Kustomization
+    namespace: flux-system
+  - name: test-deployment
+    kind: Deployment
+    namespace: default
+
+- name: "flux-config-checks | Extract flux config into map"
+  ansible.builtin.set_fact:
+    flux_config_map: "{{ flux_config_map | default({}) | combine({flux_resource_name: item | community.general.json_query(query) | flatten | first}) }}"
+  vars:
+    flux_resource_name: "{{ item.item.kind }}/{{ item.item.name }}"
+    # yamllint disable-line rule:line-length
+    query: "resources[*].{created: metadata.creationTimestamp, name: metadata.name, namespace: metadata.namespace, labels: metadata.labels, status: status.conditions[*].join('=', [type,status]), status_reason: status.conditions[*].join(' > ', [type,reason,message])}"  # noqa: var-naming[no-role-prefix]
+  loop: "{{ flux_config_state.results }}"
+  loop_control:
+    label: "{{ flux_resource_name }}"
+
+- name: "flux-config-checks | Show flux config"
+  debug:
+    msg: "{{ flux_config_map }}"
+
+- name: "flux-config-checks | Assert that required resources are ready"
+  ansible.builtin.assert:
+    that: "{{ not flux_config_map[item].status or 'Ready=True' in flux_config_map[item].status or 'Available=True' in flux_config_map[item].status }}"
+  loop: "{{ flux_config_map.keys() }}"

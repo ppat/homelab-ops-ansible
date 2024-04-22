@@ -1,0 +1,74 @@
+---
+dependency:
+  name: galaxy
+
+driver:
+  name: docker
+
+platforms:
+- name: "node1-server"
+  image: ${MOLECULE_IMAGE:-geerlingguy/docker-ubuntu2204-ansible:latest}
+  pre_build_image: true
+  exposed_ports:
+  - 6443/tcp
+  docker_networks:
+  - name: k3s-cluster
+  networks:
+  - name: k3s-cluster
+  volumes:
+  - /tmp/bootstrap:/tmp/bootstrap
+  - ${MOLECULE_SCENARIO_DIRECTORY}/flux-root:/tmp/flux-root
+  command: /usr/sbin/init
+  runtime: sysbox-runc
+  user: root
+
+- name: "node2-server"
+  image: ${MOLECULE_IMAGE:-geerlingguy/docker-ubuntu2204-ansible:latest}
+  pre_build_image: true
+  exposed_ports:
+  - 6443/tcp
+  docker_networks:
+  - name: k3s-cluster
+  networks:
+  - name: k3s-cluster
+  volumes:
+  - /tmp/bootstrap:/tmp/bootstrap
+  command: /usr/sbin/init
+  runtime: sysbox-runc
+  user: root
+
+- name: "node3-agent"
+  image: ${MOLECULE_IMAGE:-geerlingguy/docker-ubuntu2204-ansible:latest}
+  pre_build_image: true
+  exposed_ports:
+  - 6443/tcp
+  docker_networks:
+  - name: k3s-cluster
+  networks:
+  - name: k3s-cluster
+  volumes:
+  - /tmp/bootstrap:/tmp/bootstrap
+  command: /usr/sbin/init
+  runtime: sysbox-runc
+  user: root
+
+provisioner:
+  name: ansible
+  playbooks:
+    prepare: prepare.yml
+  inventory:
+    group_vars:
+      all:
+        k3s_version: $k3s_version
+        flux_version: $flux_version
+        config:
+          cluster_bootstrap_secrets: "/tmp/bootstrap/cluster-bootstrap-secrets"
+          flux_bootstrap_conf: "/tmp/bootstrap/flux-bootstrap-conf"
+          flux_bootstrap_secrets: "/tmp/bootstrap/flux-bootstrap-secrets"
+        disabled_components: [local-storage, servicelb, traefik]
+        templated_configuration:
+          tls-san: "{% raw %}kubernetes-api.{{ cluster_bootstrap_secrets['DOMAIN_NAME'] }}{% endraw %}"
+          flannel-backend: wireguard-native
+
+verifier:
+  name: ansible

@@ -1,0 +1,9 @@
+---
+mirrors:
+{% for mirror in k3s.registry.mirrors %}
+  {{ mirror.source }}:
+    endpoint:
+      - "{{ k3s.registry.endpoint }}"
+    rewrite:
+      "^(.*)": "{{ mirror.prefix }}/$1"
+{% endfor %}

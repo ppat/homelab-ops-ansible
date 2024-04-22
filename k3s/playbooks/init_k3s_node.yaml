@@ -1,0 +1,49 @@
+---
+- name: Initialize k3s node
+  hosts: localhost
+  become: true
+  gather_facts: true
+
+  pre_tasks:
+  - name: Confirm that required variables are defined
+    assert:
+      that:
+      - k3s_version is defined and k3s_version|length > 0
+      - flux_version is defined and flux_version|length > 0
+      - k3s_server_cidr is defined and k3s_server_cidr|length > 0
+      - k3s_server_port is defined and k3s_server_port|length > 0
+      - node_type_by_hostname is defined and node_type_by_hostname|length > 0
+
+  - name: "Detect node type by hostname"
+    ansible.builtin.set_fact:
+      node_type: "{{ node_type_by_hostname[ansible_nodename] }}"
+
+  - name: "Detect existing servers"
+    ansible.builtin.shell: "nmap {{ k3s_server_cidr }} --open -p {{ k3s_server_port }} -oG - | awk '/Up$/{print $2}'"
+    register: existing_servers_response
+    changed_when: false
+
+  - name: "Set api-server url"
+    ansible.builtin.set_fact:
+      k3s_server_url: "https://{{ existing_servers_response.stdout_lines[0] }}:{{ k3s_server_port }}"
+    when: existing_servers_response.stdout_lines|length > 0
+
+  - name: "Fail when api-server url cannot be detected for agent nodes"
+    ansible.builtin.fail:
+      msg: "Cannot detect api-server url for agent node"
+    failed_when: node_type == 'agent' and existing_servers_response.stdout_lines|length == 0
+
+  tasks:
+  - name: "install k3s as {{ node_type }}"
+    ansible.builtin.include_role:
+      name: homelab_ops.k3s.initialize_k3s_host
+    vars:
+      cluster_url: "{{ k3s_server_url | default('') }}"
+      disabled_components: [local-storage, servicelb, traefik]
+      templated_configuration:
+        tls-san: "{% raw %}kubernetes-api.{{ cluster_bootstrap_conf['DOMAIN_NAME'] }}{% endraw %}"
+        flannel-backend: wireguard-native
+      config:
+        cluster_bootstrap_secrets: "/root/.secrets/cluster-bootstrap-secrets"
+        flux_bootstrap_conf: "/root/.secrets/flux-bootstrap-conf"
+        flux_bootstrap_secrets: "/root/.secrets/flux-bootstrap-secrets"

@@ -1,0 +1,31 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: flux-system-git-source
+  namespace: flux-system
+spec:
+  interval: 1m0s
+  ref:
+    branch: main
+  secretRef:
+    name: flux-system-git-secret
+  url: git@github.com:ppat/homelab-ops-ansible.git
+  ignore: |
+    # exclude all
+    /*
+    # include deploy dir
+    !/k3s/molecule/default/flux-root
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: flux-system-root
+  namespace: flux-system
+spec:
+  interval: 1m0s
+  path: ./k3s/molecule/default/flux-root
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system-git-source
