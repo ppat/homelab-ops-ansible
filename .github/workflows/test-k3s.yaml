@@ -123,7 +123,7 @@ jobs:
 
         echo "Creating docker network..."
         docker network create k3s-cluster
-        export DOCKER_NETWORK_SUBNET="$(docker network inspect foo | jq -r .[0].IPAM.Config[0].Subnet | tr -d "\n")"
+        export DOCKER_NETWORK_SUBNET="$(docker network inspect k3s-cluster | jq -r .[0].IPAM.Config[0].Subnet | tr -d "\n")"
         echo "... Done"
 
         cat > $MOLECULE_VARS_FILE << EOF
@@ -134,6 +134,7 @@ jobs:
         EOF
 
         echo "Created vars file: $MOLECULE_VARS_FILE"
+        cat $MOLECULE_VARS_FILE
       shell: bash
       env:
         MOLECULE_VARS_FILE: ${{ env.molecule_vars_file }}
