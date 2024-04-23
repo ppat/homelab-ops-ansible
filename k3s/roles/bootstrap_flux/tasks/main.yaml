@@ -27,7 +27,7 @@
     --kubeconfig {{ kubeconfig_location }}
     --kustomize {{ config.flux.prerequisites }}/
   register: bootstrap_flux_prerequisites_status
-  changed_when: bootstrap_flux_prerequisites_status.stdout_lines | community.general.json_query("[?ends_with(@, 'unchanged')]") | length != 2
+  changed_when: bootstrap_flux_prerequisites_status.stdout_lines | community.general.json_query("[?ends_with(@, 'unchanged') == false]") | length > 0
 
 - name: "Prepare bootstrap settings manifest for flux bootstrap"
   when: bootstrap_flux_source_secret.resources|length == 0

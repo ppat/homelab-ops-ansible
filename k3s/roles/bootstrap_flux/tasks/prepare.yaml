@@ -14,4 +14,3 @@
     mode: '0600'
   loop:
   - "source-{{ config.flux.source.type }}.yaml"
-  - "kustomization.yaml"
