@@ -5,6 +5,7 @@
     --url {{ config.flux.source.git.url }}
     --private-key-file {{ config.flux.source.git.ssh_key }}
     --kubeconfig {{ kubeconfig_location }}
+  no_log: true
 
 - name: "source-git | Bootstrap flux with git repository as a source"
   ansible.builtin.command: >

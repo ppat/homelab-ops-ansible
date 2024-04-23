@@ -4,7 +4,6 @@
     state: directory
     suffix: -flux-bootstrap
   register: bootstrap_flux_tempdir
-  changed_when: false
 
 - name: "prepare | Copy bootstrap setting file"
   ansible.builtin.template:
@@ -16,4 +15,3 @@
   loop:
   - "source-{{ config.flux.source.type }}.yaml"
   - "kustomization.yaml"
-  changed_when: false
