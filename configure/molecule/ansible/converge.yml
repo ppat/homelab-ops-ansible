@@ -8,10 +8,12 @@
       name: homelab_ops.configure.ansible
     vars:
       ansible_config:
-        ansible_core_version: 2.16.2
+        # renovate: datasource=pypi depName=ansible-core
+        ansible_core_version: "2.16.2"
         dependencies:
         - name: jmespath
-          version: 1.0.1
+          # renovate: datasource=pypi depName=jmespath
+          version: "1.0.1"
           params:
           - include-apps
         collections_requirements_file: "{{ MOLECULE_SCENARIO_DIR }}/input/requirements.yaml"

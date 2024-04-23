@@ -55,7 +55,8 @@ jobs:
         sudo install -o root -g root -m 0755 /tmp/actionlint /usr/local/sbin/actionlint
       working-directory: /tmp
       env:
-        ACTIONLINT_VERSION: 1.6.26
+        # renovate: datasource=github-releases depName=rhysd/actionlint
+        ACTIONLINT_VERSION: "1.6.26"
 
     - name: check-added-large-files
       run: pre-commit run --all-files check-added-large-files

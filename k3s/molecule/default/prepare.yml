@@ -3,7 +3,10 @@
   hosts: all
   become: true
   gather_facts: true
+  vars:
+    # renovate: datasource=pypi depName=kubernetes
+    kubernetes_python_package_version: "28.1.0"
   tasks:
   - name: Install python packages needed by ansible
     ansible.builtin.pip:
-      name: "kubernetes==28.1.0"
+      name: "kubernetes=={{ kubernetes_python_package_version }}"

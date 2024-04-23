@@ -61,8 +61,11 @@ provisioner:
   inventory:
     group_vars:
       all:
+        # renovate: datasource=github-releases depName=k3s-io/k3s
         k3s_version: "1.29.3+k3s1"
+        # renovate: datasource=github-releases depName=fluxcd/flux2
         flux_version: "2.2.3"
+        # renovate: datasource=github-releases depName=kubernetes-sigs/kustomize
         kustomize_version: "5.4.1"
         config:
           flux:
