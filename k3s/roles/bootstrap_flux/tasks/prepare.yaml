@@ -14,6 +14,6 @@
     group: root
     mode: '0600'
   loop:
-  - "flux-source-{{ config.flux.source.type }}.yaml"
+  - "source-{{ config.flux.source.type }}.yaml"
   - "kustomization.yaml"
   changed_when: false
