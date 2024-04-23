@@ -1,15 +1,2 @@
 ---
 kubeconfig_default_location: /etc/rancher/k3s/k3s.yaml
-
-mandatory_secret_fields: [
-]
-
-mandatory_discovery_fields: [
-  "K3S_SERVER_TOKEN",
-  "K3S_AGENT_TOKEN"
-]
-
-mandatory_config_fields: [
-]
-
-verbose: 1

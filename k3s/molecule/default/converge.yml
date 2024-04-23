@@ -41,8 +41,3 @@
       name: homelab_ops.k3s.bootstrap_flux
     vars:
       kubeconfig_location: /etc/rancher/k3s/k3s.yaml
-      git_repository:
-        url: ssh://git@github.com/ppat/homelab-ops-ansible.git
-        private_ssh_key: "/tmp/bootstrap/git_ssh_key"
-        branch: "{{ repo_branch }}"
-        flux_source_root: /tmp/flux-gitrepo

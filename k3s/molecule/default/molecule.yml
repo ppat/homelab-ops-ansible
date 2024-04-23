@@ -65,23 +65,24 @@ provisioner:
         k3s_version: "1.29.3+k3s1"
         flux_version: "2.2.3"
         kustomize_version: "5.4.1"
-        repo_branch: $repo_branch
-        k3s_server_cidr: $docker_network_subnet
-        k3s_server_port: 6443
-        cluster_domain_name: example.net
-        k3s_server_token: $k3s_server_token
-        k3s_agent_token: $k3s_agent_token
-        # config:
-        #   bootstrap_secrets:
-        #     server_token: $k3s_server_token
-        #     agent_token: $k3s_agent_token
-        #   flux:
-        #     bootstrap: "/tmp/flux-bootstrap"
-        #   k3s:
-        #     custom:
-        #       tls-san: "kubernetes-api.example.net"
-        #       flannel-backend: wireguard-native
-        #     disabled_components: [local-storage, servicelb, traefik]
+        config:
+          flux:
+            pre_requisites: "/tmp/flux-bootstrap"
+            source:
+              type: git
+              git:
+                url: ssh://git@github.com/ppat/homelab-ops-ansible.git
+                ssh_key: "/tmp/bootstrap/git_ssh_key"
+                branch: $repo_branch
+              manifest: /tmp/flux-gitrepo
+          k3s:
+            custom:
+              tls-san: "kubernetes-api.example.net"
+              flannel-backend: wireguard-native
+            disabled_components: [local-storage, servicelb, traefik]
+            secrets:
+              server_token: $k3s_server_token
+              agent_token: $k3s_agent_token
 
 verifier:
   name: ansible
