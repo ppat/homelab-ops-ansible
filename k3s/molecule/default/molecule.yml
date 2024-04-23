@@ -73,7 +73,7 @@ provisioner:
                 url: ssh://git@github.com/ppat/homelab-ops-ansible.git
                 ssh_key: "/tmp/bootstrap/git_ssh_key"
                 branch: $repo_branch
-                path: "/k3s/molecule/default/flux-root"
+                path: "./k3s/molecule/default/flux-root"
           k3s:
             custom:
               tls-san: "kubernetes-api.example.net"

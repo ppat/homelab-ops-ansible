@@ -2,7 +2,7 @@ homelab_ops.k3s.install_flux_service
 ====================================
 
 This installs flux on the given kubernetes cluster. It will,
-- install flux CLI on the host
+- install required CLIs (`flux`, `kustomize`) on the host
 - install the specified flux version on the kubernetes cluster (if the cluster does not already have flux running on it)
 
 This is not intended for updating or upgrading flux. That should be done through changes to the git (or OCI) source that flux is connected to.

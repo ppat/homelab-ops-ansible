@@ -2,9 +2,10 @@ homelab_ops.k3s.bootstrap_flux
 ==============================
 
 This bootstrap flux on the kubernetes cluster. Bootstrapping steps include:
-- prepare and apply the necessary config maps and secrets needed by flux configuration for this cluster.
-- create a secret with the ssh key for accessing the git repository with the flux configuration.
-- link the kubernetes cluster with the git repository with the flux configuration (so that the cluster will be configured as per that configuration).
+- prepare and apply any supplied manifests to create any pre-requisite kubernetes resources.
+  - For example, setting up any ConfigMaps and/or Secrets needed (such as connecting to secret provider using external-secrets operator, etc).
+- prepare and create the flux source that will be used by flux to bootstrap the cluster based on manifests from that source.
+  - This includes creating any secrets necessary to connect to that source (e.g. ssh key needed for connecting to a git source)
 
 Requirements
 ------------

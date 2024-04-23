@@ -19,7 +19,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 1m0s
-  path: ".{{ config.flux.source.git.path | default('/') }}"
+  path: "{{ config.flux.source.git.path | default('/') }}"
   prune: true
   sourceRef:
     kind: GitRepository
