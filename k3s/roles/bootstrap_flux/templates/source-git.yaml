@@ -7,15 +7,10 @@ metadata:
 spec:
   interval: 1m0s
   ref:
-    branch: ${FLUX_GIT_BRANCH:=main}
+    branch: "{{ config.flux.source.git.branch | default('main') }}"
   secretRef:
     name: flux-system-git-secret
-  url: ssh://git@github.com/ppat/homelab-ops-ansible.git
-  ignore: |
-    # exclude all
-    /*
-    # include deploy dir
-    !/k3s/molecule/default/flux-root
+  url: "{{ config.flux.source.git.url | mandatory }}"
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
@@ -24,7 +19,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 1m0s
-  path: ./k3s/molecule/default/flux-root
+  path: ".{{ config.flux.source.git.path | default('/') }}"
   prune: true
   sourceRef:
     kind: GitRepository

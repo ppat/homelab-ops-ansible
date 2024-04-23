@@ -17,8 +17,7 @@ platforms:
   - name: k3s-cluster
   volumes:
   - /tmp/bootstrap:/tmp/bootstrap
-  - ${MOLECULE_SCENARIO_DIRECTORY}/flux-bootstrap:/tmp/flux-bootstrap
-  - ${MOLECULE_SCENARIO_DIRECTORY}/flux-gitrepo:/tmp/flux-gitrepo
+  - ${MOLECULE_SCENARIO_DIRECTORY}/flux-prerequisites:/tmp/flux-prerequisites
   - ~/go/bin/envsubst:/usr/local/bin/envsubst
   command: /usr/sbin/init
   runtime: sysbox-runc
@@ -67,14 +66,14 @@ provisioner:
         kustomize_version: "5.4.1"
         config:
           flux:
-            pre_requisites: "/tmp/flux-bootstrap"
+            prerequisites: "/tmp/flux-prerequisites"
             source:
               type: git
               git:
                 url: ssh://git@github.com/ppat/homelab-ops-ansible.git
                 ssh_key: "/tmp/bootstrap/git_ssh_key"
                 branch: $repo_branch
-              manifest: /tmp/flux-gitrepo
+                path: "/k3s/molecule/default/flux-root"
           k3s:
             custom:
               tls-san: "kubernetes-api.example.net"
