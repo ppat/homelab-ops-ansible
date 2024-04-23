@@ -10,15 +10,9 @@
     name: "{{ item.name }}"
   register: bootstrap_config_state
   loop:
-  - name: flux-bootstrap-conf
-    kind: ConfigMap
-    namespace: flux-system
-  - name: cert-manager-bootstrap-secret
+  - name: bitwarden-cli-credentials
     kind: Secret
-    namespace: cert-manager
-  - name: external-dns-bootstrap-secret
-    kind: Secret
-    namespace: external-dns
+    namespace: external-secrets
 
 - name: "bootstrap-config-checks | Extract bootstrap config into map"
   ansible.builtin.set_fact:
@@ -38,12 +32,8 @@
   vars:
     actual: "{{ bootstrap_config_map[expected.name] }}"
   loop:
-  - name: ConfigMap/flux-bootstrap-conf
-    fields: ["domain_name", "metallb_ip_address_pool"]
-  - name: Secret/cert-manager-bootstrap-secret
-    fields: ["cloudflare_apitoken", "dns01_recursive_nameservers", "dns_zone", "letsencrypt_email"]
-  - name: Secret/external-dns-bootstrap-secret
-    fields: ["pihole_server", "pihole_password"]
+  - name: Secret/bitwarden-cli-credentials
+    fields: ["BW_HOST", "BW_USERNAME", "BW_PASSWORD"]
   loop_control:
     loop_var: expected
     label: "{{ expected.name }}"
