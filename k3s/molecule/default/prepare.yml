@@ -7,14 +7,3 @@
   - name: Install python packages needed by ansible
     ansible.builtin.pip:
       name: "kubernetes==28.1.0"
-  - name: docker network
-    ansible.builtin.shell: |
-      #!/bin/bash
-      set -eo pipefail
-      docker network inspect k3s-cluster | jq -r .[0].IPAM.Config[0].Subnet
-    args:
-      executable: /bin/bash
-    register: network_out
-  - name: foo
-    ansible.builtin.debug:
-      msg: "{{ network_out }}"

@@ -66,17 +66,22 @@ provisioner:
         flux_version: "2.2.3"
         kustomize_version: "5.4.1"
         repo_branch: $repo_branch
-        config:
-          bootstrap_secrets:
-            server_token: $k3s_server_token
-            agent_token: $k3s_agent_token
-          flux:
-            bootstrap: "/tmp/flux-bootstrap"
-          k3s:
-            custom:
-              tls-san: "kubernetes-api.example.net"
-              flannel-backend: wireguard-native
-            disabled_components: [local-storage, servicelb, traefik]
+        k3s_server_cidr: $docker_network_subnet
+        k3s_server_port: 6443
+        cluster_domain_name: example.net
+        k3s_server_token: $k3s_server_token
+        k3s_agent_token: $k3s_agent_token
+        # config:
+        #   bootstrap_secrets:
+        #     server_token: $k3s_server_token
+        #     agent_token: $k3s_agent_token
+        #   flux:
+        #     bootstrap: "/tmp/flux-bootstrap"
+        #   k3s:
+        #     custom:
+        #       tls-san: "kubernetes-api.example.net"
+        #       flannel-backend: wireguard-native
+        #     disabled_components: [local-storage, servicelb, traefik]
 
 verifier:
   name: ansible

@@ -44,8 +44,8 @@
       disabled_components: [local-storage, servicelb, traefik]
       config:
         bootstrap_secrets:
-          server_token: $k3s_server_token
-          agent_token: $k3s_agent_token
+          server_token: "{{ k3s_server_token | default('') }}"
+          agent_token: "{{ k3s_agent_token | mandatory }}"
         k3s:
           custom:
             tls-san: "kubernetes-api.{{ cluster_domain_name }}"

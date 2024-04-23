@@ -121,10 +121,16 @@ jobs:
         export AGENT_TOKEN="$(openssl rand -base64 32 | tr -dc A-Za-z0-9 | head -c 16)"
         echo "... Done"
 
+        echo "Creating docker network..."
+        docker network create k3s-cluster
+        export DOCKER_NETWORK_SUBNET="$(docker network inspect foo | jq -r .[0].IPAM.Config[0].Subnet | tr -d "\n")"
+        echo "... Done"
+
         cat > $MOLECULE_VARS_FILE << EOF
         repo_branch: $BRANCH
         k3s_server_token: $SERVER_TOKEN
         k3s_agent_token: $AGENT_TOKEN
+        docker_network_subnet: $DOCKER_NETWORK_SUBNET
         EOF
 
         echo "Created vars file: $MOLECULE_VARS_FILE"
