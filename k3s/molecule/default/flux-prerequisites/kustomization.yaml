@@ -4,3 +4,4 @@ kind: Kustomization
 
 resources:
 - flux-bootstrap-secrets.yaml
+- flux-bootstrap-config.yaml

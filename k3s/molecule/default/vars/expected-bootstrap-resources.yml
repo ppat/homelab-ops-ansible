@@ -1,0 +1,19 @@
+---
+required_bootstrap_resources:
+- name: bitwarden-cli-credentials
+  kind: Secret
+  namespace: external-secrets
+  fields:
+  - BW_HOST
+  - BW_USERNAME
+  - BW_PASSWORD
+- name: cluster-bootstrap-conf
+  kind: ConfigMap
+  namespace: flux-system
+  fields:
+  - active_cert_issuer
+  - cert_issuer_email
+  - cluster_domain
+  - dns_zone
+  - load_balancer_ip_pool
+  - local_nameserver_bypass

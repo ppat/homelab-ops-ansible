@@ -1,6 +1,6 @@
 ---
 - name: "Check for mandatory variables definitions"
-  assert:
+  ansible.builtin.assert:
     that:
     - config is defined and config|length > 0
     - config.flux is defined and config.flux|length > 0

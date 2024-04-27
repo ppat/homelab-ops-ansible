@@ -9,42 +9,41 @@
     kind: "{{ item.kind }}"
     name: "{{ item.name }}"
   register: bootstrap_config_state
-  loop:
-  - name: bitwarden-cli-credentials
-    kind: Secret
-    namespace: external-secrets
-  - name: cluster-bootstrap-conf
-    kind: ConfigMap
-    namespace: flux-system
+  loop: "{{ required_bootstrap_resources }}"
+  loop_control:
+    label: "{{ item.kind }}/{{ item.name }}"
 
-- name: "bootstrap-config-checks | Extract bootstrap config into map"
+- name: "bootstrap-config-checks | Extract bootstrap settings into map"
   ansible.builtin.set_fact:
-    bootstrap_config_map: "{{ bootstrap_config_map | default({}) | combine({config_name: config_value}) }}"
+    bootstrap_settings_map: "{{ bootstrap_settings_map | default({}) | combine({config_key: config_value}) }}"
   vars:
-    config_name: "{{ item.item.kind }}/{{ item.item.name }}"
+    config_key: "{{ item.item.kind }}/{{ item.item.name }}"
     config_value: "{{ item | community.general.json_query('resources[*].{fields: keys(data)}') | flatten | first }}"
   loop: "{{ bootstrap_config_state.results }}"
 
 - name: "bootstrap-config-checks | Show bootstrap config"
   debug:
-    msg: "{{ bootstrap_config_map }}"
+    msg: "{{ bootstrap_settings_map }}"
 
-- name: "bootstrap-config-checks | Assert that expected bootstrap config is present"
+- name: "bootstrap-config-checks | Assert that all expected bootstrap resources are present"
   ansible.builtin.assert:
-    that: "{{ (expected.fields | difference(actual.fields) | length == 0) and (actual.fields | difference(expected.fields) | length == 0) }}"
+    that: expected_key in actual_keys
   vars:
-    actual: "{{ bootstrap_config_map[expected.name] }}"
-  loop:
-  - name: Secret/bitwarden-cli-credentials
-    fields: ["BW_HOST", "BW_USERNAME", "BW_PASSWORD"]
-  - name: ConfigMap/cluster-bootstrap-conf
-    fields:
-    - active_cert_issuer
-    - cert_issuer_email
-    - cluster_domain
-    - dns_zone
-    - load_balancer_ip_pool
-    - local_nameserver_bypass
+    actual_keys: "{{ bootstrap_settings_map.keys() }}"
+    expected_key: "{{ expected.kind }}/{{ expected.name }}"
+  loop: "{{ required_bootstrap_resources }}"
   loop_control:
     loop_var: expected
-    label: "{{ expected.name }}"
+    label: "{{ expected_key }}"
+
+- name: "bootstrap-config-checks | Assert that all expected fields are present in bootstrap resources"
+  ansible.builtin.assert:
+    # assert that all expected fields are present in actual
+    # while allowing actual to contain additional fields than expected
+    that: "{{ expected.fields | difference(actual.fields) | length == 0 }}"
+  vars:
+    actual: "{{ bootstrap_settings_map[expected.kind + '/' + expected.name] }}"
+  loop: "{{ required_bootstrap_resources }}"
+  loop_control:
+    loop_var: expected
+    label: "{{ expected.kind }}/{{ expected.name }}"
