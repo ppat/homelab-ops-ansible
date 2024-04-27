@@ -6,7 +6,9 @@
   ansible.builtin.command: >
     /root/k3s-node-init.sh
     --type {{ k3s.node.type }}
-    --url {{ k3s.discovery_url | default('') }}
+    {{ cluster_url_param }}
+  vars:
+    cluster_url_param: "{{ (k3s.discovery_url is defined and k3s.discovery_url|length > 0) | ternary('--url ' + k3s.discovery_url, '') }}"
   register: install_k3s_service_init_node
   ignore_errors: true
 

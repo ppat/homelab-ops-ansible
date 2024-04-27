@@ -48,21 +48,19 @@ determine_install_params() {
   echo $result
 }
 
-invoke_install_script() {
-  local install_parameters="$(determine_install_params $NODE_TYPE $SERVER_URL)"
-  echo "Using commandline parameters:"
-  echo "    ${install_parameters}"
-  echo "All remaining parameters (from: /etc/rancher/k3s/config.yaml):"
-  pr -t -o 4 /etc/rancher/k3s/config.yaml
-  echo
+PARAMS="$(determine_install_params $NODE_TYPE $SERVER_URL)"
+echo "Using commandline parameters:"
+echo "    ${PARAMS}"
+echo "All remaining parameters (from: /etc/rancher/k3s/config.yaml):"
+pr -t -o 4 /etc/rancher/k3s/config.yaml
+echo
+export INSTALL_K3S_SKIP_DOWNLOAD=true
+set -x
+/usr/bin/timeout --verbose 90s /bin/sh /tmp/install ${PARAMS:?}
+set +x
+echo
 
-  export INSTALL_K3S_SKIP_DOWNLOAD=true
-  /bin/sh /root/k3s-install.sh -- ${install_parameters:?}
-  echo
-
-  echo "adding marker file indicating the node has been initialized..."
-  touch /etc/rancher/k3s/status/k3s.$NODE_TYPE.initialized
-  echo "Done"
-}
-
-/usr/bin/timeout --verbose 90s invoke_install_script
+echo "adding marker file indicating the node has been initialized..."
+sudo mkdir -p /etc/rancher/k3s/status/
+sudo touch /etc/rancher/k3s/status/k3s.$NODE_TYPE.initialized
+echo "Done"
