@@ -1,0 +1,43 @@
+---
+- name: "prepare | Fetch k3s installer script: {{ k3s_installer_script_url }}"
+  ansible.builtin.get_url:
+    url: "{{ k3s_installer_script_url }}"
+    dest: /root/k3s-install.sh
+    owner: root
+    group: root
+    mode: '0400'
+
+- name: "prepare | Fetch k3s binary: {{ k3s_binary_url }}"
+  ansible.builtin.include_role:
+    name: homelab_ops.packages.install_from_url
+  vars:
+    package:  # noqa: var-naming[no-role-prefix]
+      name: "k3s"
+      url: "{{ k3s_binary_url }}"
+      mode: '0750'
+      path: /usr/local/bin
+
+- name: "prepare | Configure private registries"
+  ansible.builtin.template:
+    src: "k3s-registries.yaml.j2"
+    dest: "/etc/rancher/k3s/registries.yaml"
+    owner: root
+    group: root
+    mode: '0600'
+  when: k3s.registry is defined and k3s.registry.endpoint is defined and k3s.registry.mirrors|length > 0
+
+- name: "prepare | Create k3s config file"
+  ansible.builtin.template:
+    src: "k3s-config.yaml.j2"
+    dest: "/etc/rancher/k3s/config.yaml"
+    owner: root
+    group: root
+    mode: '0600'
+
+- name: "prepare | Create kubelet config file"
+  ansible.builtin.copy:
+    src: "k3s-kubelet.yaml"
+    dest: "/etc/rancher/k3s/kubelet.config"
+    owner: root
+    group: root
+    mode: '0600'

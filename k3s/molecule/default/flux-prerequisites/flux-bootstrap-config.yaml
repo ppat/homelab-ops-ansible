@@ -1,0 +1,14 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cluster-bootstrap-conf
+  namespace: flux-system
+data:
+  bitwarden_cli_image: ghcr.io/charlesthomas/bitwarden-cli:2023.12.1
+  cert_issuer: letsencrypt-staging-issuer
+  cert_issuer_email: letsencrypt@example.com
+  dns_zone: example.com
+  domain_name: k3s.example.com
+  metallb_ip_address_pool: 192.168.0.128/28
+  recursive_nameservers: 192.168.0.10:53

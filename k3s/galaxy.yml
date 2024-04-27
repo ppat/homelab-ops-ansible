@@ -1,0 +1,24 @@
+---
+namespace: homelab_ops
+name: k3s
+version: 0.0.0
+readme: README.md
+authors:
+- homelab-ops@homelab-ops.com
+
+description: ""
+license:
+- AGPL-3.0-only
+tags: [homelab, k3s, flux]
+dependencies:
+  community.general: ">=6.5.0"
+  kubernetes.core: ">=2.4.0"
+  homelab_ops.packages: ">=0.1.0"
+
+repository: https://github.com/ppat/homelab-ops-ansible
+documentation: https://github.com/ppat/homelab-ops-ansible/blob/main/k3s/README.md
+homepage: https://github.com/ppat/homelab-ops-ansible/blob/main/k3s/README.md
+issues: https://github.com/ppat/homelab-ops-ansible/issues
+
+build_ignore:
+- molecule

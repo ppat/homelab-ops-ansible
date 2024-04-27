@@ -1,0 +1,50 @@
+---
+- name: "Check for mandatory variables definitions"
+  assert:
+    that:
+    - config is defined and config|length > 0
+    - config.flux is defined and config.flux|length > 0
+    - config.flux.prerequisites is defined
+    - config.flux.source is defined and config.flux.source|length > 0
+    - config.flux.source.type is defined
+    - config.flux.source.git is defined and config.flux.source.git|length > 0
+    - config.flux.source.git.url is defined and config.flux.source.git.url is url(schemes=['ssh'])
+    - config.flux.source.git.ssh_key is defined
+    - kubeconfig_location is defined
+
+- name: "Check if flux root source secret exists"
+  kubernetes.core.k8s_info:
+    kubeconfig: "{{ kubeconfig_location }}"
+    namespace: flux-system
+    kind: Secret
+    name: "flux-root-source-secret"
+  register: bootstrap_flux_source_secret
+
+- name: "Create pre-requisite kubernetes resources for flux bootstrap"
+  when: bootstrap_flux_source_secret.resources|length == 0
+  ansible.builtin.command: >
+    kubectl apply
+    --kubeconfig {{ kubeconfig_location }}
+    --kustomize {{ config.flux.prerequisites }}/
+  register: bootstrap_flux_prerequisites_status
+  changed_when: >
+    (bootstrap_flux_prerequisites_status.stdout_lines | community.general.json_query("[?ends_with(@, 'created')]") | length > 0)
+    or
+    (bootstrap_flux_prerequisites_status.stdout_lines | community.general.json_query("[?ends_with(@, 'changed')]") | length > 0)
+
+- name: "Prepare bootstrap settings manifest for flux bootstrap"
+  when: bootstrap_flux_source_secret.resources|length == 0
+  ansible.builtin.import_tasks: prepare.yaml
+
+- name: "Create flux source and bootstrap cluster from source"
+  when: bootstrap_flux_source_secret.resources|length == 0
+  ansible.builtin.include_tasks: "source-{{ config.flux.source.type }}.yaml"
+
+- name: "Cleanup temp directories and files"
+  when: bootstrap_flux_source_secret.resources|length == 0
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+  - "{{ bootstrap_flux_tempdir.path }}"
+  changed_when: false

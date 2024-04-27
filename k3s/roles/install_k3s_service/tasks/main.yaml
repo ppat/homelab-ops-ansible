@@ -1,0 +1,62 @@
+---
+- name: "Check for mandatory variables definitions"
+  assert:
+    that:
+    - k3s is defined and k3s|length > 0
+    - k3s.version is defined
+    - k3s.node is defined and k3s.node|length > 0
+    - k3s.node.type is defined
+    - k3s.node.type == 'server' or (k3s.node.type == 'agent' and k3s.discovery_url is url(schemes=['https']))
+
+- name: "Check for k3s initialization"
+  ansible.builtin.stat:
+    path: /etc/rancher/k3s/status/k3s.system.initialized
+  register: install_k3s_service_initialized
+
+- name: "Create directories"
+  when: not install_k3s_service_initialized.stat.exists
+  ansible.builtin.file:
+    path: "{{ item }}"
+    owner: root
+    group: root
+    mode: '0750'
+    state: directory
+  loop:
+  - /etc/rancher/k3s
+  - /etc/rancher/node
+  - /var/lib/rancher
+  - /var/lib/rancher/k3s
+  - /etc/rancher/k3s/status
+
+- name: "install k3s if not installed before"
+  when: not install_k3s_service_initialized.stat.exists
+  block:
+  - name: "Prepare configuration and binaries"
+    ansible.builtin.include_tasks: prepare.yaml
+  - name: "Initialize server node"
+    when: k3s.node.type == 'server'
+    ansible.builtin.include_tasks: init-server-node.yaml
+  - name: "Initialize agent node"
+    when: k3s.node.type == 'agent'
+    ansible.builtin.include_tasks: init-agent-node.yaml
+  - name: "Check that the newly initialized k3s service is operational"
+    when: k3s.node.type == 'server'
+    ansible.builtin.include_tasks: check-status.yaml
+  - name: "Configure KUBECONFIG as a system-wide environment variable"
+    when: k3s.node.type == 'server'
+    ansible.builtin.lineinfile:
+      path: "/etc/environment"
+      owner: root
+      group: root
+      mode: '0644'
+      regexp: "^KUBECONFIG=.*"
+      line: "KUBECONFIG={{ k3s.kubeconfig_location | mandatory }}"
+  - name: "Record that k3s service has completed initialization"
+    ansible.builtin.file:
+      path: /etc/rancher/k3s/status/k3s.system.initialized
+      state: touch
+      mode: '0400'
+
+- name: "k3s was installed previously, check that the service still is operational"
+  when: install_k3s_service_initialized.stat.exists and k3s.node.type == 'server'
+  ansible.builtin.include_tasks: check-status.yaml

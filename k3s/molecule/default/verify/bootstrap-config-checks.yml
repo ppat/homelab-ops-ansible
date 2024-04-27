@@ -1,0 +1,39 @@
+---
+# ----------------------------------------------------------------------------------------------------------
+# bootstrap configuration
+# ----------------------------------------------------------------------------------------------------------
+- name: "bootstrap-config-checks | Fetch bootstrap configuration from cluster"
+  kubernetes.core.k8s_info:
+    kubeconfig: /etc/rancher/k3s/k3s.yaml
+    namespace: "{{ item.namespace }}"
+    kind: "{{ item.kind }}"
+    name: "{{ item.name }}"
+  register: bootstrap_config_state
+  loop:
+  - name: bitwarden-cli-credentials
+    kind: Secret
+    namespace: external-secrets
+
+- name: "bootstrap-config-checks | Extract bootstrap config into map"
+  ansible.builtin.set_fact:
+    bootstrap_config_map: "{{ bootstrap_config_map | default({}) | combine({config_name: config_value}) }}"
+  vars:
+    config_name: "{{ item.item.kind }}/{{ item.item.name }}"
+    config_value: "{{ item | community.general.json_query('resources[*].{fields: keys(data)}') | flatten | first }}"
+  loop: "{{ bootstrap_config_state.results }}"
+
+- name: "bootstrap-config-checks | Show bootstrap config"
+  debug:
+    msg: "{{ bootstrap_config_map }}"
+
+- name: "bootstrap-config-checks | Assert that expected bootstrap config is present"
+  ansible.builtin.assert:
+    that: "{{ (expected.fields | difference(actual.fields) | length == 0) and (actual.fields | difference(expected.fields) | length == 0) }}"
+  vars:
+    actual: "{{ bootstrap_config_map[expected.name] }}"
+  loop:
+  - name: Secret/bitwarden-cli-credentials
+    fields: ["BW_HOST", "BW_USERNAME", "BW_PASSWORD"]
+  loop_control:
+    loop_var: expected
+    label: "{{ expected.name }}"

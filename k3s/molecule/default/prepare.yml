@@ -1,0 +1,9 @@
+---
+- name: Prepare
+  hosts: all
+  become: true
+  gather_facts: true
+  tasks:
+  - name: Install python packages needed by ansible
+    ansible.builtin.pip:
+      name: "kubernetes==28.1.0"

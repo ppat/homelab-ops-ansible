@@ -1,0 +1,87 @@
+---
+dependency:
+  name: galaxy
+
+driver:
+  name: docker
+
+platforms:
+- name: "node1-server"
+  image: ${MOLECULE_IMAGE:-geerlingguy/docker-ubuntu2204-ansible:latest}
+  pre_build_image: true
+  exposed_ports:
+  - 6443/tcp
+  docker_networks:
+  - name: k3s-cluster
+  networks:
+  - name: k3s-cluster
+  volumes:
+  - /tmp/bootstrap:/tmp/bootstrap
+  - ${MOLECULE_SCENARIO_DIRECTORY}/flux-prerequisites:/tmp/flux-prerequisites
+  - ~/go/bin/envsubst:/usr/local/bin/envsubst
+  command: /usr/sbin/init
+  runtime: sysbox-runc
+  user: root
+
+- name: "node2-server"
+  image: ${MOLECULE_IMAGE:-geerlingguy/docker-ubuntu2204-ansible:latest}
+  pre_build_image: true
+  exposed_ports:
+  - 6443/tcp
+  docker_networks:
+  - name: k3s-cluster
+  networks:
+  - name: k3s-cluster
+  volumes:
+  - /tmp/bootstrap:/tmp/bootstrap
+  - ~/go/bin/envsubst:/usr/local/bin/envsubst
+  command: /usr/sbin/init
+  runtime: sysbox-runc
+  user: root
+
+- name: "node3-agent"
+  image: ${MOLECULE_IMAGE:-geerlingguy/docker-ubuntu2204-ansible:latest}
+  pre_build_image: true
+  exposed_ports:
+  - 6443/tcp
+  docker_networks:
+  - name: k3s-cluster
+  networks:
+  - name: k3s-cluster
+  volumes:
+  - /tmp/bootstrap:/tmp/bootstrap
+  command: /usr/sbin/init
+  runtime: sysbox-runc
+  user: root
+
+provisioner:
+  name: ansible
+  playbooks:
+    prepare: prepare.yml
+  inventory:
+    group_vars:
+      all:
+        k3s_version: "1.29.3+k3s1"
+        flux_version: "2.2.3"
+        kustomize_version: "5.4.1"
+        config:
+          flux:
+            prerequisites: "/tmp/flux-prerequisites"
+            source:
+              type: git
+              git:
+                url: ssh://git@github.com/ppat/homelab-ops-ansible.git
+                ssh_key: "/tmp/bootstrap/git_ssh_key"
+                branch: $repo_branch
+                path: "./k3s/molecule/default/flux-root"
+          k3s:
+            custom:
+              tls-san: "kubernetes-api.example.com"
+              flannel-backend: wireguard-native
+            disabled_components: [local-storage, servicelb, traefik]
+            secrets:
+              server_token: $k3s_server_token
+              agent_token: $k3s_agent_token
+
+verifier:
+  name: ansible
