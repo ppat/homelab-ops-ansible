@@ -41,10 +41,10 @@ echo "All remaining parameters should have been previously set via /etc/rancher/
 pr -t -o 4 /etc/rancher/k3s/config.yaml
 echo
 
-if [[ "$K3S_URL" == "" && "$NODE_TYPE" == "server" ]]; then
+if [[ "${K3S_URL:=none}" == "none" && "$NODE_TYPE" == "server" ]]; then
   echo "init server node as new cluster"
   /bin/sh /root/k3s-install.sh -- server --cluster-init
-elif [[ "$NODE_TYPE" == "server" ]]; then
+elif [[ "${K3S_URL:=none}" != "none" && "$NODE_TYPE" == "server" ]]; then
   echo "init server node connecting to existing cluster: $K3S_URL"
   /bin/sh /root/k3s-install.sh -- server
 else
