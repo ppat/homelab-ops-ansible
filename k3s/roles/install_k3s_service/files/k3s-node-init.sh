@@ -47,9 +47,12 @@ if [[ "${K3S_URL:=none}" == "none" && "$NODE_TYPE" == "server" ]]; then
 elif [[ "${K3S_URL:=none}" != "none" && "$NODE_TYPE" == "server" ]]; then
   echo "init server node connecting to existing cluster: $K3S_URL"
   /bin/sh /root/k3s-install.sh -- server
-else
+elif [[ "${K3S_URL:=none}" != "none" && "$NODE_TYPE" == "agent" ]]; then
   echo "init agent node connecting to existing cluster: $K3S_URL"
   /bin/sh /root/k3s-install.sh -- agent
+else
+  echo "invalid node type and k3s url combination."
+  exit 1
 fi
 
 echo "adding marker file indicating the node has been initialized..."

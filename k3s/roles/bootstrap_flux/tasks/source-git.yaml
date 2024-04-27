@@ -11,4 +11,7 @@
   ansible.builtin.command: >
     kubectl apply --kubeconfig {{ kubeconfig_location }} -f {{ bootstrap_flux_tempdir.path }}/source-{{ config.flux.source.type }}.yaml
   register: bootstrap_flux_source_status
-  changed_when: bootstrap_flux_source_status.stdout_lines | community.general.json_query("[?ends_with(@, 'unchanged')]") | length != 2
+  changed_when: >
+    (bootstrap_flux_source_status.stdout_lines | community.general.json_query("[?ends_with(@, 'created')]") | length > 0)
+    or
+    (bootstrap_flux_source_status.stdout_lines | community.general.json_query("[?ends_with(@, 'changed')]") | length > 0)
