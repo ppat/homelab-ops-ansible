@@ -46,7 +46,7 @@
     expected_label: "node-role.kubernetes.io/control-plane"
   loop: "{{ required_nodes }}"
 
-- name: "cluster-node-checks | Assert that only the server nodes have taints set"
+- name: "cluster-node-checks | Assert that only the server nodes have control plane taints set"
   ansible.builtin.assert:
     that: "{{ (node_type == 'server') | ternary(expected_taint in node_taints, expected_taint not in node_taints) }}"
   vars:

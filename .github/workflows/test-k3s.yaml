@@ -25,7 +25,7 @@ on:
   - cron: '0 10 */30 * *'
 
 env:
-  non_workflow_dispatch_log_verbosity: 0
+  non_workflow_dispatch_log_verbosity: 1
   molecule_vars_file: /tmp/molecule_vars.yaml
 
 concurrency:

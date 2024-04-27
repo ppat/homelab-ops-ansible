@@ -56,5 +56,3 @@ echo "adding marker file indicating the node has been initialized..."
 touch /etc/rancher/k3s/status/k3s.$NODE_TYPE.initialized
 
 echo "Done"
-echo "Test failure..."
-exit 1
