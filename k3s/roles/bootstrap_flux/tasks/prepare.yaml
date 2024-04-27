@@ -1,0 +1,16 @@
+---
+- name: "prepare | Create temp directory for flux bootstrap"
+  ansible.builtin.tempfile:
+    state: directory
+    suffix: -flux-bootstrap
+  register: bootstrap_flux_tempdir
+
+- name: "prepare | Copy bootstrap setting file"
+  ansible.builtin.template:
+    src: "{{ item }}"
+    dest: "{{ bootstrap_flux_tempdir.path }}/{{ item }}"
+    owner: root
+    group: root
+    mode: '0600'
+  loop:
+  - "source-{{ config.flux.source.type }}.yaml"

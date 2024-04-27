@@ -1,0 +1,33 @@
+---
+- name: "Check for mandatory variables definitions"
+  ansible.builtin.assert:
+    that:
+    - flux is defined and flux|length > 0
+    - flux.version is defined
+    - flux.kubeconfig_location is defined
+    - kustomize.version is defined
+
+- name: "Check for flux initialization"
+  ansible.builtin.stat:
+    path: /etc/rancher/k3s/status/flux.system.initialized
+  register: install_flux_service_initialized
+
+- name: "install flux if not installed before"
+  when: not install_flux_service_initialized.stat.exists
+  block:
+  - name: "Prepare configuration and binaries"
+    ansible.builtin.include_tasks: prepare.yaml
+  - name: "Check whether flux-system namespace exists"
+    kubernetes.core.k8s_info:
+      kubeconfig: "{{ flux.kubeconfig_location | mandatory }}"
+      kind: Namespace
+      name: flux-system
+    register: install_flux_service_namespace_status
+  - name: "Install flux service, if flux-system namespace doesn't exist"
+    when: install_flux_service_namespace_status.resources|length == 0
+    ansible.builtin.include_tasks: init-flux.yaml
+  - name: "flux-init | Record that flux has completed initialization"
+    ansible.builtin.file:
+      path: /etc/rancher/k3s/status/flux.system.initialized
+      state: touch
+      mode: '0400'

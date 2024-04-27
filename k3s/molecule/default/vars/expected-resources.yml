@@ -1,0 +1,16 @@
+---
+required_resources:
+  flux_config:
+  - name: flux-root-source-secret
+    kind: Secret
+    namespace: flux-system
+  - name: flux-root-source
+    kind: GitRepository
+    namespace: flux-system
+  - name: flux-root
+    kind: Kustomization
+    namespace: flux-system
+  git_source:
+  - name: test-deployment
+    kind: Deployment
+    namespace: default

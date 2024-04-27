@@ -1,0 +1,18 @@
+---
+- name: "post-init-node | Configure KUBECONFIG as a system-wide environment variable"
+  when: k3s.node.type == 'server'
+  ansible.builtin.lineinfile:
+    path: "/etc/environment"
+    owner: root
+    group: root
+    mode: '0644'
+    regexp: "^KUBECONFIG=.*"
+    line: "KUBECONFIG={{ k3s.kubeconfig_location | mandatory }}"
+
+- name: "post-init-node | Remove any temp files"
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+  - '/tmp/k3s_token_server'
+  - '/tmp/k3s_token_agent'

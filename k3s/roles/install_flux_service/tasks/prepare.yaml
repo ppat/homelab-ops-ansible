@@ -1,0 +1,20 @@
+---
+- name: "prepare | install flux CLI"
+  ansible.builtin.include_role:
+    name: homelab_ops.packages.install_from_url
+  vars:
+    package:  # noqa: var-naming[no-role-prefix]
+      name: flux
+      url: "{{ flux_url }}"
+      mode: '0750'
+      path: /usr/local/bin
+
+- name: "prepare | install kustomize CLI"
+  ansible.builtin.include_role:
+    name: homelab_ops.packages.install_from_url
+  vars:
+    package:  # noqa: var-naming[no-role-prefix]
+      name: kustomize
+      url: "{{ kustomize_url }}"
+      mode: '0750'
+      path: /usr/local/bin
