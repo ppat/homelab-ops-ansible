@@ -13,6 +13,9 @@
   - name: bitwarden-cli-credentials
     kind: Secret
     namespace: external-secrets
+  - name: cluster-bootstrap-conf
+    kind: ConfigMap
+    namespace: flux-system
 
 - name: "bootstrap-config-checks | Extract bootstrap config into map"
   ansible.builtin.set_fact:
@@ -34,6 +37,14 @@
   loop:
   - name: Secret/bitwarden-cli-credentials
     fields: ["BW_HOST", "BW_USERNAME", "BW_PASSWORD"]
+  - name: ConfigMap/cluster-bootstrap-conf
+    fields:
+    - active_cert_issuer
+    - cert_issuer_email
+    - cluster_domain
+    - dns_zone
+    - load_balancer_ip_pool
+    - local_nameserver_bypass
   loop_control:
     loop_var: expected
     label: "{{ expected.name }}"
