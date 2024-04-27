@@ -5,10 +5,9 @@
 - name: "init-node | Initialize node"
   ansible.builtin.command: >
     /root/k3s-node-init.sh
-    --type "{{ k3s.node.type }}"
-    --url "{{ k3s.discovery_url | default('') }}"
+    --type {{ k3s.node.type }}
+    --url {{ k3s.discovery_url | default('') }}
   register: install_k3s_service_init_node
-  timeout: 90 # seconds
   ignore_errors: true
 
 - name: "init-node | Show node initialization output"
