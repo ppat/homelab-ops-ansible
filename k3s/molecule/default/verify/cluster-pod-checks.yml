@@ -25,6 +25,7 @@
     label: "{{ pod_name }}"
 
 - name: "cluster-pod-checks | Show pods"
+  when: ansible_verbosity > 0
   ansible.builtin.debug:
     msg: "{{ cluster_pod_map }}"
 

@@ -1,7 +1,7 @@
 ---
 - name: "Check for mandatory variables definitions"
-  assert:
-    ansible.builtin.that:
+  ansible.builtin.assert:
+    that:
     - k3s_version is defined
     - flux_version is defined
     - kustomize_version is defined

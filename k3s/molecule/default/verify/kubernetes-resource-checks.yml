@@ -25,6 +25,7 @@
     label: "{{ resource_key }}"
 
 - name: "kubernetes-resource-checks | {{ required_resources_type }} | Show resource map"
+  when: ansible_verbosity > 0
   debug:
     msg: "{{ resource_state_map }}"
 

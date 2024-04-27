@@ -14,6 +14,7 @@
     query: "[*].{key: key, value: keys(value)}"  # noqa: var-naming[no-role-prefix]
 
 - name: "cluster-api-checks | Show supported cluster APIs"
+  when: ansible_verbosity > 0
   debug:
     msg: "{{ cluster_api_map }}"
 

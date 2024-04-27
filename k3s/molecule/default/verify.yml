@@ -34,11 +34,9 @@
   - name: verify flux configuration resources
     ansible.builtin.import_tasks: verify/kubernetes-resource-checks.yml
     vars:
-      required_resources_list: "{{ required_resources['flux_config'] }}"
       required_resources_type: flux_config
 
   - name: verify git source resources
     ansible.builtin.import_tasks: verify/kubernetes-resource-checks.yml
     vars:
-      required_resources_list: "{{ required_resources['git_source'] }}"
       required_resources_type: git_source

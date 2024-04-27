@@ -22,6 +22,7 @@
   loop: "{{ bootstrap_config_state.results }}"
 
 - name: "bootstrap-config-checks | Show bootstrap config"
+  when: ansible_verbosity > 0
   debug:
     msg: "{{ bootstrap_settings_map }}"
 
