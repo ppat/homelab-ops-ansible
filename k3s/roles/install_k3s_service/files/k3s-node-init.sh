@@ -56,7 +56,7 @@ pr -t -o 4 /etc/rancher/k3s/config.yaml
 echo
 export INSTALL_K3S_SKIP_DOWNLOAD=true
 set -x
-/usr/bin/timeout --verbose 90s /bin/sh /tmp/install ${PARAMS:?}
+/usr/bin/timeout --verbose 90s /bin/sh /root/k3s-install.sh ${PARAMS:?}
 set +x
 echo
 
