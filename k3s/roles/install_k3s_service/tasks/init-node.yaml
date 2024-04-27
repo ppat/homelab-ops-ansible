@@ -8,6 +8,7 @@
     --type "{{ k3s.node.type }}"
     --url "{{ k3s.discovery_url | default('') }}"
   register: install_k3s_service_init_node
+  timeout: 180 # seconds
   ignore_errors: true
 
 - name: "init-node | Show node initialization output"
