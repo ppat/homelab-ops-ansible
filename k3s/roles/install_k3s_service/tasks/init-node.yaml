@@ -18,7 +18,7 @@
 - name: "init-node | Fail if node initialization failed"
   when: install_k3s_service_init_node.failed
   ansible.builtin.fail:
-    msg: "Node initialization failed, please above output for error message."
+    msg: "Node initialization failed, please see above output for error message."
 
 - name: "init-node | Check that the newly initialized k3s service is operational"
   ansible.builtin.include_tasks: check-status.yaml
