@@ -1,0 +1,22 @@
+---
+- name: "Check for mandatory variables definitions"
+  ansible.builtin.assert:
+    that:
+    - k3s is defined and k3s|length > 0
+    - k3s.version is defined
+    - k3s.node is defined and k3s.node|length > 0
+    - k3s.node.type is defined
+    - k3s.node.type == 'server' or (k3s.node.type == 'agent' and k3s.discovery_url is url(schemes=['https']))
+
+- name: "Check for k3s initialization"
+  ansible.builtin.stat:
+    path: /etc/rancher/k3s/status/k3s.node.initialized
+  register: install_k3s_service_initialized
+
+- name: "initialize k3s node, if not initialized before"
+  when: not install_k3s_service_initialized.stat.exists
+  ansible.builtin.include_tasks: init-node.yaml
+
+- name: "k3s was initialized previously on this node, check that the service still is operational"
+  when: install_k3s_service_initialized.stat.exists
+  ansible.builtin.include_tasks: check-status.yaml

@@ -1,0 +1,35 @@
+---
+- name: "init-node | Prepare configuration and binaries"
+  ansible.builtin.include_tasks: prepare.yaml
+
+- name: "init-node | Initialize node"
+  ansible.builtin.command: >
+    /root/k3s-node-init.sh
+    --type {{ k3s.node.type }}
+    {{ cluster_url_param }}
+  vars:
+    cluster_url_param: "{{ (k3s.discovery_url is defined and k3s.discovery_url|length > 0) | ternary('--url ' + k3s.discovery_url, '') }}"
+  register: install_k3s_service_init_node
+  ignore_errors: true
+
+- name: "init-node | Show node initialization output"
+  when: install_k3s_service_init_node.failed or ansible_verbosity > 0
+  ansible.builtin.debug:
+    var: install_k3s_service_init_node
+
+- name: "init-node | Fail if node initialization failed"
+  when: install_k3s_service_init_node.failed
+  ansible.builtin.fail:
+    msg: "Node initialization failed, please see above output for error message."
+
+- name: "init-node | Check that the newly initialized k3s service is operational"
+  ansible.builtin.include_tasks: check-status.yaml
+
+- name: "init-node | Run node post-initialization steps"
+  ansible.builtin.include_tasks: post-init-node.yaml
+
+- name: "init-node | Record that k3s service has completed initialization"
+  ansible.builtin.file:
+    path: /etc/rancher/k3s/status/k3s.node.initialized
+    state: touch
+    mode: '0400'

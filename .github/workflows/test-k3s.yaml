@@ -1,0 +1,150 @@
+---
+name: "test collection: k3s"
+
+# yamllint disable-line rule:truthy
+on:
+  pull_request:
+    paths:
+    - 'k3s/**'
+    - 'requirements.txt'
+    - '.github/workflows/test-k3s.yaml'
+  workflow_dispatch:
+    inputs:
+      log_verbosity:
+        description: 'Log Verbosity'
+        required: true
+        default: 2
+        type: choice
+        options:
+        - '0'
+        - '1'
+        - '2'
+        - '3'
+        - '4'
+  schedule:
+  - cron: '0 10 */30 * *'
+
+env:
+  non_workflow_dispatch_log_verbosity: 0
+  molecule_vars_file: /tmp/molecule_vars.yaml
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+    - name: Checkout
+      uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+
+    - name: Set up python
+      uses: actions/setup-python@0a5c61591373683505ea898e09a3ea4f39ef2b9c # v5
+      with:
+        python-version: '3.11'
+        cache: 'pip'
+        cache-dependency-path: |
+          requirements.txt
+
+    - name: Set up go
+      uses: actions/setup-go@v5
+      with:
+        go-version: 'stable'
+
+    - name: Install python requirements
+      run: |
+        python -m pip install -r requirements.txt
+
+    - name: Install ansible collections
+      run: |
+        ansible-galaxy collection install ./k3s/
+
+        # install dependent homelab-ops packages from same branch (overriding version specified in galaxy.yml of homelab_ops.k3s collection)
+        ansible-galaxy collection install ./packages/
+
+    - name: Build envsubst binary
+      run: |
+        go install github.com/drone/envsubst/cmd/envsubst@latest
+
+    - name: Install sysbox
+      run: |
+        # see: https://github.com/nestybox/sysbox/blob/master/docs/user-guide/install-package.md#installing-sysbox
+        wget --progress=dot:giga https://downloads.nestybox.com/sysbox/releases/v0.6.2/sysbox-ce_0.6.2-0.linux_amd64.deb -O /tmp/sysbox.deb
+        sudo apt-get install jq
+        sudo apt-get install /tmp/sysbox.deb
+        rm /tmp/sysbox.deb
+
+        sudo systemctl restart containerd
+        sudo systemctl restart docker
+        sudo systemctl restart sysbox
+        sudo systemctl restart containerd
+        sudo systemctl restart docker
+
+        sudo systemctl status sysbox
+
+    - name: Determine molecule verbosity
+      # yamllint disable-line rule:indentation
+      run: |
+        set -eo pipefail
+
+        MOLECULE_PARAMS="--no-debug"
+        if [[ $LOG_VERBOSITY -gt 2 ]]; then
+          MOLECULE_PARAMS="--debug"
+        fi
+        if [[ $LOG_VERBOSITY -gt 0 ]]; then
+          VERBOSE_FLAG=$(printf "v"'%.s' $(eval "echo {1.."$(($LOG_VERBOSITY))"}"))
+          MOLECULE_PARAMS="$MOLECULE_PARAMS -$VERBOSE_FLAG"
+        fi
+        echo "Setting molecule params to [$MOLECULE_PARAMS]..."
+        echo "MOLECULE_PARAMS=$MOLECULE_PARAMS" >> $GITHUB_ENV
+      shell: bash
+      env:
+        LOG_VERBOSITY: ${{ github.event.inputs.log_verbosity || env.non_workflow_dispatch_log_verbosity }}
+
+    - name: Create molecule vars file
+      # yamllint disable-line rule:indentation
+      run: |
+        set -eo pipefail
+
+        echo "Setting branch..."
+        if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
+          BRANCH="${GITHUB_HEAD_REF}"
+        else
+          BRANCH="${GITHUB_REF}"
+        fi
+        echo "... to ${BRANCH}"
+
+        echo "Generating k3s tokens..."
+        export SERVER_TOKEN="$(openssl rand -base64 32 | tr -dc A-Za-z0-9 | head -c 16)"
+        export AGENT_TOKEN="$(openssl rand -base64 32 | tr -dc A-Za-z0-9 | head -c 16)"
+        echo "... Done"
+
+        cat > $MOLECULE_VARS_FILE << EOF
+        repo_branch: $BRANCH
+        k3s_server_token: $SERVER_TOKEN
+        k3s_agent_token: $AGENT_TOKEN
+        EOF
+
+        echo "Created vars file: $MOLECULE_VARS_FILE"
+      shell: bash
+      env:
+        MOLECULE_VARS_FILE: ${{ env.molecule_vars_file }}
+
+    - name: Molecule Test
+      run: |
+        set -eo pipefail
+
+        # prepare ssh key needed for flux bootstrap
+        mkdir -p /tmp/bootstrap
+        echo "${GIT_SSH_KEY}" | base64 -d | sudo tee /tmp/bootstrap/git_ssh_key > /dev/null
+
+        molecule $MOLECULE_PARAMS --env-file $MOLECULE_VARS_FILE test --all --no-parallel
+      working-directory: ./k3s
+      shell: bash
+      env:
+        ANSIBLE_FORCE_COLOR: 1
+        PY_COLORS: 1
+        GIT_SSH_KEY: ${{ secrets.FLUX_REPO_READER_SSH_KEY }}
+        MOLECULE_VARS_FILE: ${{ env.molecule_vars_file }}

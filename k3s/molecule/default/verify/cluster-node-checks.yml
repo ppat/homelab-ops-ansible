@@ -1,0 +1,56 @@
+---
+# ----------------------------------------------------------------------------------------------------------
+# cluster node checks
+# ----------------------------------------------------------------------------------------------------------
+- name: "cluster-node-checks | Get cluster nodes"
+  kubernetes.core.k8s_info:
+    kubeconfig: /etc/rancher/k3s/k3s.yaml
+    kind: Node
+  register: cluster_node_state
+
+- name: "cluster-node-checks | Extract cluster node facts into list"
+  ansible.builtin.set_fact:
+    cluster_node_list: "{{ cluster_node_state | community.general.json_query(query) }}"
+  vars:
+    # yamllint disable-line rule:line-length
+    query: "resources[*].{created: metadata.creationTimestamp, name: metadata.name, labels: metadata.labels, annotations: metadata.annotations, status: status.conditions[*].join('=', [type,status]), taints: spec.taints[*].join('=', [key,effect])}"  # noqa: var-naming[no-role-prefix]
+
+- name: "cluster-node-checks | Extract cluster node facts into map keyed by node name"
+  ansible.builtin.set_fact:
+    cluster_node_map: "{{ cluster_node_map | default({}) | combine({ item.name: item }) }}"
+  loop: "{{ cluster_node_list }}"
+  loop_control:
+    label: "{{ item.name }}"
+
+- name: "cluster-node-checks | Show nodes"
+  when: ansible_verbosity > 0
+  ansible.builtin.debug:
+    msg: "{{ cluster_node_map }}"
+
+- name: "cluster-node-checks | Assert that each node is listed"
+  ansible.builtin.assert:
+    that: item in cluster_node_map
+  loop: "{{ required_nodes }}"
+
+- name: "cluster-node-checks | Assert that each node is ready"
+  ansible.builtin.assert:
+    that: "{{ 'Ready=True' in cluster_node_map[item].status }}"
+  loop: "{{ required_nodes }}"
+
+- name: "cluster-node-checks | Assert that node match expected node type"
+  ansible.builtin.assert:
+    that: "{{ (node_type == 'server') | ternary(expected_label in node_labels, expected_label not in node_labels) }}"
+  vars:
+    node_type: "{{ item | split('-') | last }}"
+    node_labels: "{{ cluster_node_map[item].labels }}"
+    expected_label: "node-role.kubernetes.io/control-plane"
+  loop: "{{ required_nodes }}"
+
+- name: "cluster-node-checks | Assert that only the server nodes have control plane taints set"
+  ansible.builtin.assert:
+    that: "{{ (node_type == 'server') | ternary(expected_taint in node_taints, expected_taint not in node_taints) }}"
+  vars:
+    node_type: "{{ item | split('-') | last }}"
+    node_taints: "{{ cluster_node_map[item].taints }}"
+    expected_taint: "node-role.kubernetes.io/control-plane=NoSchedule"
+  loop: "{{ required_nodes }}"

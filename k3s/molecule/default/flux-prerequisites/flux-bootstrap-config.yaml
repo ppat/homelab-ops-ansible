@@ -1,0 +1,13 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cluster-bootstrap-conf
+  namespace: flux-system
+data:
+  active_cert_issuer: letsencrypt-staging-issuer
+  cert_issuer_email: letsencrypt@example.com
+  cluster_domain: k3s.example.com
+  dns_zone: example.com
+  load_balancer_ip_pool: 192.168.0.128/28
+  local_nameserver_bypass: 1.1.1.1:53

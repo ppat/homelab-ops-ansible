@@ -1,0 +1,29 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: flux-root-source
+  namespace: flux-system
+spec:
+  interval: 1m0s
+  ref:
+    branch: "{{ config.flux.source.git.branch | default('main') }}"
+  secretRef:
+    name: flux-root-source-secret
+  url: "{{ config.flux.source.git.url | mandatory }}"
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: flux-root
+  namespace: flux-system
+spec:
+  interval: 1m0s
+  path: "{{ config.flux.source.git.path | default('/') }}"
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-root-source
+    namespace: flux-system
+  timeout: 2m0s
+  wait: true

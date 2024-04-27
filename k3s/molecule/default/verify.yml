@@ -1,0 +1,42 @@
+---
+- name: Verify cluster
+  hosts: node2-server
+  gather_facts: false
+  vars:
+    required_nodes:
+    - node1-server
+    - node2-server
+    - node3-agent
+
+  pre_tasks:
+  - name: Load required pods
+    ansible.builtin.include_vars: vars/expected-pods.yml
+  - name: Load required api
+    ansible.builtin.include_vars: vars/expected-api.yml
+  - name: Load required resources
+    ansible.builtin.include_vars: vars/expected-resources.yml
+  - name: Load required bootstrap settings
+    ansible.builtin.include_vars: vars/expected-bootstrap-resources.yml
+
+  tasks:
+  - name: verify cluster nodes
+    ansible.builtin.import_tasks: verify/cluster-node-checks.yml
+
+  - name: verify cluster pods
+    ansible.builtin.import_tasks: verify/cluster-pod-checks.yml
+
+  - name: verify cluster api
+    ansible.builtin.import_tasks: verify/cluster-api-checks.yml
+
+  - name: verify bootstrap configuration
+    ansible.builtin.import_tasks: verify/bootstrap-config-checks.yml
+
+  - name: verify flux configuration resources
+    ansible.builtin.import_tasks: verify/kubernetes-resource-checks.yml
+    vars:
+      required_resources_type: flux_config
+
+  - name: verify git source resources
+    ansible.builtin.import_tasks: verify/kubernetes-resource-checks.yml
+    vars:
+      required_resources_type: git_source

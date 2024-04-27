@@ -1,0 +1,26 @@
+---
+# ----------------------------------------------------------------------------------------------------------
+# cluster api checks
+# ----------------------------------------------------------------------------------------------------------
+- name: "cluster-api-checks | Fetch supported cluster APIs"
+  kubernetes.core.k8s_cluster_info:
+    kubeconfig: /etc/rancher/k3s/k3s.yaml
+  register: cluster_info
+
+- name: "cluster-api-checks | Extract cluster api facts into map grouped by api version"
+  ansible.builtin.set_fact:
+    cluster_api_map: "{{ cluster_info.apis | dict2items | flatten | community.general.json_query(query) | items2dict }}"
+  vars:
+    query: "[*].{key: key, value: keys(value)}"  # noqa: var-naming[no-role-prefix]
+
+- name: "cluster-api-checks | Show supported cluster APIs"
+  when: ansible_verbosity > 0
+  debug:
+    msg: "{{ cluster_api_map }}"
+
+- name: "cluster-api-checks | Assert that expected APIs are present"
+  ansible.builtin.assert:
+    that: "{{ item.kind in cluster_api_map[item.version] }}"
+  loop: "{{ required_api }}"
+  loop_control:
+    label: "{{ item.version }}:{{ item.kind }}"

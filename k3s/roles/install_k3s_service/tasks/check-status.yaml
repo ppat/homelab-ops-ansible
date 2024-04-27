@@ -1,0 +1,49 @@
+---
+- name: "check-status | load systemd service facts"
+  ansible.builtin.service_facts:
+
+- name: "check-status | check that k3s.service is running"
+  ansible.builtin.assert:
+    that: >
+      system_service_name in ansible_facts.services
+      and
+      ansible_facts.services[system_service_name].status == 'enabled'
+      and
+      ansible_facts.services[system_service_name].state == 'running'
+  vars:
+    system_service_name: "{{ (k3s.node.type == 'server') | ternary('k3s.service', 'k3s-agent.service') }}"
+
+- name: "check-status | Wait till node is operational"
+  when: k3s.node.type == 'server'
+  kubernetes.core.k8s_info:
+    kubeconfig: "{{ k3s.kubeconfig_location | mandatory }}"
+    kind: Node
+    label_selectors:
+    - "kubernetes.io/hostname={{ ansible_hostname }}"
+    wait: true
+    wait_condition:
+      reason: KubeletReady
+      status: "True"
+      type: Ready
+    wait_timeout: 180
+
+- name: "check-status | Wait till not-ready taint is removed"
+  when: k3s.node.type == 'server'
+  kubernetes.core.k8s_info:
+    kubeconfig: "{{ k3s.kubeconfig_location | mandatory }}"
+    kind: Node
+    label_selectors:
+    - "kubernetes.io/hostname={{ ansible_hostname }}"
+  register: install_k3s_service_node_status
+    # yamllint disable-line rule:line-length
+  until: "'node.kubernetes.io/not-ready' not in (install_k3s_service_node_status.resources | map(attribute='spec.taints') | flatten | map(attribute='key'))"
+  retries: 5
+  delay: 10
+
+- name: "check-status | Show node status"
+  when: k3s.node.type == 'server'
+  debug:
+    msg: "{{ install_k3s_service_node_status | community.general.json_query(query) | flatten }}"
+  vars:
+    # yamllint disable-line rule:line-length
+    query: "resources[*].{created: metadata.creationTimestamp, name: metadata.name, labels: metadata.labels, status: status.conditions[*].join('=', [type,status]), taints: spec.taints[*].join('=', [key,effect])}"  # noqa: var-naming[no-role-prefix]

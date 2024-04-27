@@ -1,0 +1,5 @@
+---
+node_architecture: "{{ 'arm64' if ansible_architecture == 'aarch64' else 'amd64' }}"
+k3s_installer_script_url: "https://raw.githubusercontent.com/k3s-io/k3s/v{{ k3s.version }}/install.sh"
+# yamllint disable-line rule:line-length
+k3s_binary_url: "https://github.com/k3s-io/k3s/releases/download/v{{ k3s.version }}/{{ (node_architecture == 'amd64') | ternary('k3s', 'k3s-' + node_architecture) }}"
