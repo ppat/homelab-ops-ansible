@@ -5,9 +5,11 @@ name: "test collection: os"
 on:
   pull_request:
     paths:
-    - 'os/**'
-    - 'requirements.txt'
-    - '.github/workflows/test-os.yaml'
+    # As this action takes nearly an hour to run, we're only triggering it on changes to a subset of changes
+    # that we normally trigger on for other collections.
+    - 'os/roles/**/*.yaml'
+    - 'os/roles/**/*.j2'
+    - 'os/molecule/**'
   workflow_dispatch:
     inputs:
       log_verbosity:
@@ -25,7 +27,9 @@ on:
   - cron: '0 10 */30 * *'
 
 env:
-  non_workflow_dispatch_log_verbosity: 0
+  # As this action takes nearly an hour to run, we're running it in highest verbosity to avoid needing to re-run
+  # just to get additional information.
+  non_workflow_dispatch_log_verbosity: 4
   COLLECTIONS_PATH: /usr/share/ansible/collections
   MOLECULE_VARS_FILE: /tmp/molecule_vars.yaml
 

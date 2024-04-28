@@ -1,12 +1,45 @@
 #!/bin/bash
-set -exo pipefail
+set -eo pipefail
+
+fetch_image() {
+  local url=$1
+  local output_file=$2
+
+  local timeout=300
+  local attempt=0
+  local retries=3
+
+  while [ $attempt -lt $retries ]; do
+    echo "Attempt $attempt"
+    rm -f ${output_file}.xz
+    set +e
+    /usr/bin/timeout --verbose $timeout wget -q $url -O ${output_file}.xz
+    exit_code=$?
+    set -e
+    if [[ $exit_code -eq 0 ]]; then
+      echo "  Success"
+      return 0
+    elif [[ $exit_code -eq 124 ]]; then
+      echo "  Timed out"
+      attempt=$(( attempt + 1 ))
+    else
+      echo "  Failed"
+      exit $exit_code
+    fi
+  done
+}
 
 main() {
   local url=$1
   local output_file=$2
 
-  wget --progress=dot:giga $url -O ${output_file}.xz
+  echo "Fetching image from $url..."
+  fetch_image $url $output_file
+
+  echo "Unpacking image..."
   xz -d ${output_file}.xz
+
+  echo "Done..."
 }
 
 OUTPUT_FILE=""
