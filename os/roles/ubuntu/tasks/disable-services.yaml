@@ -1,0 +1,12 @@
+---
+- name: "disable-services | Disable systemd services that should not run"
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    enabled: false
+  loop: "{{ ubuntu.services.disable | default([]) }}"
+
+- name: "disable-services | Mask systemd services that should not run"
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    masked: true
+  loop: "{{ ubuntu.services.mask | default([]) }}"

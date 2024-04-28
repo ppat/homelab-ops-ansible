@@ -1,0 +1,29 @@
+---
+- name: "cleanup | apt autoclean + autoremove"
+  ansible.builtin.apt:
+    autoclean: true
+    autoremove: true
+
+- name: "cleanup | apt lists"
+  ansible.builtin.shell: "find /var/lib/apt/lists/* -type f -print -delete"
+  changed_when: false
+
+- name: "cleanup | drop everything except the lock file from /var/cache/apt/archives"
+  ansible.builtin.command: "apt-get clean"   # noqa: command-instead-of-module
+  changed_when: false
+
+- name: "cleanup | kernel backups"
+  ansible.builtin.shell: "find {{ boot_firmware_dest[device_type] }}/* -name *.bak -print -delete"
+  changed_when: false
+
+- name: "cleanup | kernel sources"
+  ansible.builtin.shell: "find {{ boot_firmware_source }}/* -type f -print -delete"
+  changed_when: false
+
+- name: "cleanup | specific files and directories..."
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+  - "/.disk"
+  - "{{ boot_firmware_source }}/*"

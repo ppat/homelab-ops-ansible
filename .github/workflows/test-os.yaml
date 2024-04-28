@@ -1,0 +1,120 @@
+---
+name: "test collection: os"
+
+# yamllint disable-line rule:truthy
+on:
+  pull_request:
+    paths:
+    - 'os/**'
+    - 'requirements.txt'
+    - '.github/workflows/test-os.yaml'
+  workflow_dispatch:
+    inputs:
+      log_verbosity:
+        description: 'Log Verbosity'
+        required: true
+        default: 2
+        type: choice
+        options:
+        - '0'
+        - '1'
+        - '2'
+        - '3'
+        - '4'
+  schedule:
+  - cron: '0 10 */30 * *'
+
+env:
+  non_workflow_dispatch_log_verbosity: 0
+  COLLECTIONS_PATH: /usr/share/ansible/collections
+  MOLECULE_VARS_FILE: /tmp/molecule_vars.yaml
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        ubuntu_code_name: ["jammy"]
+        arch: ["arm64"]
+        device_type: ["raspi"]
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+    - name: Checkout
+      uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+
+    - name: Set up python
+      uses: actions/setup-python@0a5c61591373683505ea898e09a3ea4f39ef2b9c # v5
+      with:
+        python-version: '3.11'
+
+    - name: Install system packages
+      run: |
+        sudo apt-get update
+        sudo apt-get install -yq --no-install-recommends binfmt-support qemu-user-static parted
+
+    - name: Install python requirements
+      run: |
+        sudo python -m pip install -r requirements.txt
+
+    - name: Install ansible collections
+      run: |
+        sudo mkdir -p $COLLECTIONS_PATH
+        sudo ansible-galaxy collection install ./os/ -p $COLLECTIONS_PATH
+        sudo ansible-galaxy collection install ./packages/ -p $COLLECTIONS_PATH
+        sudo ansible-galaxy collection install community.general -p $COLLECTIONS_PATH
+
+    - name: Determine molecule verbosity
+      # yamllint disable-line rule:indentation
+      run: |
+        set -eo pipefail
+
+        MOLECULE_PARAMS="--no-debug"
+        if [[ $LOG_VERBOSITY -gt 2 ]]; then
+          MOLECULE_PARAMS="--debug"
+        fi
+        if [[ $LOG_VERBOSITY -gt 0 ]]; then
+          VERBOSE_FLAG=$(printf "v"'%.s' $(eval "echo {1.."$(($LOG_VERBOSITY))"}"))
+          MOLECULE_PARAMS="$MOLECULE_PARAMS -$VERBOSE_FLAG"
+        fi
+        echo "Setting molecule params to [$MOLECULE_PARAMS]..."
+        echo "MOLECULE_PARAMS=$MOLECULE_PARAMS" >> $GITHUB_ENV
+      shell: bash
+      env:
+        LOG_VERBOSITY: ${{ github.event.inputs.log_verbosity || env.non_workflow_dispatch_log_verbosity }}
+
+    - name: Create molecule vars file
+      # yamllint disable-line rule:indentation
+      run: |
+        set -eo pipefail
+
+        cat > $MOLECULE_VARS_FILE << EOF
+        boot_firmware_source: /mnt/boot-firmware
+        device_type: ${{ matrix.device_type }}
+        image_url: $SERVER_URL/$SERVER_PATH/$SERVER_FILENAME
+        image_file: $IMAGE_FILE
+        system_root_mount: $SYSTEM_ROOT
+        EOF
+
+        cat $MOLECULE_VARS_FILE
+      shell: bash
+      env:
+        SERVER_URL: https://cdimage.ubuntu.com
+        SERVER_PATH: "ubuntu-server/${{ matrix.ubuntu_code_name }}/daily-preinstalled/current"
+        SERVER_FILENAME: "${{ matrix.ubuntu_code_name }}-preinstalled-server-${{ matrix.arch }}+${{ matrix.device_type }}.img.xz"
+        IMAGE_FILE: "${{ matrix.ubuntu_code_name }}.img"
+        SYSTEM_ROOT: /mnt/sysroot
+
+    - name: Molecule Test
+      run: |
+        sudo -E molecule $MOLECULE_PARAMS --env-file $MOLECULE_VARS_FILE test --all --no-parallel
+      shell: bash
+      working-directory: ./os
+      env:
+        ANSIBLE_FORCE_COLOR: 1
+        ANSIBLE_COLLECTIONS_PATH: "${{ env.COLLECTIONS_PATH }}"
+        PY_COLORS: 1
+        TERM: xterm-256color

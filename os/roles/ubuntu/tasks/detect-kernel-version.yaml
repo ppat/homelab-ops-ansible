@@ -1,0 +1,14 @@
+---
+# we check the version version of the kernel by checking the kernel symlinked to
+# from /boot/vmlinuz instead of using `uname -r` as uname shows the kernel version
+# that we booted under. We need to know the version of the kernel that we installed
+# or updated to using apt-get.
+
+- name: "detect-kernel-version | Check current kernel marked as default from vmlinuz symlink"
+  ansible.builtin.stat:
+    path: "/boot/vmlinuz"
+  register: stat_kernel
+
+- name: "detect-kernel-version | Extract kernel version"
+  ansible.builtin.set_fact:
+    current_kernel_version: "{{ stat_kernel.stat.lnk_source['/boot/vmlinuz-'|length:] }}"

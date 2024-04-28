@@ -1,0 +1,7 @@
+---
+- name: "packages-remove | Uninstall packages that should not be on image"
+  when: ubuntu.packages.remove|length > 0
+  ansible.builtin.include_role:
+    name: "homelab_ops.packages.apt_uninstall"
+  vars:
+    packages: "{{ ubuntu.packages.remove | default([]) }}"

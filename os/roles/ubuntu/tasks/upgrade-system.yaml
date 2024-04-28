@@ -1,0 +1,34 @@
+---
+- name: "upgrade-system | configure uncompressed kernel if needed"
+  when: device_type == 'raspi'
+  ansible.builtin.include_tasks: configure-uncompressed-kernel.yaml
+
+- name: "upgrade-system | Prevent upgrade of kernel"
+  ansible.builtin.dpkg_selections:
+    name: "{{ item }}"
+    selection: hold
+  loop:
+  - linux-headers-raspi
+  - linux-image-raspi
+  - linux-raspi
+  # we default to using the kernel version provided with the source image instead of upgrading to the latest version
+  # under the assumption that the kernel versions released with the source image will have benefitted from some form of
+  # testing. we only set this to "true" in cases when we know that an updated kernel is needed to resolve a specific issue.
+  when: device_type == 'raspi' and not ubuntu.kernel.upgrade|default("false")|bool
+
+- name: "upgrade-system | Update the apt package index"
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: "upgrade-system | Upgrade pre-existing packages to their latest versions"
+  ansible.builtin.apt:
+    upgrade: true
+    autoclean: true
+    autoremove: true
+    dpkg_options: "force-confdef"
+    install_recommends: false
+
+- name: "upgrade-system | Uncompress kernel if needed"
+  when: device_type == 'raspi'
+  ansible.builtin.include_tasks: uncompress-kernel.yaml

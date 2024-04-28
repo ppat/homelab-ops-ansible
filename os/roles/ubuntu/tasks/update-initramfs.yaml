@@ -1,0 +1,43 @@
+---
+- name: "update-initramfs | Indicate that iscsi support should be available within initramfs for use at boot time"
+  ansible.builtin.file:
+    path: /etc/iscsi/iscsi.initramfs
+    state: touch
+    owner: root
+    group: root
+    mode: '0644'
+  changed_when: false
+
+- name: "update-initramfs | Detect installed kernel (not the current kernel booted under)"
+  ansible.builtin.import_tasks: detect-kernel-version.yaml
+
+- name: "update-initramfs | read the current initramfs stats"
+  ansible.builtin.stat:
+    path: "{{ boot_firmware_dest[device_type] }}/initrd.img"
+  register: stat_initramfs
+
+- name: "update-initramfs | calculate initramfs age"
+  ansible.builtin.set_fact:
+    initramfs_age_seconds: "{{ (now() - ('%Y-%m-%d %H:%M:%S' | strftime(stat_initramfs.stat.mtime) | to_datetime)).total_seconds() }}"
+  when: stat_initramfs.stat.exists
+
+- name: "update-initramfs | Create a new initramfs for kernel: {{ current_kernel_version }}"
+  when: not stat_initramfs.stat.exists or initramfs_age_seconds|int > 900
+  ansible.builtin.command: "update-initramfs -v -k {{ current_kernel_version }} -c"
+  register: initramfs
+
+- name: "update-initramfs | Read the new initramfs symlink"
+  when: initramfs.changed
+  ansible.builtin.stat:
+    path: "/boot/initrd.img"
+  register: stat_initrd
+
+- name: "update-initramfs | Place the new initramfs under boot partition mount"
+  when: initramfs.changed
+  ansible.builtin.copy:
+    src: "{{ stat_initrd.stat.lnk_source }}"
+    dest: "{{ boot_firmware_dest[device_type] }}/initrd.img"
+    owner: root
+    group: root
+    mode: '0755'
+    remote_src: true

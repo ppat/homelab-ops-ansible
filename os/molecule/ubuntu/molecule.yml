@@ -1,0 +1,38 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: default
+platforms:
+- name: instance
+- name: controller
+provisioner:
+  name: ansible
+  inventory:
+    host_vars:
+      instance:
+        device_type: $device_type
+        boot_firmware_source: $boot_firmware_source
+      controller:
+        image_url: $image_url
+        image_file: $image_file
+        system_root_mount: $system_root_mount
+        boot_firmware_source: $boot_firmware_source
+    hosts:
+      all:
+        hosts:
+          instance:
+            ansible_host: $system_root_mount
+            ansible_connection: chroot
+            ansible_remote_tmp: /tmp/.ansible
+          controller:
+            ansible_host: localhost
+            ansible_connection: local
+  playbooks:
+    prepare: prepare.yml
+  default_sequence:
+  - converge
+  test_sequence:
+  - converge
+  verify_sequence:
+  - converge

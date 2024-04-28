@@ -1,0 +1,30 @@
+---
+- name: "configure-system | Set system-wide environement variables"
+  ansible.builtin.template:
+    src: environment.j2
+    dest: "/etc/environment"
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: "configure-system | Disable Ubuntu MotD"
+  ansible.builtin.lineinfile:
+    path: /etc/default/motd-news
+    regexp: '^ENABLED='
+    line: 'ENABLED=0'
+
+- name: "configure-system | Configure sysctl attributes"
+  ansible.posix.sysctl:
+    name: "{{ item.key }}"
+    value: "{{ item.value }}"
+    state: present
+    reload: true
+  loop: "{{ ubuntu.kernel.parameters | default({}) | dict2items }}"
+
+- name: "configure-system | Configure kernel modules to be loaded on boot"
+  ansible.builtin.lineinfile:
+    path: /etc/modules-load.d/modules.conf
+    line: "{{ item }}"
+    state: present
+    insertafter: EOF
+  loop: "{{ ubuntu.kernel.modules | default([]) }}"
