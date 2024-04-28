@@ -1,7 +1,7 @@
 ---
 repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v4.5.0
+  rev: v4.6.0
   hooks:
   - id: check-added-large-files
   - id: check-executables-have-shebangs
@@ -14,28 +14,28 @@ repos:
     args: [--fix=lf]
   - id: trailing-whitespace
 - repo: https://github.com/adrienverge/yamllint.git
-  rev: v1.33.0
+  rev: v1.35.1
   hooks:
   - id: yamllint
     args: [--strict]
 - repo: https://github.com/ansible/ansible-lint
-  rev: v6.22.1
+  rev: v24.2.2
   hooks:
   - id: ansible-lint
     args: ["--skip-list=yaml,jinja"]
     stages:
     - manual
 - repo: https://github.com/koalaman/shellcheck-precommit
-  rev: v0.9.0
+  rev: v0.10.0
   hooks:
   - id: shellcheck
 - repo: https://github.com/alessandrojcm/commitlint-pre-commit-hook
-  rev: v9.10.0
+  rev: v9.16.0
   hooks:
   - id: commitlint
     stages: [commit-msg]
     additional_dependencies:
-    - '@commitlint/config-conventional'
-    - '@commitlint/ensure'
-    - 'commitlint-plugin-function-rules'
+    - '@commitlint/config-conventional@19.2.2'
+    - '@commitlint/ensure@19.0.3'
+    - 'commitlint-plugin-function-rules@4.0.0'
     args: ['--verbose']
