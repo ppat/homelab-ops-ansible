@@ -16,7 +16,7 @@
     - provision.raspberry_pi.serial is defined and provision.raspberry_pi.serial|length == 8
     - provision.cloudinit.ssh_users is defined and provision.cloudinit.ssh_users|length > 0
     - provision.cloudinit.ansible.core_version is defined
-    - provision.cloudinit.ansible.collections.requirements is defined
+    - provision.cloudinit.ansible.collections_requirements_file is defined
     - provision.cloudinit.ansible.playbook is defined
     - provision.cloudinit.ansible.vars_file is defined
 
