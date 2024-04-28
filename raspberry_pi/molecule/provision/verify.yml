@@ -1,0 +1,57 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  vars:
+    block_device_file: /tmp/test_block_device.img
+    sysroot_mount: /mnt/sysroot
+    generated_config_files:
+    - /boot/firmware/cmdline.txt
+    - /boot/firmware/config.txt
+    - /etc/fstab
+    - /boot/firmware/user-data
+    - /boot/firmware/meta-data
+    - /boot/firmware/vendor-data
+  tasks:
+  - name: Detect loopback device by file (for when it already exists)
+    ansible.builtin.shell: |
+      #!/bin/bash
+      set -eo pipefail
+      losetup --associated {{ block_device_file }} | cut -d':' -f1
+    args:
+      executable: /bin/bash
+    become: true
+    register: loopback_device_detect_register
+    changed_when: false
+
+  - name: Extract detected loopback device
+    ansible.builtin.set_fact:
+      loopback_device: "{{ loopback_device_detect_register.stdout }}"
+
+  - name: Read partitions of loopback_device
+    ansible.builtin.shell: |
+      #!/bin/bash
+      set -eo pipefail
+      lsblk {{ loopback_device | mandatory }} --fs --paths --list
+    args:
+      executable: /bin/bash
+    become: true
+    register: filesystem_lsblk_register
+    changed_when: false
+
+  - name: "Display lsblk output"
+    ansible.builtin.debug:
+      msg: "{{ filesystem_lsblk_register.stdout_lines }}"
+
+  - name: "Read generated file"
+    ansible.builtin.slurp:
+      src: "{{ sysroot_mount }}{{ item }}"
+    register: generated_files
+    loop: "{{ generated_config_files }}"
+
+  - name: "Display generated file"
+    ansible.builtin.debug:
+      msg: "{{ item['content'] | b64decode }}"
+    loop: "{{ generated_files.results }}"
+    loop_control:
+      label: "{{ item.item }}"

@@ -1,0 +1,49 @@
+---
+- name: Prepare
+  hosts: all
+  gather_facts: false
+  vars:
+    block_device_file: /tmp/test_block_device.img
+  tasks:
+  - name: Install required packages
+    ansible.builtin.apt:
+      name:
+      - bsdextrautils
+      - btrfs-progs
+      - dosfstools
+      - e2fsprogs
+      - parted
+      - pipx
+      - rsync
+      - wget
+      - zstd
+      state: present
+      install_recommends: false
+      update_cache: true
+      cache_valid_time: 3600
+
+  - name: Select next available loopback device
+    ansible.builtin.stat:
+      path: "{{ block_device_file }}"
+    register: block_device_file_stat_register
+
+  - name: Select next available loopback device
+    ansible.builtin.command: losetup -f
+    become: true
+    register: loopback_device_select_register
+    when: not block_device_file_stat_register.stat.exists
+
+  - name: Extract selected loopback device
+    ansible.builtin.set_fact:
+      loopback_device: "{{ loopback_device_select_register.stdout }}"
+    when: not block_device_file_stat_register.stat.exists
+
+  - name: Create file to back the test block device
+    ansible.builtin.command: "dd if=/dev/zero of={{ block_device_file }} bs=1M count=1000"
+    become: true
+    when: not block_device_file_stat_register.stat.exists
+
+  - name: Create loopback device for the test block device
+    ansible.builtin.command: "losetup -P {{ loopback_device | mandatory }} {{ block_device_file }}"
+    become: true
+    when: not block_device_file_stat_register.stat.exists

@@ -1,0 +1,4 @@
+---
+kernel_settings:
+  config: "{{ kernel_config_defaults | combine(kernel.config) }}"
+  filename: "{{ kernel.filename | default('vmlinuz') }}"

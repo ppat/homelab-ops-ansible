@@ -1,0 +1,20 @@
+---
+- name: Converge
+  hosts: all
+  gather_facts: false
+  vars:
+    boot_path: "/mnt/boot"
+  tasks:
+  - name: "Configure raspberry pi kernel config.txt"
+    ansible.builtin.include_role:
+      name: homelab_ops.raspberry_pi.kernel_config
+    vars:
+      kernel:
+        config:
+          disabled_features:
+          - bluetooth
+          - wifi
+          - act_led
+          autodetect:
+          - display
+        filename: vmlinux

@@ -1,0 +1,43 @@
+[all]
+kernel={{ kernel_settings.filename }}
+initramfs initrd.img followkernel
+cmdline=cmdline.txt
+disable_splash=1
+
+[pi4]
+arm_64bit=1
+
+{% if 'act_led' in kernel_settings.config["disabled_features"] -%}
+# disable ACT-LED (usually used for SD card activity)
+dtparam=act_led_trigger=none
+dtparam=act_led_activelow=off
+{% endif %}
+
+{% if 'bluetooth' in kernel_settings.config["disabled_features"] -%}
+dtoverlay=disable-bt
+{% endif %}
+{% if 'wifi' in kernel_settings.config["disabled_features"] -%}
+dtoverlay=disable-wifi
+{% endif %}
+
+[all]
+enable_uart=0
+{% if 'camera' in kernel_settings.config["autodetect"] -%}
+camera_auto_detect=1
+{% else -%}
+camera_auto_detect=0
+{% endif %}
+{% if 'display' in kernel_settings.config["autodetect"] -%}
+display_auto_detect=1
+{% else -%}
+display_auto_detect=0
+{% endif %}
+
+{% if rpi_serial and kernel_settings.config["arm_boost_supported"] -%}
+# configure arm boost for a specific rpi serial only
+[0x{{ rpi_serial }}]
+arm_boost=1
+{% endif %}
+
+# placing 'all' filter at the end to reset any cumulative filters
+[all]

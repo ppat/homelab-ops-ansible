@@ -1,0 +1,54 @@
+---
+- name: "Check for mandatory variables definitions"
+  assert:
+    that:
+    # we have parameterized ubuntu distribution release into a variable instead of detecting via `ansible_distribution_release`
+    # as we don't want the value for the currently running OS, but the value for OS being installed/configured
+    # as those two maybe different.
+    - ubuntu_distribution_release is defined and ubuntu_distribution_release in supported_ubuntu_releases
+    - root_filesystem is defined
+    - root_filesystem.uuid is defined
+    - root_filesystem.name is defined and root_filesystem.name|length > 0
+    - root_filesystem.fstype is defined and root_filesystem.fstype in supported_filesystem_types
+    - root_filesystem.partlabel is defined and root_filesystem.partlabel|length > 0
+    - boot_path is defined and boot_path|length > 0
+
+- name: "Set root filesystem identifer (uuid present)"
+  ansible.builtin.set_fact:
+    root_device_identifier: "UUID={{ root_filesystem.uuid }}"
+  when: root_filesystem.uuid and root_filesystem.uuid|length > 0
+
+- name: "Set root filesystem identifer (uuid not present)"
+  ansible.builtin.set_fact:
+    root_device_identifier: "{{ root_filesystem.name }}"
+  when: root_device_identifier is not defined
+
+- name: "Select root filesystem params"
+  ansible.builtin.set_fact:
+    rootfs_params:
+    - "root={{ root_device_identifier }}"
+    - "rootfstype={{ root_filesystem.fstype }}"
+    - "{{ (root_filesystem.fstype == 'btrfs') | ternary('rootflags=subvol=@' + root_filesystem.partlabel, '') }}"
+    - "rootwait"
+
+- name: "Select parameters for kernel cmdline.txt"
+  ansible.builtin.set_fact:
+    kernel_params: "{{ base_params + rootfs_params + additional_kernel_params }}"
+  vars:
+    base_params: "{{ kernel_cmdline.ubuntu_release_specific[ubuntu_distribution_release] + kernel_cmdline.baseline }}"
+
+- name: "Ensure boot path exists"
+  ansible.builtin.file:
+    path: "{{ boot_path }}"
+    owner: root
+    group: root
+    mode: '0755'
+    state: directory
+
+- name: "Create/update kernel cmdline.txt"
+  ansible.builtin.copy:
+    content: "{{ kernel_params | reject('match', '^$') | join(' ') | trim }}"
+    dest: "{{ boot_path }}/cmdline.txt"
+    owner: root
+    group: root
+    mode: '0755'

@@ -1,0 +1,43 @@
+---
+- name: "prepare-block-device | ensure system root mount path exists"
+  ansible.builtin.file:
+    path: "{{ system_root_mount_point }}"
+    state: directory
+
+- name: "prepare-block-device | override partition configuration defaults with any user provided values"
+  ansible.builtin.set_fact:
+    partition_config: "{{ partition_config | default({}) | combine({item.key: overridden_value}) }}"
+  vars:
+    overridden_value: "{{ item.value | combine(provision.block_device.partitions[item.key]) | combine({'mount_path': (system_root_mount_point + item.value.mount_path).rstrip('/') }) }}"
+  loop: "{{ partition_defaults | dict2items }}"
+  loop_control:
+    label: "{{ item.key }}"
+
+- name: "prepare-block-device | set required partition and filesystem configuration"
+  ansible.builtin.set_fact:
+    # convert to list and sort by partition number
+    required_configuration: "{{ partition_config | dict2items | community.general.json_query('[].value') | sort(attribute='number') }}"
+
+- name: "prepare-block-device | create partitions on selected block device"
+  ansible.builtin.include_role:
+    name: homelab_ops.block_device.partition
+  vars:
+    disk: "{{ selected_block_device.path }}"
+    size_unit: "{{ provision.block_device.size_unit | default(default_size_unit) }}"
+    partition_table_type: "{{ provision.block_device.partition_table_type | default(default_partition_table_type) }}"
+    partitions: "{{ required_configuration }}"
+
+- name: "prepare-block-device | create filesystems on newly created partitions"
+  ansible.builtin.include_role:
+    name: homelab_ops.block_device.filesystem
+  vars:
+    disk: "{{ selected_block_device.path }}"
+    partitions: "{{ required_configuration }}"
+
+- name: "prepare-block-device | retain filesystem creation output for system root information"
+  ansible.builtin.set_fact:
+    root_filesystem: "{{ filesystem_state[partition_config.root.number|string] }}"
+
+- name: "prepare-block-device | retain partition creation output for system root information"
+  ansible.builtin.set_fact:
+    root_partition: "{{ partition_state[root_filesystem.name] }}"

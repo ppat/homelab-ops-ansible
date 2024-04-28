@@ -1,0 +1,22 @@
+---
+- name: "configure-cloudinit | set up ansible"
+  ansible.builtin.include_role:
+    name: homelab_ops.configure.ansible
+  vars:
+    ansible_config:
+      ansible_core_version: "{{ provision.cloudinit.ansible.core_version }}"
+      dependencies: "{{ provision.cloudinit.ansible.dependencies | default([]) }}"
+      collections_requirements_file: "{{ provision.cloudinit.ansible.collections.requirements }}"
+
+- name: "configure-cloudinit | set up cloud init"
+  ansible.builtin.include_role:
+    name: homelab_ops.configure.cloud_init
+  vars:
+    cloudinit:
+      # place data source under boot filesystem mount path
+      data_source_path: "{{ partition_config.boot.mount_path }}"
+      local_hostname: "{{ provision.raspberry_pi.hostname | default(default_hostname) }}"
+      instance_id: "{{ provision.raspberry_pi.instance_id | default(default_instance_id) }}"
+      users: "{{ provision.cloudinit.ssh_users }}"
+      ansible_playbook: "{{ provision.cloudinit.ansible.playbook }}"
+      ansible_vars_file: "{{ provision.cloudinit.ansible.vars_file }}"

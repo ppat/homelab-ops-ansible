@@ -1,0 +1,7 @@
+---
+kernel_config_defaults:
+  arm_boost_supported: false
+  autodetect: ['display']
+  disabled_features: []
+
+rpi_serial: ~

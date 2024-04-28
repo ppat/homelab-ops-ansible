@@ -1,0 +1,23 @@
+---
+- name: "Check for mandatory variables definitions"
+  assert:
+    that:
+    - boot_path is defined and boot_path|length > 0
+    - kernel|list is ansible.builtin.subset(['config', 'filename'])
+    - kernel.config|list is ansible.builtin.subset(['arm_boost_supported', 'autodetect', 'disabled_features'])
+
+- name: "Ensure boot path exists"
+  ansible.builtin.file:
+    path: "{{ boot_path }}"
+    owner: root
+    group: root
+    mode: '0755'
+    state: directory
+
+- name: "Create/update kernel config.txt"
+  ansible.builtin.template:
+    src: kernel-config.txt.j2
+    dest: "{{ boot_path }}/config.txt"
+    owner: root
+    group: root
+    mode: '0755'
