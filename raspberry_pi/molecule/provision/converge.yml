@@ -1,0 +1,91 @@
+---
+- name: Converge
+  hosts: all
+  gather_facts: false
+  vars:
+    block_device_file: /tmp/test_block_device.img
+    sysroot_mount: /mnt/sysroot
+  tasks:
+  - name: Detect loopback device by file
+    ansible.builtin.shell: |
+      #!/bin/bash
+      set -eo pipefail
+      losetup --associated {{ block_device_file }} | cut -d':' -f1
+    args:
+      executable: /bin/bash
+    become: true
+    register: loopback_device_detect_register
+    changed_when: false
+
+  - name: Extract detected loopback device
+    ansible.builtin.set_fact:
+      loopback_device: "{{ loopback_device_detect_register.stdout }}"
+
+  - name: "Provision raspberry pi"
+    ansible.builtin.include_role:
+      name: homelab_ops.raspberry_pi.provision
+    vars:
+      provision:
+        block_device:
+          additional_bind_mounts:
+          - src: /srv/longhorn
+            target: /var/lib/longhorn
+          - src: /tmp
+            target: /var/tmp
+          partitions:
+            boot:
+              size: 100
+            root:
+              size: 200
+              filesystem_type: btrfs
+              filesystem_options:
+                subvolumes:
+                - name: home
+                  path: home
+                  copy_on_write: true
+                - name: snapshots
+                  path: .snapshots
+                  copy_on_write: true
+                - name: tmp
+                  path: tmp
+                  copy_on_write: false
+                - name: var
+                  path: var
+                  copy_on_write: false
+            data:
+              size: ~
+              filesystem_type: ext4
+          root_mount_point: "{{ sysroot_mount }}"
+          selector:
+            include:
+              type: loop
+              path: "{{ loopback_device }}"
+          size_unit: MiB
+        os_image:
+          url: https://cdimage.ubuntu.com/ubuntu-base/releases/jammy/release/ubuntu-base-22.04-base-amd64.tar.gz
+          distribution_release: jammy
+        raspberry_pi:
+          serial: '12345678'
+          kernel:
+            config:
+              arm_boost_supported: true
+              disabled_features:
+              - bluetooth
+              - wifi
+              - act_led
+        cloudinit:
+          ansible:
+            # renovate: datasource=pypi depName=ansible-core
+            core_version: "2.16.2"
+            dependencies:
+            - name: jmespath
+              # renovate: datasource=pypi depName=jmespath
+              version: "1.0.1"
+              params: []
+            collections_requirements_file: "{{ MOLECULE_SCENARIO_DIR }}/input/requirements.yaml"
+            playbook: "{{ MOLECULE_SCENARIO_DIR }}/input/playbook.yaml"
+            vars_file: /root/.secrets/cloudinit-playbook-vars
+          ssh_users:
+          - name: test-user
+            authorized_keys:
+            - ssh-ed25519 AAAABBBBCCCCDDDDEEEEFFFF test-user@email.com

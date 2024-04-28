@@ -1,0 +1,28 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  vars:
+    boot_path: "/mnt/boot"
+    kernel_config_path: "{{ boot_path }}/config.txt"
+  tasks:
+  - name: Stat for generated kernel config
+    ansible.builtin.stat:
+      path: "{{ kernel_config_path }}"
+    register: kernel_config_stat
+
+  - name: Assert that kernel config exists at destination
+    ansible.builtin.assert:
+      that:
+      - "{{ kernel_config_stat.stat.exists }}"
+      fail_msg: "{{ kernel_config_path }} does NOT exist at expected location"
+      success_msg: "{{ kernel_config_path }} has been generated"
+
+  - name: "Read generated config.txt"
+    ansible.builtin.slurp:
+      src: "{{ kernel_config_path }}"
+    register: config_generated
+
+  - name: "Display generated config.txt"
+    ansible.builtin.debug:
+      msg: "{{ config_generated['content'] | b64decode }}"

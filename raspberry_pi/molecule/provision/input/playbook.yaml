@@ -1,0 +1,10 @@
+---
+- name: Running cloud-init first-time boot playbook
+  hosts: localhost
+  become: true
+  gather_facts: true
+
+  tasks:
+  - name: "Hello world"
+    ansible.builtin.debug:
+      msg: "Hello world"

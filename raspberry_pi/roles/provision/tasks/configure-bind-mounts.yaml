@@ -1,0 +1,43 @@
+---
+- name: "configure-bind-mounts | Create temp fstab file"
+  ansible.builtin.tempfile:
+    state: file
+  register: tmp_fstab_file
+  changed_when: false
+
+- name: "configure-bind-mounts | Check if any device is mounted at requested bind mount locations"
+  ansible.builtin.command: "findmnt --mtab --json {{ system_root_mount_point }}{{ item.target }}"
+  loop: "{{ provision.block_device.additional_bind_mounts | default([]) }}"
+  loop_control:
+    label: "{{ item.target }}"
+  register: existing_bind_mounts_register
+  changed_when: false
+  failed_when: false
+
+- name: "configure-bind-mounts | create src directory for bind mount"
+  ansible.builtin.file:
+    path: "{{ system_root_mount_point }}{{ item.item.src }}"
+    state: directory
+  when: item.rc == 1
+  loop: "{{ existing_bind_mounts_register.results }}"
+  loop_control:
+    label: "{{ item.item.src }}"
+
+- name: "configure-bind-mounts | bind-mount directories into expected location"
+  ansible.posix.mount:
+    path: "{{ system_root_mount_point }}{{ item.item.target }}"
+    src: "{{ system_root_mount_point }}{{ item.item.src }}"
+    fstab: "{{ tmp_fstab_file.path }}"
+    opts: bind
+    state: mounted
+    fstype: none
+  when: item.rc == 1
+  loop: "{{ existing_bind_mounts_register.results }}"
+  loop_control:
+    label: "{{ item.item.target }}->{{ item.item.src }}"
+
+- name: "configure-bind-mounts | Remove temporary fstab"
+  ansible.builtin.file:
+    path: "{{ tmp_fstab_file.path }}"
+    state: absent
+  changed_when: false
