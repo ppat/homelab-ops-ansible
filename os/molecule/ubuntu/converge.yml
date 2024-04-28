@@ -1,0 +1,42 @@
+---
+- name: Converge
+  hosts: instance
+  gather_facts: true
+  tasks:
+  - name: "Setup Ubuntu OS"
+    ansible.builtin.include_role:
+      name: homelab_ops.os.ubuntu
+    vars:
+      ubuntu:
+        kernel:
+          modules:
+          - br_netfilter
+          parameters:
+            net.ipv4.ip_forward: 1
+            net.ipv6.conf.all.forwarding: 1
+          upgrade: true
+        packages:
+          install:
+          - vim
+          remove:
+          - name: snapd
+            systemd_services: [snapd]
+            directories:
+            - /snap
+            - /var/snap
+            - /var/lib/snapd
+            - /var/cache/snapd
+            - /usr/lib/snapd
+            - /root/snap
+            reinstall: prevent
+          - name: squashfs-tools
+          - name: unattended-upgrades
+            systemd_services: [unattended-upgrades]
+            reinstall: prevent
+        services:
+          mask:
+          - apt-daily-upgrade.service
+          - apt-daily.service
+          disable:
+          - apt-daily-upgrade.timer
+          - apt-daily.timer

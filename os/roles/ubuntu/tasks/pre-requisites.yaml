@@ -1,0 +1,21 @@
+---
+- name: "pre-requisites | Ensure boot partition mount exists"
+  ansible.builtin.file:
+    path: "{{ boot_firmware_dest[device_type] }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: "pre-requisites | Re-locate boot firmware from mounted boot partition to expected location"
+  ansible.builtin.copy:
+    # src has trailing slash so that contents of directory will be copied instead of directory as well
+    src: "{{ boot_firmware_source }}/"
+    dest: "{{ boot_firmware_dest[device_type] }}"
+    remote_src: true
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: "pre-requisites | Detect installed kernel (not the current kernel booted under)"
+  ansible.builtin.import_tasks: detect-kernel-version.yaml

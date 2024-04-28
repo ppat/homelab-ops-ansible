@@ -1,0 +1,34 @@
+---
+- name: Prepare
+  hosts: controller
+  gather_facts: false
+  tasks:
+  - name: "Fetch and unpack image"
+    ansible.builtin.shell: >
+      scripts/fetch-image.sh
+      --url {{ image_url }}
+      --output {{ image_file }}
+    args:
+      executable: /bin/bash
+
+  - name: "Mount image onto system root directory"
+    ansible.builtin.shell: >
+      scripts/mount-image.sh
+      --image {{ image_file }}
+      --system-root {{ system_root_mount }}
+      --boot-root {{ boot_firmware_source }}
+    args:
+      executable: /bin/bash
+
+  - name: "Removing existing resolv conf"
+    ansible.builtin.file:
+      path: "{{ system_root_mount }}/etc/resolv.conf"
+      state: absent
+
+  - name: "Creating temporary resolv conf"
+    ansible.builtin.copy:
+      content: 'nameserver 1.1.1.1'
+      dest: "{{ system_root_mount }}/etc/resolv.conf"
+      owner: root
+      group: root
+      mode: '0644'

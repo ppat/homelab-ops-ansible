@@ -1,0 +1,34 @@
+---
+- name: "Check for mandatory variables definitions"
+  ansible.builtin.assert:
+    that:
+    - ubuntu is defined and ubuntu|length > 0
+    - ubuntu.kernel is defined and ubuntu.kernel|length > 0
+    - ubuntu.packages is defined and ubuntu.packages|length > 0
+    - ubuntu.services is defined and ubuntu.services|length > 0
+    - boot_firmware_source is defined
+    - device_type is defined
+
+- name: "Prepare pre-requisites"
+  ansible.builtin.import_tasks: pre-requisites.yaml
+
+- name: "Remove unnecessary packages"
+  ansible.builtin.import_tasks: remove-packages.yaml
+
+- name: "Upgrade system: existing packages + kernel"
+  ansible.builtin.import_tasks: upgrade-system.yaml
+
+- name: "Install required packages"
+  ansible.builtin.import_tasks: install-packages.yaml
+
+- name: "Disable additional unnecessary services"
+  ansible.builtin.import_tasks: disable-services.yaml
+
+- name: "Configure system"
+  ansible.builtin.import_tasks: configure-system.yaml
+
+- name: "Create a new initramfs"
+  ansible.builtin.import_tasks: update-initramfs.yaml
+
+- name: "Perform clean up"
+  ansible.builtin.import_tasks: cleanup.yaml

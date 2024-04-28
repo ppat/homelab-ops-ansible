@@ -1,0 +1,25 @@
+#!/bin/bash
+set -e
+
+BTPATH="{{ boot_firmware_dest[device_type] }}"
+CKPATH=$BTPATH/vmlinuz
+DKPATH=$BTPATH/vmlinux
+
+# Check if an uncompressed kernel already exists and that it has not changed
+if [[ -e $BTPATH/check.md5 && -e $DKPATH ]]; then
+   if md5sum --status --ignore-missing -c $BTPATH/check.md5; then
+      echo -e "\e[32mNo changes needed. Uncompressed kernel available.\e[0m"
+      exit 0
+   else
+      echo -e "\e[31mNewer compressed kernel available! Will proceed with to uncompress...\e[0m"
+      # Backup the old uncompressed kernel
+      mv $DKPATH $DKPATH.$(date +'%Y-%m-%d').bak
+   fi
+fi
+
+echo "Uncompressing kernel: $CKPATH.............."
+zcat -qf $CKPATH > $DKPATH
+echo -e "\e[32mKernel uncompressed succesfully\e[0m"
+
+# Hash the new kernel for checking
+md5sum $CKPATH $DKPATH > $BTPATH/check.md5
