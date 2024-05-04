@@ -71,7 +71,7 @@ jobs:
     - name: Install sysbox
       run: |
         # see: https://github.com/nestybox/sysbox/blob/master/docs/user-guide/install-package.md#installing-sysbox
-        wget --progress=dot:giga https://downloads.nestybox.com/sysbox/releases/v0.6.2/sysbox-ce_0.6.2-0.linux_amd64.deb -O /tmp/sysbox.deb
+        wget --progress=dot:giga https://downloads.nestybox.com/sysbox/releases/v${SYSBOX_VERSION}/sysbox-ce_${SYSBOX_VERSION}-0.linux_amd64.deb -O /tmp/sysbox.deb
         sudo apt-get install jq
         sudo apt-get install /tmp/sysbox.deb
         rm /tmp/sysbox.deb
@@ -83,6 +83,9 @@ jobs:
         sudo systemctl restart docker
 
         sudo systemctl status sysbox
+      env:
+        # renovate: datasource=github-releases depName=nestybox/sysbox
+        SYSBOX_VERSION: "0.6.2"
 
     - name: Determine molecule verbosity
       # yamllint disable-line rule:indentation
