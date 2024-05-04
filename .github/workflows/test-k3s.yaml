@@ -109,11 +109,7 @@ jobs:
         set -eo pipefail
 
         echo "Setting branch..."
-        if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
-          BRANCH="${GITHUB_HEAD_REF}"
-        else
-          BRANCH="${GITHUB_REF}"
-        fi
+        BRANCH="${GITHUB_HEAD_REF}"
         echo "... to ${BRANCH}"
 
         echo "Generating k3s tokens..."
