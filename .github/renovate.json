@@ -43,6 +43,9 @@
       "groupSlug": "github-actions-deps",
       "matchFileNames": [
         ".github/workflows/**"
+      ],
+      "matchManagers": [
+        "github-actions"
       ]
     },
     {
