@@ -46,3 +46,46 @@ jobs:
 
     - name: Determine release version
       run: echo "RELEASED_VERSION=$(cat /tmp/released.version | cut -d'v' -f2)" >> $GITHUB_ENV
+
+    - name: Build collections
+      run: |
+        # no dependencies on homelab_ops collections
+        ansible-galaxy collection build ./archive/ --output-path $OUTPUT_DIR
+        ansible-galaxy collection build ./block_device/ --output-path $OUTPUT_DIR
+        ansible-galaxy collection build ./configure/ --output-path $OUTPUT_DIR
+        ansible-galaxy collection build ./packages/ --output-path $OUTPUT_DIR
+
+        # depends on packages
+        ansible-galaxy collection build ./k3s/ --output-path $OUTPUT_DIR
+        ansible-galaxy collection build ./os/ --output-path $OUTPUT_DIR
+
+        # depends on archive, block_device, configure
+        ansible-galaxy collection build ./raspberry_pi/ --output-path $OUTPUT_DIR
+      env:
+        OUTPUT_DIR: dist/
+
+    - name: Test collection install
+      # yamllint disable-line rule:indentation
+      run: |
+        set -eo pipefail
+
+        for collection in $(find dist/ -type f -name homelab_ops-*.tar.gz); do
+          echo "Installing ${collection}..."
+          ansible-galaxy collection install $collection
+          echo
+        done
+      shell: bash
+
+    - name: Publish to ansible-galaxy collection
+      # yamllint disable-line rule:indentation
+      run: |
+        set -eo pipefail
+
+        for collection in $(find dist/ -type f -name homelab_ops-*.tar.gz); do
+          echo "Publishing ${collection}..."
+          ansible-galaxy collection publish --token ${AG_API_TOKEN} $collection
+          echo
+        done
+      shell: bash
+      env:
+        AG_API_TOKEN: ${{ secrets.ANSIBLE_GALAXY_API_TOKEN }}
