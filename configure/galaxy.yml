@@ -9,7 +9,7 @@ authors:
 description: ""
 license:
 - AGPL-3.0-only
-tags: [homelab, configure, fstab, cloud-init, ubuntu]
+tags: [homelab, configure, fstab, cloudinit, ubuntu]
 dependencies:
   community.general: ">8.1.0"
 
