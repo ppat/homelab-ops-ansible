@@ -85,7 +85,7 @@ jobs:
         sudo systemctl status sysbox
       env:
         # renovate: datasource=github-releases depName=nestybox/sysbox
-        SYSBOX_VERSION: "0.6.2"
+        SYSBOX_VERSION: "0.6.4"
 
     - name: Determine molecule verbosity
       # yamllint disable-line rule:indentation
