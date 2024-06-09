@@ -103,6 +103,16 @@
         "poetry"
       ],
       "allowedVersions": "<24"
+    },
+    {
+      "matchPackageNames": [
+        "requests"
+      ],
+      "matchManagers": [
+        "pip_requirements",
+        "poetry"
+      ],
+      "allowedVersions": "<2.32.0"
     }
   ],
   "prHourlyLimit": 10,
