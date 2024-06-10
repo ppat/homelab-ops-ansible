@@ -50,8 +50,8 @@
     },
     {
       "groupName": "all npm non-major dependencies",
-      "groupSlug": "npm-non-major-deps",
-      "matchManagers": [
+      "groupSlug": "npm-deps-non-major",
+      "matchDatasources": [
         "npm"
       ],
       "matchUpdateTypes": [
@@ -62,7 +62,7 @@
     {
       "groupName": "all npm major dependencies",
       "groupSlug": "npm-deps",
-      "matchManagers": [
+      "matchDatasources": [
         "npm"
       ],
       "matchUpdateTypes": [
@@ -71,10 +71,9 @@
     },
     {
       "groupName": "all python non-major dependencies",
-      "groupSlug": "python-non-major-deps",
-      "matchManagers": [
-        "pip_requirements",
-        "poetry"
+      "groupSlug": "pypi-deps-non-major",
+      "matchDatasources": [
+        "pypi"
       ],
       "matchUpdateTypes": [
         "minor",
@@ -83,10 +82,36 @@
     },
     {
       "groupName": "all python major dependencies",
-      "groupSlug": "python-deps",
-      "matchManagers": [
-        "pip_requirements",
-        "poetry"
+      "groupSlug": "pypi-deps",
+      "matchDatasources": [
+        "pypi"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ]
+    },
+    {
+      "groupName": "ansible-core non-major versions",
+      "groupSlug": "ansible-core-non-major",
+      "matchDatasources": [
+        "pypi"
+      ],
+      "matchPackageNames": [
+        "ansible-core"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ]
+    },
+    {
+      "groupName": "ansible-core major versions",
+      "groupSlug": "ansible-core",
+      "matchDatasources": [
+        "pypi"
+      ],
+      "matchPackageNames": [
+        "ansible-core"
       ],
       "matchUpdateTypes": [
         "major"
@@ -98,9 +123,8 @@
         "molecule",
         "molecule-plugins"
       ],
-      "matchManagers": [
-        "pip_requirements",
-        "poetry"
+      "matchDatasources": [
+        "pypi"
       ],
       "allowedVersions": "<24"
     },
@@ -108,9 +132,8 @@
       "matchPackageNames": [
         "requests"
       ],
-      "matchManagers": [
-        "pip_requirements",
-        "poetry"
+      "matchDatasources": [
+        "pypi"
       ],
       "allowedVersions": "<2.32.0"
     }
