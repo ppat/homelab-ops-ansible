@@ -56,7 +56,7 @@ jobs:
       working-directory: /tmp
       env:
         # renovate: datasource=github-releases depName=rhysd/actionlint
-        ACTIONLINT_VERSION: "1.6.27"
+        ACTIONLINT_VERSION: "1.7.1"
 
     - name: check-added-large-files
       run: pre-commit run --all-files check-added-large-files
