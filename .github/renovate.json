@@ -22,7 +22,7 @@
       "k3s/molecule/default/flux-root/.+\\.yaml$",
       "k3s/roles/bootstrap_flux/templates/.+\\.yaml$"
     ]
-  }  
+  },
   "packageRules": [
     {
       "groupName": "all ansible-galaxy non-major dependencies",
