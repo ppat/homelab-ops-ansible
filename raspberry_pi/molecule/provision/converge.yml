@@ -76,7 +76,7 @@
         cloudinit:
           ansible:
             # renovate: datasource=pypi depName=ansible-core
-            core_version: "2.16.6"
+            core_version: "2.16.7"
             dependencies:
             - name: jmespath
               # renovate: datasource=pypi depName=jmespath
