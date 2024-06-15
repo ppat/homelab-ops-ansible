@@ -45,7 +45,14 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GH_RELEASE_TOKEN }}
 
     - name: Determine release version
-      run: echo "RELEASED_VERSION=$(cat /tmp/released.version | cut -d'v' -f2)" >> $GITHUB_ENV
+      shell: bash
+      # yamllint disable-line rule:indentation
+      run: |
+        if [[ ! -f /tmp/released.version ]]; then
+          echo "No release occurred... cannot proceed."
+          exit 1
+        fi
+        echo "RELEASED_VERSION=$(cat /tmp/released.version | cut -d'v' -f2)" >> "$GITHUB_ENV"
 
     - name: Build collections
       run: |
