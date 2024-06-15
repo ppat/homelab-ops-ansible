@@ -2,6 +2,37 @@
 
 
 
+## [1.0.1](https://github.com/ppat/homelab-ops-ansible/compare/v1.0.0...v1.0.1) (2024-06-15)
+
+
+### 🐛 Enhancements + Bug Fixes
+
+* **deps:** update npm non-major dependencies ([#55](https://github.com/ppat/homelab-ops-ansible/issues/55)) ([d6b468c](https://github.com/ppat/homelab-ops-ansible/commit/d6b468c143fca5f192412b7b0107a48f358cecb1))
+* **os:** fix issue where initramfs generation and kernel uncompress steps did not run ([#67](https://github.com/ppat/homelab-ops-ansible/issues/67)) ([3d96be3](https://github.com/ppat/homelab-ops-ansible/commit/3d96be3f9f6a66cc811a445e6ac19f274a6f98e9))
+* **other:** pin requests package version to be < 2.32.0 as it breaks molecule ([#51](https://github.com/ppat/homelab-ops-ansible/issues/51)) ([ce40589](https://github.com/ppat/homelab-ops-ansible/commit/ce40589e8225c4a0770e6856cf4f089fa1b0c06b))
+
+
+### ⚙️ Other
+
+* **deps:** pin nginx docker tag to 0f04e4f ([#60](https://github.com/ppat/homelab-ops-ansible/issues/60)) ([d96a38c](https://github.com/ppat/homelab-ops-ansible/commit/d96a38c72f6e619e61bc28dadd154ac12efd5480))
+* **deps:** update all ansible-galaxy non-major dependencies ([#26](https://github.com/ppat/homelab-ops-ansible/issues/26)) ([864679c](https://github.com/ppat/homelab-ops-ansible/commit/864679c6cdc09312baa9baf1cdbf4fe0ad192b4e))
+* **deps:** update all python non-major dependencies ([#56](https://github.com/ppat/homelab-ops-ansible/issues/56)) ([0d48c5e](https://github.com/ppat/homelab-ops-ansible/commit/0d48c5e44fd46d2b29843f88f22d1787f2b67db2))
+* **deps:** update dependency ansible-core to v2.16.7 ([#64](https://github.com/ppat/homelab-ops-ansible/issues/64)) ([92a46e8](https://github.com/ppat/homelab-ops-ansible/commit/92a46e8ea1b49acac7c6e5cb97f6918608f3fa98))
+* **deps:** update dependency community.general to v8.6.1 ([#49](https://github.com/ppat/homelab-ops-ansible/issues/49)) ([a7d0efe](https://github.com/ppat/homelab-ops-ansible/commit/a7d0efe8f70608015249a800cbfd0bd30fe6273f))
+* **deps:** update dependency fluxcd/flux2 to v2.3.0 ([#45](https://github.com/ppat/homelab-ops-ansible/issues/45)) ([af2cf5f](https://github.com/ppat/homelab-ops-ansible/commit/af2cf5fa3a120b09c43c8df5e0cabd01c3f55962))
+* **deps:** update dependency k3s-io/k3s to v1.30.1+k3s1 ([#46](https://github.com/ppat/homelab-ops-ansible/issues/46)) ([b91cd25](https://github.com/ppat/homelab-ops-ansible/commit/b91cd250da9289f1c1317f8ff581a7c2db6450dd))
+* **deps:** update dependency kubernetes to v29 ([#27](https://github.com/ppat/homelab-ops-ansible/issues/27)) ([5657b9b](https://github.com/ppat/homelab-ops-ansible/commit/5657b9b46c7680cccb62fcc56df64ed3ba2262e9))
+* **deps:** update dependency kubernetes to v30 ([#58](https://github.com/ppat/homelab-ops-ansible/issues/58)) ([2ada4fb](https://github.com/ppat/homelab-ops-ansible/commit/2ada4fbd5a6a5813ef801278652ee6c5e3573c82))
+* **deps:** update dependency requests to v2.32.2 [security] ([#61](https://github.com/ppat/homelab-ops-ansible/issues/61)) ([c767cca](https://github.com/ppat/homelab-ops-ansible/commit/c767cca5d84898333594bf5ffb0ff7f4d4d190f7))
+* **deps:** update dependency rhysd/actionlint to v1.6.27 ([#42](https://github.com/ppat/homelab-ops-ansible/issues/42)) ([0b86f8d](https://github.com/ppat/homelab-ops-ansible/commit/0b86f8daf101bb8f7cd31db684e78971eb4df2d6))
+* **deps:** update dependency rhysd/actionlint to v1.7.1 ([#47](https://github.com/ppat/homelab-ops-ansible/issues/47)) ([ea348ae](https://github.com/ppat/homelab-ops-ansible/commit/ea348ae205804a6c81ef6b8d376bb8889a4a9f8c))
+* **deps:** update github-action dependencies ([#28](https://github.com/ppat/homelab-ops-ansible/issues/28)) ([5241b56](https://github.com/ppat/homelab-ops-ansible/commit/5241b561bd87daef969e2e64ef3d5ba7284c34a9))
+* **deps:** update minimum required versions of ansible-core and collections ([#66](https://github.com/ppat/homelab-ops-ansible/issues/66)) ([fb0535d](https://github.com/ppat/homelab-ops-ansible/commit/fb0535d90f73163b0cbf1627302dce6e302b7b3a))
+* **deps:** update nginx docker digest to 56b388b ([#63](https://github.com/ppat/homelab-ops-ansible/issues/63)) ([b969050](https://github.com/ppat/homelab-ops-ansible/commit/b9690508e3661eaadf17335ba6cb56c3c0a1ff5c))
+* **other:** update renovate config ([#59](https://github.com/ppat/homelab-ops-ansible/issues/59)) ([5fb12f1](https://github.com/ppat/homelab-ops-ansible/commit/5fb12f1b6ee47490c9e15a00d4585736ee112da7))
+* **other:** update renovate config with better groupings ([#54](https://github.com/ppat/homelab-ops-ansible/issues/54)) ([dd401b1](https://github.com/ppat/homelab-ops-ansible/commit/dd401b18e98d43745c3fb9788640e3bac9aa558b))
+* **other:** update renovate configuration ([#62](https://github.com/ppat/homelab-ops-ansible/issues/62)) ([62a6937](https://github.com/ppat/homelab-ops-ansible/commit/62a69376a491cecaef6c593d696d0af656efec94))
+
 ## 1.0.0 (2024-05-06)
 
 
