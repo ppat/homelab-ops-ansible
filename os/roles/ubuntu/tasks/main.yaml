@@ -27,6 +27,10 @@
 - name: "Configure system"
   ansible.builtin.import_tasks: configure-system.yaml
 
+- name: "Uncompress kernel if needed"
+  when: device_type == 'raspi'
+  ansible.builtin.include_tasks: uncompress-kernel.yaml
+
 - name: "Create a new initramfs"
   ansible.builtin.import_tasks: update-initramfs.yaml
 

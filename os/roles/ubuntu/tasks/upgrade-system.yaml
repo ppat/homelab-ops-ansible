@@ -28,7 +28,3 @@
     autoremove: true
     dpkg_options: "force-confdef"
     install_recommends: false
-
-- name: "upgrade-system | Uncompress kernel if needed"
-  when: device_type == 'raspi'
-  ansible.builtin.include_tasks: uncompress-kernel.yaml
