@@ -1,14 +1,16 @@
 ---
-- name: "uncompress-kernel | Read uncompressed kernel file stats"
+- name: "uncompress-kernel | Read kernel uncompressed marker"
   ansible.builtin.stat:
-    path: "{{ boot_firmware_dest[device_type] }}/vmlinux"
-  register: stat_vmlinux
+    path: "{{ boot_firmware_dest[device_type] }}/kernel.uncompressed.marker"
+  register: stat_kernel_uncompressed_marker
 
-- name: "uncompress-kernel | Calculate uncompressed kernel age"
-  when: stat_vmlinux.stat.exists
-  ansible.builtin.set_fact:
-    kernel_age_seconds: "{{ (now() - ('%Y-%m-%d %H:%M:%S' | strftime(stat_vmlinux.stat.mtime) | to_datetime)).total_seconds() }}"
-
-- name: "uncompress-kernel | Uncompress the current kernel if not exists or not changed in last 60 minutes"
-  when: not stat_vmlinux.stat.exists or kernel_age_seconds|int > 3600
+- name: "uncompress-kernel | Uncompress the current kernel if marker does not exist"
+  when: not stat_kernel_uncompressed_marker.stat.exists
   ansible.builtin.command: "{{ boot_firmware_dest[device_type] }}/auto_uncompress_kernel.sh"
+  register: kernel_uncompress
+
+- name: Record that kernel was uncompressed with a marker file
+  when: kernel_uncompress.changed
+  ansible.builtin.file:
+    path: "{{ boot_firmware_dest[device_type] }}/kernel.uncompressed.marker"
+    state: touch
