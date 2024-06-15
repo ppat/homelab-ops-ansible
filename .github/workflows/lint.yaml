@@ -103,3 +103,6 @@ jobs:
 
     - name: semantic-release
       run: npx semantic-release --dry-run
+
+    - name: validate-renovate-config
+      run: npx --yes --package renovate -- renovate-config-validator
