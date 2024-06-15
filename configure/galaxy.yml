@@ -11,7 +11,7 @@ license:
 - AGPL-3.0-only
 tags: [homelab, configure, fstab, cloudinit, ubuntu]
 dependencies:
-  community.general: ">8.1.0"
+  community.general: ">=9.0.0"
 
 repository: https://github.com/ppat/homelab-ops-ansible
 documentation: https://github.com/ppat/homelab-ops-ansible/blob/main/configure/README.md
