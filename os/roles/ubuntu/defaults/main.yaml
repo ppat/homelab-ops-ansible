@@ -30,6 +30,3 @@ device_type: any
 boot_firmware_dest:
   raspi: /boot/firmware
   any: /boot
-
-kernel_age_seconds: 0
-initramfs_age_seconds: 0

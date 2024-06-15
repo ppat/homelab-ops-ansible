@@ -11,20 +11,21 @@
 - name: "update-initramfs | Detect installed kernel (not the current kernel booted under)"
   ansible.builtin.import_tasks: detect-kernel-version.yaml
 
-- name: "update-initramfs | read the current initramfs stats"
+- name: "update-initramfs | read the current initramfs initialized marker"
   ansible.builtin.stat:
-    path: "{{ boot_firmware_dest[device_type] }}/initrd.img"
-  register: stat_initramfs
-
-- name: "update-initramfs | calculate initramfs age"
-  ansible.builtin.set_fact:
-    initramfs_age_seconds: "{{ (now() - ('%Y-%m-%d %H:%M:%S' | strftime(stat_initramfs.stat.mtime) | to_datetime)).total_seconds() }}"
-  when: stat_initramfs.stat.exists
+    path: "{{ boot_firmware_dest[device_type] }}/initrd.initialized.marker"
+  register: stat_initramfs_marker
 
 - name: "update-initramfs | Create a new initramfs for kernel: {{ current_kernel_version }}"
-  when: not stat_initramfs.stat.exists or initramfs_age_seconds|int > 900
+  when: not stat_initramfs_marker.stat.exists
   ansible.builtin.command: "update-initramfs -v -k {{ current_kernel_version }} -c"
   register: initramfs
+
+- name: Record that initramfs was initialized with a marker file
+  when: initramfs.changed
+  ansible.builtin.file:
+    path: "{{ boot_firmware_dest[device_type] }}/initrd.initialized.marker"
+    state: touch
 
 - name: "update-initramfs | Read the new initramfs symlink"
   when: initramfs.changed
