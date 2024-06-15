@@ -5,11 +5,9 @@ name: "test collection: os"
 on:
   pull_request:
     paths:
-    # As this action takes nearly an hour to run, we're only triggering it on changes to a subset of changes
-    # that we normally trigger on for other collections.
-    - 'os/roles/**/*.yaml'
-    - 'os/roles/**/*.j2'
-    - 'os/molecule/**'
+    - 'os/**'
+    - 'requirements.txt'
+    - '.github/workflows/test-os.yaml'
   workflow_dispatch:
     inputs:
       log_verbosity:
