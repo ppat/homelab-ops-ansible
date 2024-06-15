@@ -3,6 +3,11 @@ name: Release
 
 # yamllint disable-line rule:truthy
 on:
+  pull_request:
+    paths:
+    - '.github/workflows/release.yaml'
+    - '.releaserc.json'
+    - 'package.json'
   workflow_dispatch:
 
 concurrency:
@@ -44,16 +49,6 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GH_RELEASE_TOKEN }}
 
-    - name: Determine release version
-      shell: bash
-      # yamllint disable-line rule:indentation
-      run: |
-        if [[ ! -f /tmp/released.version ]]; then
-          echo "No release occurred... cannot proceed."
-          exit 1
-        fi
-        echo "RELEASED_VERSION=$(cat /tmp/released.version | cut -d'v' -f2)" >> "$GITHUB_ENV"
-
     - name: Build collections
       run: |
         # no dependencies on homelab_ops collections
@@ -72,6 +67,7 @@ jobs:
         OUTPUT_DIR: dist/
 
     - name: Publish to ansible-galaxy collection
+      if: ${{ github.event_name == 'workflow_dispatch' }}
       # yamllint disable-line rule:indentation
       run: |
         set -eo pipefail
