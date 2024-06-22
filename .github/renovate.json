@@ -34,7 +34,7 @@
       "matchManagers": [
         "github-actions"
       ],
-      "minimumReleaseAge": "30 days",
+      "minimumReleaseAge": "90 days",
       "schedule": [
         "before 10am on Tuesday",
         "before 10am on Thursday"
@@ -79,7 +79,11 @@
         "minor",
         "patch"
       ],
-      "minimumReleaseAge": "1 days"
+      "minimumReleaseAge": "30 days",
+      "schedule": [
+        "before 10am on Tuesday",
+        "before 10am on Thursday"
+      ]
     },
     {
       "groupName": "npm major dependencies",
@@ -90,7 +94,7 @@
       "matchUpdateTypes": [
         "major"
       ],
-      "minimumReleaseAge": "30 days",
+      "minimumReleaseAge": "90 days",
       "schedule": [
         "before 10am on Tuesday",
         "before 10am on Thursday"
