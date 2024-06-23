@@ -117,7 +117,11 @@ jobs:
         echo "Preparing for running semantic-release...."
         echo "--------------------------------------------------------------------------------------"
         echo "Detecting current branch..."
-        CURRENT_BRANCH=${GITHUB_HEAD_REF:-"${GITHUB_REF#refs/heads/}"}
+        if [[ ${{ github.event_name }} == "pull_request" ]]; then
+          CURRENT_BRANCH="${GITHUB_REF}"
+        else
+          CURRENT_BRANCH="${GITHUB_REF#refs/heads/}"
+        fi
         echo "Current branch is $CURRENT_BRANCH"
         echo "Switching semantic-release config to use current branch..."
         sed -i 's/^  branches: ["main"],$/  branches: ["${CURRENT_BRANCH}"],/g' .releaserc.js
