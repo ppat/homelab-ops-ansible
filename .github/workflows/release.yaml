@@ -61,8 +61,6 @@ jobs:
         CURRENT_BRANCH=${{ github.head_ref }}
         GITHUB_REF=$CURRENT_BRANCH
         set -x
-        unset GITHUB_ACTIONS
-        git checkout $CURRENT_BRANCH
         npx semantic-release --dry-run --no-ci --plugins $TESTABLE_PLUGINS --branches $CURRENT_BRANCH
 
     - name: Release
