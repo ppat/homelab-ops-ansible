@@ -125,7 +125,7 @@ jobs:
         fi
         echo "Current branch is $CURRENT_BRANCH"
         echo "Switching semantic-release config to use current branch..."
-        sed -i 's/^  branches: ["main"],$/  branches: ["${CURRENT_BRANCH}"],/g' .releaserc.js
+        sed -i 's/^  branches: \["main"\],$/  branches: \["'$CURRENT_BRANCH'"\],/g' .releaserc.js
         git diff
         echo "--------------------------------------------------------------------------------------"
         npx semantic-release --dry-run --no-ci
