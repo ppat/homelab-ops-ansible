@@ -123,7 +123,7 @@ jobs:
         sed -i 's/^  branches: ["main"],$/  branches: ["${CURRENT_BRANCH}"],/g' .releaserc.js
         git diff
         echo "--------------------------------------------------------------------------------------"
-        npx semantic-release --dry-run
+        npx semantic-release --dry-run --no-ci
         echo "--------------------------------------------------------------------------------------"
         echo "Switching semantic-release config back..."
         git checkout .releaserc.js
