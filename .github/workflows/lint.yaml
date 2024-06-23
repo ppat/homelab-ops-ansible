@@ -59,22 +59,23 @@ jobs:
       run: npm ci
 
     - name: semantic-release
-      # if: steps.changed-files-yaml.outputs.release_any_changed == 'true'
+      if: steps.changed-files-yaml.outputs.release_any_changed == 'true'
       shell: bash
       env:
         # list all plugins except @semantic-release/github + @semantic-release/git as those are hard to test on github actions
         TESTABLE_PLUGINS: "@semantic-release/commit-analyzer,@semantic-release/release-notes-generator,@semantic-release/changelog,@semantic-release/exec"
-        CURRENT_BRANCH: "${{ github.head_ref || github.ref_name }}"
+        CURRENT_BRANCH: ${{ github.head_ref || github.ref_name }}
+        GITHUB_TOKEN: ${{ secrets.GH_RELEASE_TOKEN }}
       # yamllint disable-line rule:indentation
       run: |
-        # echo "Preparing for running semantic-release...."
-        # echo "--------------------------------------------------------------------------------------"
-        # echo "Detecting current branch..."
-        # echo "Current branch is $CURRENT_BRANCH"
+        echo "Preparing for running semantic-release...."
+        echo "--------------------------------------------------------------------------------------"
+        echo "Detecting current branch..."
+        echo "Current branch is $(git branch)"
         # # echo "Switching semantic-release config to use $CURRENT_BRANCH branch..."
         # # sed -i 's|^  branches: \["main"\],$|  branches: \["main", "semantic-release-test"\],|g' .releaserc.js
         # # git diff
-        # echo "--------------------------------------------------------------------------------------"
+        echo "--------------------------------------------------------------------------------------"
         set -x
         unset GITHUB_ACTIONS
         git checkout $CURRENT_BRANCH
