@@ -243,6 +243,8 @@
   },
   "rebaseWhen": "behind-base-branch",
   "semanticCommits": "enabled",
+  "semanticCommitScope": "deps",
+  "semanticCommitType": "chore",
   "separateMajorMinor": true,
   "separateMultipleMajor": false,
   "timezone": "US/Eastern"
