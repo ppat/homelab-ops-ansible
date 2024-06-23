@@ -6,8 +6,9 @@ on:
   pull_request:
     paths:
     - '.github/workflows/release.yaml'
-    - '.releaserc.json'
+    - '.releaserc.js'
     - 'package.json'
+    - '**/galaxy.yml'
   workflow_dispatch:
 
 concurrency:
@@ -44,12 +45,31 @@ jobs:
         cache-dependency-path: 'package-lock.json'
 
     - name: Install node packages
-      run: npm ci
+      run: npm ci --no-fund --no-audit
 
-    - name: Release
-      run: npx semantic-release
+    - name: Release Dry Run
+      if: github.event_name == 'pull_request'
+      shell: bash
       env:
         GITHUB_TOKEN: ${{ secrets.GH_RELEASE_TOKEN }}
+        # list all plugins except @semantic-release/github + @semantic-release/git as those are hard to test on github actions
+        # TESTABLE_PLUGINS: "@semantic-release/commit-analyzer,@semantic-release/release-notes-generator,@semantic-release/changelog,@semantic-release/exec"
+        TESTABLE_PLUGINS: "@semantic-release/commit-analyzer,@semantic-release/release-notes-generator,@semantic-release/changelog"
+      run: |
+        # # echo "Switching semantic-release config to use $CURRENT_BRANCH branch..."
+        # # sed -i 's|^  branches: \["main"\],$|  branches: \["main", "semantic-release-test"\],|g' .releaserc.js
+        CURRENT_BRANCH=${{ github.head_ref }}
+        GITHUB_REF=$CURRENT_BRANCH
+        set -x
+        unset GITHUB_ACTIONS
+        git checkout $CURRENT_BRANCH
+        npx semantic-release --dry-run --no-ci --plugins $TESTABLE_PLUGINS --branches $CURRENT_BRANCH
+
+    - name: Release
+      if: github.event_name == 'workflow_dispatch'
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_RELEASE_TOKEN }}
+      run: npx semantic-release
 
     - name: Build collections
       run: |

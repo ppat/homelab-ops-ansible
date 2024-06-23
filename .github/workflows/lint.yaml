@@ -21,22 +21,6 @@ jobs:
       with:
         fetch-depth: 1
 
-    - name: Determine if any files in these groups have changed
-      id: changed-files-yaml
-      uses: tj-actions/changed-files@d6babd6899969df1a11d14c368283ea4436bca78 # v44
-      with:
-        files_yaml: |
-          actions:
-          - .github/workflows/**
-          - .shellcheckrc
-          renovate:
-          - .github/renovate.json
-          release:
-          - .github/workflows/release.yaml
-          - .node-version
-          - .releaserc.js
-          - package.json
-
     - name: Set up python
       uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d # v5
       with:
@@ -58,35 +42,19 @@ jobs:
     - name: Install node packages
       run: npm ci
 
-    - name: semantic-release
-      if: steps.changed-files-yaml.outputs.release_any_changed == 'true'
-      shell: bash
-      env:
-        # list all plugins except @semantic-release/github + @semantic-release/git as those are hard to test on github actions
-        TESTABLE_PLUGINS: "@semantic-release/commit-analyzer,@semantic-release/release-notes-generator,@semantic-release/changelog,@semantic-release/exec"
-        CURRENT_BRANCH: ${{ github.head_ref || github.ref_name }}
-        GITHUB_TOKEN: ${{ secrets.GH_RELEASE_TOKEN }}
-      # yamllint disable-line rule:indentation
-      run: |
-        echo "Preparing for running semantic-release...."
-        echo "--------------------------------------------------------------------------------------"
-        echo "Detecting current branch..."
-        echo "Current branch is $(git branch)"
-        # # echo "Switching semantic-release config to use $CURRENT_BRANCH branch..."
-        # # sed -i 's|^  branches: \["main"\],$|  branches: \["main", "semantic-release-test"\],|g' .releaserc.js
-        # # git diff
-        echo "--------------------------------------------------------------------------------------"
-        set -x
-        unset GITHUB_ACTIONS
-        git checkout $CURRENT_BRANCH
-        npx semantic-release --dry-run --no-ci --plugins $TESTABLE_PLUGINS --branches $CURRENT_BRANCH
-        # echo "--------------------------------------------------------------------------------------"
-        # echo "Switching semantic-release config back..."
-        # git checkout .releaserc.js
-        # echo "Done"
-
     - name: Install pre-commit hooks
       run: pre-commit install --install-hooks --hook-type pre-commit
+
+    - name: Determine if any files in these groups have changed
+      id: changed-files-yaml
+      uses: tj-actions/changed-files@d6babd6899969df1a11d14c368283ea4436bca78 # v44
+      with:
+        files_yaml: |
+          actions:
+          - .github/workflows/**
+          - .shellcheckrc
+          renovate:
+          - .github/renovate.json
 
     - name: check-added-large-files
       run: pre-commit run --all-files check-added-large-files
