@@ -40,10 +40,15 @@ jobs:
       run: python -m pip install -r requirements.txt
 
     - name: Install node packages
-      run: npm ci
+      run: npm ci --no-fund --no-audit
 
     - name: Install pre-commit hooks
       run: pre-commit install --install-hooks --hook-type pre-commit
+
+    - uses: actions/cache@v3
+      with:
+        path: ~/.cache/pre-commit/
+        key: pre-commit|${{ env.pythonLocation }}|${{ hashFiles('.pre-commit-config.yaml') }}
 
     - name: Determine if any files in these groups have changed
       id: changed-files-yaml
@@ -55,6 +60,11 @@ jobs:
           - .shellcheckrc
           renovate:
           - .github/renovate.json
+          ansible:
+          - */roles/**/*.yml
+          - */molecule/**/*.yaml
+          - .ansible-lint
+          - .ansible-lint-ignore
 
     - name: check-added-large-files
       run: pre-commit run --all-files check-added-large-files
@@ -112,3 +122,8 @@ jobs:
       run: |
         npm install -g renovate
         npx --yes --package renovate -- renovate-config-validator
+
+    - name: ansible-lint
+      if: steps.changed-files-yaml.outputs.ansible_any_changed == 'true'
+      run: |
+        ansible-lint -c .ansible-lint -i .ansible-lint-ignore --skip-list=yaml .
