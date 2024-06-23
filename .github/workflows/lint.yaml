@@ -55,6 +55,11 @@ jobs:
           - .shellcheckrc
           renovate:
           - .github/renovate.json
+          release:
+          - .github/workflows/release.yaml
+          - .node-version
+          - .releaserc.js
+          - package.json
 
     - name: check-added-large-files
       run: pre-commit run --all-files check-added-large-files
@@ -107,7 +112,22 @@ jobs:
       run: npx commitlint --from ${{ github.event.pull_request.head.sha }}~${{ github.event.pull_request.commits }} --to ${{ github.event.pull_request.head.sha }} --verbose
 
     - name: semantic-release
-      run: npx semantic-release --dry-run
+      if: steps.changed-files-yaml.outputs.release_any_changed == 'true'
+      run: |
+        echo "Preparing for running semantic-release...."
+        echo "--------------------------------------------------------------------------------------"
+        echo "Detecting current branch...""
+        CURRENT_BRANCH=${GITHUB_HEAD_REF:-"${GITHUB_REF#refs/heads/}"}
+        echo "Current branch is $CURRENT_BRANCH"
+        echo "Switching semantic-release config to use current branch..."
+        sed -i 's/^  branches: ["main"],$/  branches: ["${CURRENT_BRANCH}"],/g' .releaserc.js
+        git diff
+        echo "--------------------------------------------------------------------------------------"
+        npx semantic-release --dry-run
+        echo "--------------------------------------------------------------------------------------"
+        echo "Switching semantic-release config back..."
+        git checkout .releaserc.js
+        echo "Done"
 
     - name: validate-renovate-config
       if: steps.changed-files-yaml.outputs.renovate_any_changed == 'true'
