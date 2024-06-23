@@ -116,7 +116,7 @@ jobs:
       run: |
         echo "Preparing for running semantic-release...."
         echo "--------------------------------------------------------------------------------------"
-        echo "Detecting current branch...""
+        echo "Detecting current branch..."
         CURRENT_BRANCH=${GITHUB_HEAD_REF:-"${GITHUB_REF#refs/heads/}"}
         echo "Current branch is $CURRENT_BRANCH"
         echo "Switching semantic-release config to use current branch..."
