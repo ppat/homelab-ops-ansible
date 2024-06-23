@@ -52,16 +52,13 @@ jobs:
       shell: bash
       env:
         GITHUB_TOKEN: ${{ secrets.GH_RELEASE_TOKEN }}
-        # list all plugins except @semantic-release/github + @semantic-release/git as those are hard to test on github actions
-        TESTABLE_PLUGINS: "@semantic-release/commit-analyzer,@semantic-release/release-notes-generator,@semantic-release/changelog,@semantic-release/exec"
-        # TESTABLE_PLUGINS: "@semantic-release/commit-analyzer,@semantic-release/release-notes-generator,@semantic-release/changelog"
       run: |
         # # echo "Switching semantic-release config to use $CURRENT_BRANCH branch..."
         # # sed -i 's|^  branches: \["main"\],$|  branches: \["main", "semantic-release-test"\],|g' .releaserc.js
         CURRENT_BRANCH=$GITHUB_HEAD_REF
         GITHUB_REF=$CURRENT_BRANCH
         set -x
-        npx semantic-release --dry-run --no-ci --plugins $TESTABLE_PLUGINS --branches $CURRENT_BRANCH
+        npx semantic-release --dry-run --no-ci --branches $CURRENT_BRANCH
 
     - name: Release
       if: github.event_name == 'workflow_dispatch'
