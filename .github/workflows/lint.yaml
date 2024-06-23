@@ -113,6 +113,7 @@ jobs:
 
     - name: semantic-release
       if: steps.changed-files-yaml.outputs.release_any_changed == 'true'
+      # yamllint disable-line rule:indentation
       run: |
         echo "Preparing for running semantic-release...."
         echo "--------------------------------------------------------------------------------------"
