@@ -47,14 +47,12 @@ jobs:
     - name: Install node packages
       run: npm ci --no-fund --no-audit
 
-    - name: Release Dry Run
+    - name: Release - dry run
       if: github.event_name == 'pull_request'
       shell: bash
       env:
         GITHUB_TOKEN: ${{ secrets.GH_RELEASE_TOKEN }}
       run: |
-        # # echo "Switching semantic-release config to use $CURRENT_BRANCH branch..."
-        # # sed -i 's|^  branches: \["main"\],$|  branches: \["main", "semantic-release-test"\],|g' .releaserc.js
         CURRENT_BRANCH=$GITHUB_HEAD_REF
         GITHUB_REF=$CURRENT_BRANCH
         set -x
