@@ -127,7 +127,7 @@ jobs:
         echo "Creating new branch semantic-release-test from $CURRENT_BRANCH..."
         git checkout -b semantic-release-test
         echo "Switching semantic-release config to use semantic-release-test branch..."
-        sed -i 's|^  branches: \["main"\],$|  branches: \["semantic-release-test"\],|g' .releaserc.js
+        sed -i 's|^  branches: \["main"\],$|  branches: \["main", "semantic-release-test"\],|g' .releaserc.js
         git diff
         echo "--------------------------------------------------------------------------------------"
         npx semantic-release --dry-run --no-ci
