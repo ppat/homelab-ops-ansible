@@ -1,7 +1,7 @@
 const compareFunc = require('compare-func')
 
 module.exports = {
-  branches: ["main", "semantic-release"],
+  branches: ["main"],
   plugins: [
 
     ["@semantic-release/commit-analyzer", {
@@ -57,13 +57,13 @@ module.exports = {
 
     ["@semantic-release/exec", {
       prepareCmd: `
-        #!/bin/bash
-        set -eo pipefail
+        set -e
+
         for galaxy_file in $(find . -type f -name galaxy.yml -print); do
           sed -i 's/^version:.*/version: \${nextRelease.version}/g' $galaxy_file;
           sed -E -i 's|^  (homelab_ops..*): \">=(.*)\"|  \\1: \">=\${nextRelease.version}\"|g' $galaxy_file;
         done;
-        echo \${nextRelease.version} > /tmp/released.version"
+        echo \${nextRelease.version} > /tmp/released.version;
       `
     }],
 
