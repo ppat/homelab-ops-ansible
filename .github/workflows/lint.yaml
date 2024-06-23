@@ -122,7 +122,7 @@ jobs:
           CURRENT_BRANCH="${GITHUB_REF}"
         else
           CURRENT_BRANCH="${GITHUB_REF#refs/heads/}"
-        fi        
+        fi
         echo "Current branch is $CURRENT_BRANCH"
         echo "Creating new branch semantic-release-test from $CURRENT_BRANCH..."
         git checkout -b semantic-release-test
