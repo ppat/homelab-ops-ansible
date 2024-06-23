@@ -42,6 +42,31 @@ jobs:
     - name: Install node packages
       run: npm ci
 
+    - name: semantic-release
+      if: steps.changed-files-yaml.outputs.release_any_changed == 'true'
+      shell: bash
+      env:
+        # list all plugins except @semantic-release/github + @semantic-release/git as those are hard to test on github actions
+        TESTABLE_PLUGINS: "@semantic-release/commit-analyzer,@semantic-release/release-notes-generator,@semantic-release/changelog,@semantic-release/exec"
+        CURRENT_BRANCH: "${{ github.head_ref || github.ref_name }}"
+      # yamllint disable-line rule:indentation
+      run: |
+        # echo "Preparing for running semantic-release...."
+        # echo "--------------------------------------------------------------------------------------"
+        # echo "Detecting current branch..."
+        # echo "Current branch is $CURRENT_BRANCH"
+        # # echo "Switching semantic-release config to use $CURRENT_BRANCH branch..."
+        # # sed -i 's|^  branches: \["main"\],$|  branches: \["main", "semantic-release-test"\],|g' .releaserc.js
+        # # git diff
+        # echo "--------------------------------------------------------------------------------------"
+        set -x
+        unset GITHUB_ACTIONS
+        npx semantic-release --dry-run --no-ci --plugins $TESTABLE_PLUGINS --branches $CURRENT_BRANCH
+        # echo "--------------------------------------------------------------------------------------"
+        # echo "Switching semantic-release config back..."
+        # git checkout .releaserc.js
+        # echo "Done"
+
     - name: Install pre-commit hooks
       run: pre-commit install --install-hooks --hook-type pre-commit
 
@@ -110,30 +135,6 @@ jobs:
     - name: commitlint
       if: github.event_name == 'pull_request'
       run: npx commitlint --from ${{ github.event.pull_request.head.sha }}~${{ github.event.pull_request.commits }} --to ${{ github.event.pull_request.head.sha }} --verbose
-
-    - name: semantic-release
-      if: steps.changed-files-yaml.outputs.release_any_changed == 'true'
-      shell: bash
-      env:
-        # list all plugins except @semantic-release/github + @semantic-release/git as those are hard to test on github actions
-        TESTABLE_PLUGINS: "@semantic-release/commit-analyzer,@semantic-release/release-notes-generator,@semantic-release/changelog,@semantic-release/exec"
-        CURRENT_BRANCH: "${{ github.head_ref || github.ref_name }}"
-      # yamllint disable-line rule:indentation
-      run: |
-        # echo "Preparing for running semantic-release...."
-        # echo "--------------------------------------------------------------------------------------"
-        # echo "Detecting current branch..."
-        # echo "Current branch is $CURRENT_BRANCH"
-        # # echo "Switching semantic-release config to use $CURRENT_BRANCH branch..."
-        # # sed -i 's|^  branches: \["main"\],$|  branches: \["main", "semantic-release-test"\],|g' .releaserc.js
-        # # git diff
-        # echo "--------------------------------------------------------------------------------------"
-        set -x
-        npx semantic-release --dry-run --no-ci --plugins $TESTABLE_PLUGINS --branches $CURRENT_BRANCH
-        # echo "--------------------------------------------------------------------------------------"
-        # echo "Switching semantic-release config back..."
-        # git checkout .releaserc.js
-        # echo "Done"
 
     - name: validate-renovate-config
       if: steps.changed-files-yaml.outputs.renovate_any_changed == 'true'
