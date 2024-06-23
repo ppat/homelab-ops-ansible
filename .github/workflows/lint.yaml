@@ -119,7 +119,7 @@ jobs:
         echo "--------------------------------------------------------------------------------------"
         echo "Detecting current branch..."
         if [[ ${{ github.event_name }} == "pull_request" ]]; then
-          CURRENT_BRANCH="${GITHUB_REF}"
+          CURRENT_BRANCH="${{ github.ref_name }}"
         else
           CURRENT_BRANCH="${GITHUB_REF#refs/heads/}"
         fi
