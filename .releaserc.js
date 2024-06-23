@@ -57,13 +57,11 @@ module.exports = {
 
     ["@semantic-release/exec", {
       prepareCmd: `
-        #!/bin/bash
-        set -eo pipefail
         for galaxy_file in $(find . -type f -name galaxy.yml -print); do
           sed -i 's/^version:.*/version: \${nextRelease.version}/g' $galaxy_file;
           sed -E -i 's|^  (homelab_ops..*): \">=(.*)\"|  \\1: \">=\${nextRelease.version}\"|g' $galaxy_file;
         done;
-        echo \${nextRelease.version} > /tmp/released.version"
+        echo \${nextRelease.version} > /tmp/released.version;"
       `
     }],
 
