@@ -61,8 +61,15 @@ jobs:
           renovate:
           - .github/renovate.json
           ansible:
-          - */roles/**/*.yml
-          - */molecule/**/*.yaml
+          - archive/**/*.yaml
+          - block_device/**/*.yaml
+          - configure/**/*.yaml
+          - k3s/**/*.yaml
+          - os/**/*.yaml
+          - packages/**/*.yaml
+          - raspberry_pi//**/*.yaml
+          - **/*.yml
+          - **/*.j2
           - .ansible-lint
           - .ansible-lint-ignore
 
@@ -100,7 +107,7 @@ jobs:
       run: yamllint -c .yamllint --strict --format github .
 
     - name: actionlint
-      if: steps.changed-files-yaml.outputs.actions_any_changed == 'true'
+      if: steps.changed-files-yaml.outputs.actions_any_changed == 'true' || github.event_name == 'workflow_dispatch'
       shell: bash
       run: |
         [[ "$RUNNER_ARCH" == "ARM64" ]] && export PKG_ARCH=arm64 || export PKG_ARCH=amd64
@@ -117,13 +124,13 @@ jobs:
       run: npx commitlint --from ${{ github.event.pull_request.head.sha }}~${{ github.event.pull_request.commits }} --to ${{ github.event.pull_request.head.sha }} --verbose
 
     - name: validate-renovate-config
-      if: steps.changed-files-yaml.outputs.renovate_any_changed == 'true'
+      if: steps.changed-files-yaml.outputs.renovate_any_changed == 'true' || github.event_name == 'workflow_dispatch'
       shell: bash
       run: |
         npm install -g renovate
         npx --yes --package renovate -- renovate-config-validator
 
     - name: ansible-lint
-      if: steps.changed-files-yaml.outputs.ansible_any_changed == 'true'
+      if: steps.changed-files-yaml.outputs.ansible_any_changed == 'true' || github.event_name == 'workflow_dispatch'
       run: |
         ansible-lint -c .ansible-lint -i .ansible-lint-ignore --skip-list=yaml .
