@@ -122,7 +122,7 @@ jobs:
       if: steps.changed-files-yaml.outputs.renovate_any_changed == 'true' || github.event_name == 'workflow_dispatch'
       shell: bash
       run: |
-        npm install -g renovate
+        npm install renovate
         npx --yes --package renovate -- renovate-config-validator
 
     - name: ansible-lint
@@ -130,8 +130,4 @@ jobs:
       env:
         changes_output: ${{ toJson(steps.changed-files-yaml.outputs) }}
       run: |
-        echo "${{ steps.changed-files-yaml.outputs.ansible_all_changed_files }}"
-        echo -----------
-        echo $changes_output
-        echo -----------
         ansible-lint -c .ansible-lint -i .ansible-lint-ignore --skip-list=yaml --force-color .
