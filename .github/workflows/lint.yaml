@@ -32,7 +32,7 @@ jobs:
           renovate:
           - .github/renovate.json
           ansible:
-          - '!.github/**'
+          - '!.github/**.yaml'
           - .pre-commit-config.yaml
           - '**.yaml'
           - '**.yml'
