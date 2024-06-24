@@ -2,6 +2,17 @@
 
 
 
+## [1.0.2](https://github.com/ppat/homelab-ops-ansible/compare/v1.0.1...v1.0.2) (2024-06-24)
+
+### 📌 Dependencies
+
+* **deps:** update dependency community.general to v8.6.2 ([#73](https://github.com/ppat/homelab-ops-ansible/issues/73)) ([39a22f6](https://github.com/ppat/homelab-ops-ansible/commit/39a22f6e22f0719d0947c66c3bcb7ff97a5b064f))
+* **deps:** update dependency conventional-changelog-conventionalcommits to v8 ([#39](https://github.com/ppat/homelab-ops-ansible/issues/39)) ([1973bbc](https://github.com/ppat/homelab-ops-ansible/commit/1973bbc0a092dcc38631b69741e435cda0a4b9c6))
+* **deps:** update dependency requests to v2.32.3 ([#82](https://github.com/ppat/homelab-ops-ansible/issues/82)) ([a4b5abc](https://github.com/ppat/homelab-ops-ansible/commit/a4b5abc4b704321c3121c3d6f66af62cb9ff32b6))
+* **deps:** update galaxy-collection major dependencies (major) ([#74](https://github.com/ppat/homelab-ops-ansible/issues/74)) ([b511442](https://github.com/ppat/homelab-ops-ansible/commit/b51144266bfa1bd31d84809645d6ab0c51320297))
+* **deps:** update nginx docker digest to 9c36718 ([#78](https://github.com/ppat/homelab-ops-ansible/issues/78)) ([fb1e42f](https://github.com/ppat/homelab-ops-ansible/commit/fb1e42fd1d7c3f6d0446073a0f58a9d2d653cddc))
+* **deps:** update npm major dependencies (major) ([#83](https://github.com/ppat/homelab-ops-ansible/issues/83)) ([17fa940](https://github.com/ppat/homelab-ops-ansible/commit/17fa9408c33040ed62691ba2e6ff1ad7ccb0c68b))
+
 ## [1.0.1](https://github.com/ppat/homelab-ops-ansible/compare/v1.0.0...v1.0.1) (2024-06-15)
 
 
