@@ -21,6 +21,23 @@ jobs:
       with:
         fetch-depth: 1
 
+    - name: Determine if any files in these groups have changed
+      id: changed-files-yaml
+      uses: tj-actions/changed-files@d6babd6899969df1a11d14c368283ea4436bca78 # v44
+      with:
+        files_yaml: |
+          actions:
+          - .github/workflows/**
+          - .shellcheckrc
+          renovate:
+          - .github/renovate.json
+          ansible:
+          - '!.github/**'
+          - .pre-commit-config.yaml
+          - **.yaml
+          - **.yml
+          - **.j2
+
     - name: Set up python
       uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d # v5
       with:
@@ -49,23 +66,6 @@ jobs:
       with:
         path: ~/.cache/pre-commit/
         key: pre-commit|${{ env.pythonLocation }}|${{ hashFiles('.pre-commit-config.yaml') }}
-
-    - name: Determine if any files in these groups have changed
-      id: changed-files-yaml
-      uses: tj-actions/changed-files@d6babd6899969df1a11d14c368283ea4436bca78 # v44
-      with:
-        files_yaml: |
-          actions:
-          - .github/workflows/**
-          - .shellcheckrc
-          renovate:
-          - .github/renovate.json
-          ansible:
-          - '!.github/**'
-          - '!*.yaml'
-          - **.yaml
-          - **.yml
-          - **.j2
 
     - name: check-added-large-files
       run: pre-commit run --all-files check-added-large-files
