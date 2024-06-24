@@ -56,6 +56,12 @@ jobs:
     - name: Install python requirements
       run: python -m pip install -r requirements.txt
 
+    - name: Cache pre-commit hooks
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/pre-commit/
+        key: pre-commit|${{ env.pythonLocation }}|${{ hashFiles('.pre-commit-config.yaml') }}
+
     - name: Install node packages
       run: npm ci --no-fund --no-audit
 
@@ -125,9 +131,3 @@ jobs:
         echo "${{ steps.changed-files-yaml.outputs.ansible_all_changed_files }}"
         echo -----------
         ansible-lint -c .ansible-lint -i .ansible-lint-ignore --skip-list=yaml --force-color .
-
-    - name: Cache pre-commit hooks
-      uses: actions/cache@v4
-      with:
-        path: ~/.cache/pre-commit/
-        key: pre-commit|${{ env.pythonLocation }}|${{ hashFiles('.pre-commit-config.yaml') }}
