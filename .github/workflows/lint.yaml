@@ -62,11 +62,6 @@ jobs:
     - name: Install pre-commit hooks
       run: pre-commit install --install-hooks --hook-type pre-commit
 
-    - uses: actions/cache@v4
-      with:
-        path: ~/.cache/pre-commit/
-        key: pre-commit|${{ env.pythonLocation }}|${{ hashFiles('.pre-commit-config.yaml') }}
-
     - name: check-added-large-files
       run: pre-commit run --all-files check-added-large-files
 
@@ -128,3 +123,9 @@ jobs:
       if: steps.changed-files-yaml.outputs.ansible_any_changed == 'true' || github.event_name == 'workflow_dispatch'
       run: |
         ansible-lint -c .ansible-lint -i .ansible-lint-ignore --skip-list=yaml .
+
+    - name: Cache pre-commit installation
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/pre-commit/
+        key: pre-commit|${{ env.pythonLocation }}|${{ hashFiles('.pre-commit-config.yaml') }}
