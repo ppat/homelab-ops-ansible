@@ -35,7 +35,7 @@ jobs:
           - '**.yaml'
           - '**.yml'
           - '**.j2'
-          - '!.github/'
+          - '!.github/**'
           - '!.pre-commit-config.yaml'
 
     - name: Set up python
@@ -129,5 +129,7 @@ jobs:
       if: steps.changed-files-yaml.outputs.ansible_any_changed == 'true' || github.event_name == 'workflow_dispatch'
       run: |
         echo "${{ steps.changed-files-yaml.outputs.ansible_all_changed_files }}"
+        echo -----------
+        echo "${{ steps.changed-files-yaml.outputs }}"
         echo -----------
         ansible-lint -c .ansible-lint -i .ansible-lint-ignore --skip-list=yaml --force-color .
