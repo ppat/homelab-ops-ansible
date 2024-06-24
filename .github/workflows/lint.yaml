@@ -21,6 +21,23 @@ jobs:
       with:
         fetch-depth: 1
 
+    - name: Determine what files types have changed
+      id: changed-files-yaml
+      uses: tj-actions/changed-files@d6babd6899969df1a11d14c368283ea4436bca78 # v44
+      with:
+        files_yaml: |
+          actions:
+          - .github/workflows/**
+          - .shellcheckrc
+          renovate:
+          - .github/renovate.json
+          ansible:
+          - '**.yaml'
+          - '**.yml'
+          - '**.j2'
+          - '!.github/**'
+          - '!.pre-commit-config.yaml'
+
     - name: Set up python
       uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d # v5
       with:
@@ -36,61 +53,56 @@ jobs:
         cache: 'npm'
         cache-dependency-path: 'package-lock.json'
 
+    - name: Cache pre-commit hooks
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/pre-commit/
+        key: pre-commit|${{ env.pythonLocation }}|${{ hashFiles('.pre-commit-config.yaml') }}
+
     - name: Install python requirements
       run: python -m pip install -r requirements.txt
 
     - name: Install node packages
-      run: npm ci
+      run: npm ci --no-fund --no-audit
 
     - name: Install pre-commit hooks
       run: pre-commit install --install-hooks --hook-type pre-commit
 
-    - name: Determine if any files in these groups have changed
-      id: changed-files-yaml
-      uses: tj-actions/changed-files@d6babd6899969df1a11d14c368283ea4436bca78 # v44
-      with:
-        files_yaml: |
-          actions:
-          - .github/workflows/**
-          - .shellcheckrc
-          renovate:
-          - .github/renovate.json
-
     - name: check-added-large-files
-      run: pre-commit run --all-files check-added-large-files
+      run: pre-commit run --all-files --color=always check-added-large-files
 
     - name: check-executables-have-shebangs
-      run: pre-commit run --all-files check-executables-have-shebangs
+      run: pre-commit run --all-files --color=always check-executables-have-shebangs
 
     - name: check-json
-      run: pre-commit run --all-files check-json
+      run: pre-commit run --all-files --color=always check-json
 
     - name: check-shebang-scripts-are-executable
-      run: pre-commit run --all-files check-shebang-scripts-are-executable
+      run: pre-commit run --all-files --color=always check-shebang-scripts-are-executable
 
     - name: detect-private-key
-      run: pre-commit run --all-files detect-private-key
+      run: pre-commit run --all-files --color=always detect-private-key
 
     - name: end-of-file-fixer
-      run: pre-commit run --all-files end-of-file-fixer
+      run: pre-commit run --all-files --color=always end-of-file-fixer
 
     - name: forbid-new-submodules
-      run: pre-commit run --all-files forbid-new-submodules
+      run: pre-commit run --all-files --color=always forbid-new-submodules
 
     - name: mixed-line-ending
-      run: pre-commit run --all-files mixed-line-ending
+      run: pre-commit run --all-files --color=always mixed-line-ending
 
     - name: trailing-whitespace
-      run: pre-commit run --all-files trailing-whitespace
+      run: pre-commit run --all-files --color=always trailing-whitespace
 
     - name: shellcheck
-      run: pre-commit run --all-files shellcheck
+      run: pre-commit run --all-files --color=always shellcheck
 
     - name: yamllint
       run: yamllint -c .yamllint --strict --format github .
 
     - name: actionlint
-      if: steps.changed-files-yaml.outputs.actions_any_changed == 'true'
+      if: steps.changed-files-yaml.outputs.actions_any_changed == 'true' || github.event_name == 'workflow_dispatch'
       shell: bash
       run: |
         [[ "$RUNNER_ARCH" == "ARM64" ]] && export PKG_ARCH=arm64 || export PKG_ARCH=amd64
@@ -104,11 +116,18 @@ jobs:
 
     - name: commitlint
       if: github.event_name == 'pull_request'
-      run: npx commitlint --from ${{ github.event.pull_request.head.sha }}~${{ github.event.pull_request.commits }} --to ${{ github.event.pull_request.head.sha }} --verbose
+      run: npx commitlint --color --from ${{ github.event.pull_request.head.sha }}~${{ github.event.pull_request.commits }} --to ${{ github.event.pull_request.head.sha }} --verbose
 
     - name: validate-renovate-config
-      if: steps.changed-files-yaml.outputs.renovate_any_changed == 'true'
+      if: steps.changed-files-yaml.outputs.renovate_any_changed == 'true' || github.event_name == 'workflow_dispatch'
       shell: bash
       run: |
-        npm install -g renovate
+        npm install renovate
         npx --yes --package renovate -- renovate-config-validator
+
+    - name: ansible-lint
+      if: steps.changed-files-yaml.outputs.ansible_any_changed == 'true' || github.event_name == 'workflow_dispatch'
+      env:
+        changes_output: ${{ toJson(steps.changed-files-yaml.outputs) }}
+      run: |
+        ansible-lint -c .ansible-lint -i .ansible-lint-ignore --skip-list=yaml --force-color .

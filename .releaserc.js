@@ -18,11 +18,10 @@ module.exports = {
       preset: "conventionalcommits",
       presetConfig: {
         types: [
-          { type: "build", section: "⚙️ Other", hidden: true },
+          { type: "build", hidden: true },
           { type: "chore", scope: "deps", section: "📌 Dependencies" },
-          { type: "chore", scope: "linters", hidden: true },
           { type: "chore", scope: "other", hidden: true },
-          { type: "ci", section: "⚙️ Other", hidden: true },
+          { type: "ci", hidden: true },
           { type: "docs", section: "🛠 Improvements" },
           { type: "feat", section: "✨ Features" },
           { type: "fix", section: "🐛 Enhancements + Bug Fixes" },

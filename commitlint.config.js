@@ -42,6 +42,7 @@ module.exports = {
         'raspberry_pi',
         'deps',
         'release',
+        'linters',
         'other'
       ]
     ],
