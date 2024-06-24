@@ -53,14 +53,14 @@ jobs:
         cache: 'npm'
         cache-dependency-path: 'package-lock.json'
 
-    - name: Install python requirements
-      run: python -m pip install -r requirements.txt
-
     - name: Cache pre-commit hooks
       uses: actions/cache@v4
       with:
         path: ~/.cache/pre-commit/
         key: pre-commit|${{ env.pythonLocation }}|${{ hashFiles('.pre-commit-config.yaml') }}
+
+    - name: Install python requirements
+      run: python -m pip install -r requirements.txt
 
     - name: Install node packages
       run: npm ci --no-fund --no-audit
