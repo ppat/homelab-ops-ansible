@@ -45,7 +45,7 @@ jobs:
     - name: Install pre-commit hooks
       run: pre-commit install --install-hooks --hook-type pre-commit
 
-    - uses: actions/cache@v3
+    - uses: actions/cache@v4
       with:
         path: ~/.cache/pre-commit/
         key: pre-commit|${{ env.pythonLocation }}|${{ hashFiles('.pre-commit-config.yaml') }}
@@ -61,17 +61,11 @@ jobs:
           renovate:
           - .github/renovate.json
           ansible:
-          - archive/**/*.yaml
-          - block_device/**/*.yaml
-          - configure/**/*.yaml
-          - k3s/**/*.yaml
-          - os/**/*.yaml
-          - packages/**/*.yaml
-          - raspberry_pi//**/*.yaml
-          - **/*.yml
-          - **/*.j2
-          - .ansible-lint
-          - .ansible-lint-ignore
+          - '!.github/**'
+          - '!*.yaml'
+          - **.yaml
+          - **.yml
+          - **.j2
 
     - name: check-added-large-files
       run: pre-commit run --all-files check-added-large-files
