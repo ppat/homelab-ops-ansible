@@ -63,34 +63,34 @@ jobs:
       run: pre-commit install --install-hooks --hook-type pre-commit
 
     - name: check-added-large-files
-      run: pre-commit run --all-files check-added-large-files
+      run: pre-commit run --all-files --color=always check-added-large-files
 
     - name: check-executables-have-shebangs
-      run: pre-commit run --all-files check-executables-have-shebangs
+      run: pre-commit run --all-files --color=always check-executables-have-shebangs
 
     - name: check-json
-      run: pre-commit run --all-files check-json
+      run: pre-commit run --all-files --color=always check-json
 
     - name: check-shebang-scripts-are-executable
-      run: pre-commit run --all-files check-shebang-scripts-are-executable
+      run: pre-commit run --all-files --color=always check-shebang-scripts-are-executable
 
     - name: detect-private-key
-      run: pre-commit run --all-files detect-private-key
+      run: pre-commit run --all-files --color=always detect-private-key
 
     - name: end-of-file-fixer
-      run: pre-commit run --all-files end-of-file-fixer
+      run: pre-commit run --all-files --color=always end-of-file-fixer
 
     - name: forbid-new-submodules
-      run: pre-commit run --all-files forbid-new-submodules
+      run: pre-commit run --all-files --color=always forbid-new-submodules
 
     - name: mixed-line-ending
-      run: pre-commit run --all-files mixed-line-ending
+      run: pre-commit run --all-files --color=always mixed-line-ending
 
     - name: trailing-whitespace
-      run: pre-commit run --all-files trailing-whitespace
+      run: pre-commit run --all-files --color=always trailing-whitespace
 
     - name: shellcheck
-      run: pre-commit run --all-files shellcheck
+      run: pre-commit run --all-files --color=always shellcheck
 
     - name: yamllint
       run: yamllint -c .yamllint --strict --format github .
@@ -110,7 +110,7 @@ jobs:
 
     - name: commitlint
       if: github.event_name == 'pull_request'
-      run: npx commitlint --from ${{ github.event.pull_request.head.sha }}~${{ github.event.pull_request.commits }} --to ${{ github.event.pull_request.head.sha }} --verbose
+      run: npx commitlint --color --from ${{ github.event.pull_request.head.sha }}~${{ github.event.pull_request.commits }} --to ${{ github.event.pull_request.head.sha }} --verbose
 
     - name: validate-renovate-config
       if: steps.changed-files-yaml.outputs.renovate_any_changed == 'true' || github.event_name == 'workflow_dispatch'
@@ -124,7 +124,7 @@ jobs:
       run: |
         echo "${{ steps.changed-files-yaml.outputs.ansible_all_changed_files }}"
         echo -----------
-        ansible-lint -c .ansible-lint -i .ansible-lint-ignore --skip-list=yaml --force-color -v .
+        ansible-lint -c .ansible-lint -i .ansible-lint-ignore --skip-list=yaml --force-color .
 
     - name: cache pre-commit installation
       uses: actions/cache@v4
