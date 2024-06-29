@@ -223,17 +223,6 @@
         "before 10am on Tuesday",
         "before 10am on Thursday"
       ]
-    },
-    {
-      "allowedVersions": "<24",
-      "matchDatasources": [
-        "pypi"
-      ],
-      "matchPackageNames": [
-        "ansible-lint",
-        "molecule",
-        "molecule-plugins"
-      ]
     }
   ],
   "prConcurrentLimit": 20,
