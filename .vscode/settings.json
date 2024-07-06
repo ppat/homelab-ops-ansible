@@ -1,0 +1,27 @@
+{
+  "ansible.validation.lint.enabled": true,
+  "ansible.validation.lint.arguments": "-c .ansible-lint -i .ansible-lint-ignore",
+  "editor.detectIndentation": true,
+  "editor.indentSize": 2,
+  "editor.insertSpaces": true,
+  "explorer.excludeGitIgnore": true,
+  "search.exclude": {
+    "**/dist": true,
+    "**/node_modules": true,
+    "**/package-lock.json": true
+  },
+  "search.useIgnoreFiles": true,
+
+  "[javascript]": {
+    "editor.detectIndentation": false,
+    "editor.indentSize": 2
+  },
+  "[json]": {
+    "editor.detectIndentation": false,
+    "editor.indentSize": 2
+  },
+  "[shellscript]": {
+    "editor.detectIndentation": false,
+    "editor.indentSize": 2
+  }
+}
