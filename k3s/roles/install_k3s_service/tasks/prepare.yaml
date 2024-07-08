@@ -76,7 +76,7 @@
   no_log: true
 
 - name: "prepare | Create files necessary for meeting CIS Hardening security standard"
-  when: cis_hardening_enabled and k3s.node.type == 'server'
+  when: cis_hardening_enabled and k3s.node.type == 'server' and item.source != ''
   ansible.builtin.copy:
     src: "{{ item.source }}"
     dest: "{{ item.dest }}"

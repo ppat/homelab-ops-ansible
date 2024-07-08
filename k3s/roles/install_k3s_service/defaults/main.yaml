@@ -31,31 +31,21 @@ standard_locations:
   pod_security_admission: "/var/lib/rancher/k3s/server/psa.yaml"
   audit_policy: "/var/lib/rancher/k3s/server/audit.yaml"
 
-defaults:
+hardening_settings:
   kube_api_server:
-    standard: []
-    hardened:
-    - "admission-control-config-file={{ standard_locations.pod_security_admission }}"
-    - 'audit-log-path=/var/lib/rancher/k3s/server/logs/audit.log'
-    - "audit-policy-file={{ standard_locations.audit_policy }}"
-    - 'audit-log-maxage=30'
-    - 'audit-log-maxbackup=10'
-    - 'audit-log-maxsize=100'
-    - 'request-timeout=300s'
-    - 'service-account-lookup=true'
+  - 'audit-log-path=/var/lib/rancher/k3s/server/logs/audit.log'
+  - "audit-policy-file={{ standard_locations.audit_policy }}"
+  - 'audit-log-maxage=30'
+  - 'audit-log-maxbackup=10'
+  - 'audit-log-maxsize=100'
+  - 'request-timeout=300s'
+  - 'service-account-lookup=true'
   kube_controller_manager:
-    standard: []
-    hardened:
-    - 'terminated-pod-gc-threshold=10'
-    - 'use-service-account-credentials=true'
-  kubelet:
-    standard:
-    - "config={{ standard_locations.kubelet_config }}"
-    hardened:
-    - "config={{ standard_locations.kubelet_config }}"
+  - 'terminated-pod-gc-threshold=10'
+  - 'use-service-account-credentials=true'
+  admission_control:
+  - "admission-control-config-file={{ standard_locations.pod_security_admission }}"
+  secrets_encryption:
+  - '--secrets-encryption'
   other:
-    standard:
-    - '--prefer-bundled-bin'
-    hardened:
-    - '--prefer-bundled-bin'
-    - '--secrets-encryption'
+  - '--protect-kernel-defaults'
