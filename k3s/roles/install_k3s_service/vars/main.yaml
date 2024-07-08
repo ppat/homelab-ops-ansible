@@ -14,7 +14,7 @@ kubelet_arg: "{{ cis_hardening_enabled | ternary(defaults.kubelet.hardened, defa
 other_arg: "{{ cis_hardening_enabled | ternary(defaults.other.hardened, defaults.other.standard) }}"
 
 passthrough_params:
-- "{{ (kube_api_server_arg|length > 0) | ['--kube-apiserver-arg '] | product(kube_api_server_arg) | map('join') | list | join(' ') }}"
-- "{{ (kube_controller_manager_arg|length > 0) | ['--kube-controller-manager-arg '] | product(kube_controller_manager_arg) | map('join') | list | join(' ') }}"
-- "{{ (kubelet_arg|length > 0) | ['--kubelet-arg '] | product(kubelet_arg) | map('join') | list | join(' ') }}"
-- "{{ (other_arg|length > 0) | ternary(other_arg, []) | join(' ') }}"
+- "{{ ['--kube-apiserver-arg '] | product(kube_api_server_arg) | map('join') | list | join(' ') }}"
+- "{{ ['--kube-controller-manager-arg '] | product(kube_controller_manager_arg) | map('join') | list | join(' ') }}"
+- "{{ ['--kubelet-arg '] | product(kubelet_arg) | map('join') | list | join(' ') }}"
+- "{{ other_arg | join(' ') }}"
