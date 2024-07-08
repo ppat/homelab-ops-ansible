@@ -5,6 +5,8 @@ k3s_installer_script_url: "https://raw.githubusercontent.com/k3s-io/k3s/v{{ k3s.
 k3s_binary_url: "https://github.com/k3s-io/k3s/releases/download/v{{ k3s.version }}/{{ (node_architecture == 'amd64') | ternary('k3s', 'k3s-' + node_architecture) }}"
 
 cis_hardening_enabled: "{{ (k3s.hardening is defined and k3s.hardening.enabled is defined) | ternary(k3s.hardening.enabled, 'false') | bool }}"
+pod_security_admission_file: "{{ (k3s.hardening is defined and k3s.hardening.pod_security_admission is defined) | ternary(k3s.hardening.pod_security_admission, 'default-psa.yaml') }}"
+audit_policy_file: "{{ (k3s.hardening is defined and k3s.hardening.audit_policy is defined) | ternary(k3s.hardening.audit_policy, 'default-audit-policy.yaml') }}"
 
 kube_api_server_arg: "{{ cis_hardening_enabled | ternary(defaults.kube_api_server.hardened, defaults.kube_api_server.standard) | join(' ') }}"
 kube_controller_manager_arg: "{{ cis_hardening_enabled | ternary(defaults.kube_controller_manager.hardened, defaults.kube_controller_manager.standard) | join(' ') }}"

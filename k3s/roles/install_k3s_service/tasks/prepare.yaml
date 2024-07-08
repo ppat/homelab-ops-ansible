@@ -83,7 +83,7 @@
     group: root
     mode: '0600'
   with:
-  - source: "{{ k3s.hardening.pod_security_admission is defined | ternary(k3s.hardening.pod_security_admission, 'default-pod-security-admission.yaml') }}"
+  - source: "{{ pod_security_admission_file }}"
     dest: "{{ standard_locations.pod_security_admission }}"
-  - source: "{{ k3s.hardening.audit_policy is defined | ternary(k3s.hardening.audit_policy, 'default-audit-policy.yaml') }}"
+  - source: "{{ audit_policy_file }}"
     dest: "{{ standard_locations.audit_policy }}"

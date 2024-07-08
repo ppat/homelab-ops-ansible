@@ -82,6 +82,8 @@ provisioner:
               tls-san: "kubernetes-api.example.com"
               flannel-backend: wireguard-native
             disabled_components: [local-storage, servicelb, traefik]
+            hardening:
+              enabled: $hardening_enabled
             secrets:
               server_token: $k3s_server_token
               agent_token: $k3s_agent_token
