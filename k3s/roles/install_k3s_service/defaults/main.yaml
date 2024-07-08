@@ -58,5 +58,4 @@ defaults:
     - '--prefer-bundled-bin'
     hardened:
     - '--prefer-bundled-bin'
-    - '--protect-kernel-defaults'
     - '--secrets-encryption'
