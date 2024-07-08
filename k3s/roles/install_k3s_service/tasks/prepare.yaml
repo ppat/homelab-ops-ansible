@@ -11,6 +11,7 @@
   - /etc/rancher/node
   - /var/lib/rancher
   - /var/lib/rancher/k3s
+  - /var/lib/rancher/k3s/server
   - /etc/rancher/k3s/status
 
 - name: "prepare | Fetch k3s binary: {{ k3s_binary_url }}"
