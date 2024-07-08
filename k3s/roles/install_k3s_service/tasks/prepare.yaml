@@ -82,7 +82,7 @@
     owner: root
     group: root
     mode: '0600'
-  with:
+  loop:
   - source: "{{ pod_security_admission_file }}"
     dest: "{{ standard_locations.pod_security_admission }}"
   - source: "{{ audit_policy_file }}"

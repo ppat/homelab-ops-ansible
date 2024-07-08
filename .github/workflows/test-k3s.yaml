@@ -38,7 +38,7 @@ jobs:
     timeout-minutes: 15
     strategy:
       matrix:
-        cis_hardening: ["true", "false"]
+        cis_hardening: ["hardening=on", "hardening=off"]
     steps:
     - name: Checkout
       uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
@@ -138,7 +138,7 @@ jobs:
       shell: bash
       env:
         MOLECULE_VARS_FILE: ${{ env.molecule_vars_file }}
-        HARDENING: ${{ matrix.cis_hardening }}
+        HARDENING: ${{ matrix.cis_hardening == 'hardening=on' }}
 
     - name: Molecule Test
       run: |

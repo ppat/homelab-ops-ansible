@@ -40,6 +40,8 @@ rules:
   new-line-at-end-of-file: disable
   new-lines:
     type: unix
+  octal-values:
+    forbid-implicit-octal: true
   trailing-spaces: enable
   truthy: enable
 
