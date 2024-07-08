@@ -9,7 +9,7 @@
     --passthrough-args "{{ passthrough_args }}"
     {{ cluster_url_param }}
   vars:
-    cluster_url_param: "{{ (k3s.discovery_url|default('')|length > 0) | ternary('--url ' + k3s.discovery_url, '') }}"
+    cluster_url_param: "{{ (cluster_url|length > 0) | ternary('--url ' + cluster_url, '') }}"
     passthrough_args: "{{ passthrough_params | reject('match', '^$') | join(' ') | trim }}"
   register: install_k3s_service_init_node
   ignore_errors: true

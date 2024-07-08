@@ -23,4 +23,5 @@ passthrough_params:
 # other settings
 - "--kubelet-arg config={{ standard_locations.kubelet_config }}"
 
+cluster_url: "{{ k3s.discovery_url | default('') }}"
 kubeconfig_location: "{{ k3s.kubeconfig_location | default(standard_locations.kubeconfig) }}"
