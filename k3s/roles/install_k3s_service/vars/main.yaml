@@ -8,13 +8,13 @@ cis_hardening_enabled: "{{ (k3s.hardening is defined and k3s.hardening.enabled i
 pod_security_admission_file: "{{ (k3s.hardening is defined and k3s.hardening.pod_security_admission is defined) | ternary(k3s.hardening.pod_security_admission, 'default-psa.yaml') }}"
 audit_policy_file: "{{ (k3s.hardening is defined and k3s.hardening.audit_policy is defined) | ternary(k3s.hardening.audit_policy, 'default-audit-policy.yaml') }}"
 
-kube_api_server_arg: "{{ cis_hardening_enabled | ternary(defaults.kube_api_server.hardened, defaults.kube_api_server.standard) | join(',') }}"
-kube_controller_manager_arg: "{{ cis_hardening_enabled | ternary(defaults.kube_controller_manager.hardened, defaults.kube_controller_manager.standard) | join(',') }}"
-kubelet_arg: "{{ cis_hardening_enabled | ternary(defaults.kubelet.hardened, defaults.kubelet.standard) | join(',') }}"
-other_arg: "{{ cis_hardening_enabled | ternary(defaults.other.hardened, defaults.other.standard) | join(' ') }}"
+kube_api_server_arg: "{{ (cis_hardening_enabled and k3s.node.type == 'server') | ternary(defaults.kube_api_server.hardened, defaults.kube_api_server.standard) }}"
+kube_controller_manager_arg: "{{ (cis_hardening_enabled and k3s.node.type == 'server') | ternary(defaults.kube_controller_manager.hardened, defaults.kube_controller_manager.standard) }}"
+kubelet_arg: "{{ cis_hardening_enabled | ternary(defaults.kubelet.hardened, defaults.kubelet.standard) }}"
+other_arg: "{{ cis_hardening_enabled | ternary(defaults.other.hardened, defaults.other.standard) }}"
 
 passthrough_params:
-- "{{ (k3s.node.type == 'server' and kube_api_server_arg|length > 0) | ternary('--kube-apiserver-arg=' + kube_api_server_arg, '') }}"
-- "{{ (k3s.node.type == 'server' and kube_controller_manager_arg|length > 0) | ternary('--kube-controller-manager-arg=' + kube_controller_manager_arg, '') }}"
-- "{{ (kubelet_arg|length > 0) | ternary('--kubelet-arg=' + kubelet_arg, '') }}"
-- "{{ (other_arg|length > 0) | ternary(other_arg, '') }}"
+- "{{ (kube_api_server_arg|length > 0) | ['--kube-apiserver-arg '] | product(kube_api_server_arg) | map('join') | list | join(' ') }}"
+- "{{ (kube_controller_manager_arg|length > 0) | ['--kube-controller-manager-arg '] | product(kube_controller_manager_arg) | map('join') | list | join(' ') }}"
+- "{{ (kubelet_arg|length > 0) | ['--kubelet-arg '] | product(kubelet_arg) | map('join') | list | join(' ') }}"
+- "{{ (other_arg|length > 0) | ternary(other_arg, []) | join(' ') }}"
