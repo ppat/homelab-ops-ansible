@@ -1,5 +1,5 @@
 {
-  "ansible.validation.lint.enabled": true,
+  "ansible.validation.lint.enabled": false,
   "ansible.validation.lint.arguments": "-c .ansible-lint -i .ansible-lint-ignore",
   "editor.detectIndentation": true,
   "editor.indentSize": 2,

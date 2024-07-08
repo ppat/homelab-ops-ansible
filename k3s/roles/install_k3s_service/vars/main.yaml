@@ -3,3 +3,23 @@ node_architecture: "{{ 'arm64' if ansible_architecture == 'aarch64' else 'amd64'
 k3s_installer_script_url: "https://raw.githubusercontent.com/k3s-io/k3s/v{{ k3s.version }}/install.sh"
 # yamllint disable-line rule:line-length
 k3s_binary_url: "https://github.com/k3s-io/k3s/releases/download/v{{ k3s.version }}/{{ (node_architecture == 'amd64') | ternary('k3s', 'k3s-' + node_architecture) }}"
+
+cis_hardening_enabled: "{{ (k3s.hardening is defined and k3s.hardening.enabled is defined) | ternary(k3s.hardening.enabled, 'false') | bool }}"
+pod_security_admission_file: "{{ (k3s.hardening is defined and k3s.hardening.pod_security_admission is defined) | ternary(k3s.hardening.pod_security_admission, '') }}"
+audit_policy_file: "{{ (k3s.hardening is defined and k3s.hardening.audit_policy is defined) | ternary(k3s.hardening.audit_policy, 'default-audit-policy.yaml') }}"
+
+hardened:
+  admission_control: "{{ (cis_hardening_enabled and k3s.node.type == 'server' and pod_security_admission_file != '') | ternary(hardening_settings.admission_control, []) }}"
+  kube_api_server: "{{ (cis_hardening_enabled and k3s.node.type == 'server') | ternary(hardening_settings.kube_api_server, []) }}"
+  kube_controller_manager: "{{ (cis_hardening_enabled and k3s.node.type == 'server') | ternary(hardening_settings.kube_controller_manager, []) }}"
+  secrets_encryption: "{{ (cis_hardening_enabled and k3s.node.type == 'server') | ternary(hardening_settings.secrets_encryption, []) }}"
+
+passthrough_params:
+# hardening settings
+- "{{ ['--kube-apiserver-arg '] | product(hardened.admission_control) | map('join') | list | join(' ') }}"
+- "{{ ['--kube-apiserver-arg '] | product(hardened.kube_api_server) | map('join') | list | join(' ') }}"
+- "{{ ['--kube-controller-manager-arg '] | product(hardened.kube_controller_manager) | map('join') | list | join(' ') }}"
+- "{{ hardened.secrets_encryption | join(' ') }}"
+# other settings
+- "--kubelet-arg config={{ standard_locations.kubelet_config }}"
+- "--prefer-bundled-bin"

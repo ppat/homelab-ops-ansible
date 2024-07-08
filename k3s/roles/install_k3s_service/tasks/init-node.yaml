@@ -6,9 +6,11 @@
   ansible.builtin.command: >
     /root/k3s-node-init.sh
     --type {{ k3s.node.type }}
+    --passthrough-args "{{ passthrough_args }}"
     {{ cluster_url_param }}
   vars:
     cluster_url_param: "{{ (k3s.discovery_url is defined and k3s.discovery_url|length > 0) | ternary('--url ' + k3s.discovery_url, '') }}"
+    passthrough_args: "{{ passthrough_params | reject('match', '^$') | join(' ') | trim }}"
   register: install_k3s_service_init_node
   ignore_errors: true
 
@@ -16,6 +18,28 @@
   when: install_k3s_service_init_node.failed or ansible_verbosity > 0
   ansible.builtin.debug:
     var: install_k3s_service_init_node
+
+- name: "init-node | Read journalctl output as node startup failed"
+  when: install_k3s_service_init_node.failed
+  ansible.builtin.shell: >
+    journalctl -xeu k3s.service | tail -50
+  register: install_k3s_service_journalctl_out
+
+- name: "init-node | Show journalctl output as node startup failed"
+  when: install_k3s_service_init_node.failed
+  ansible.builtin.debug:
+    var: install_k3s_service_journalctl_out
+
+- name: "init-node | Read syslog output as node startup failed"
+  when: install_k3s_service_init_node.failed
+  ansible.builtin.shell: >
+    grep k3s /var/log/syslog
+  register: install_k3s_service_syslog_out
+
+- name: "init-node | Show journalctl output as node startup failed"
+  when: install_k3s_service_init_node.failed
+  ansible.builtin.debug:
+    var: install_k3s_service_syslog_out
 
 - name: "init-node | Fail if node initialization failed"
   when: install_k3s_service_init_node.failed

@@ -3,7 +3,6 @@
 {{ item.key }}: {{ item.value }}
 {% endfor %}
 
-prefer-bundled-bin: true
 {% if k3s.node.type == 'server' -%}
 write-kubeconfig: {{ k3s.kubeconfig_location | mandatory }}
 write-kubeconfig-mode: '600'
@@ -19,5 +18,3 @@ node-label: {{ k3s.node.labels }}
 {% if k3s.node.taints|length > 0 -%}
 node-taint: {{ k3s.node.taints }}
 {% endif %}
-
-kubelet-arg: 'config=/etc/rancher/k3s/kubelet.config'

@@ -25,3 +25,25 @@ agent_config_fields: [
   # Experimental
   "rootless"
 ]
+
+standard_locations:
+  kubelet_config: /etc/rancher/k3s/kubelet.config
+  pod_security_admission: "/var/lib/rancher/k3s/server/psa.yaml"
+  audit_policy: "/var/lib/rancher/k3s/server/audit.yaml"
+
+hardening_settings:
+  kube_api_server:
+  - 'audit-log-path=/var/lib/rancher/k3s/server/logs/audit.log'
+  - "audit-policy-file={{ standard_locations.audit_policy }}"
+  - 'audit-log-maxage=30'
+  - 'audit-log-maxbackup=10'
+  - 'audit-log-maxsize=100'
+  - 'request-timeout=300s'
+  - 'service-account-lookup=true'
+  kube_controller_manager:
+  - 'terminated-pod-gc-threshold=10'
+  - 'use-service-account-credentials=true'
+  admission_control:
+  - "admission-control-config-file={{ standard_locations.pod_security_admission }}"
+  secrets_encryption:
+  - '--secrets-encryption'

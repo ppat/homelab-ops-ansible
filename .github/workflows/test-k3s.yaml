@@ -13,7 +13,7 @@ on:
       log_verbosity:
         description: 'Log Verbosity'
         required: true
-        default: 2
+        default: '2'
         type: choice
         options:
         - '0'
@@ -25,7 +25,7 @@ on:
   - cron: '0 10 */30 * *'
 
 env:
-  non_workflow_dispatch_log_verbosity: 0
+  non_workflow_dispatch_log_verbosity: '0'
   molecule_vars_file: /tmp/molecule_vars.yaml
 
 concurrency:
@@ -36,6 +36,9 @@ jobs:
   test:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    strategy:
+      matrix:
+        cis_hardening: ["hardening=on", "hardening=off"]
     steps:
     - name: Checkout
       uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
@@ -128,12 +131,14 @@ jobs:
         repo_branch: $BRANCH
         k3s_server_token: $SERVER_TOKEN
         k3s_agent_token: $AGENT_TOKEN
+        hardening_enabled: "$HARDENING"
         EOF
 
         echo "Created vars file: $MOLECULE_VARS_FILE"
       shell: bash
       env:
         MOLECULE_VARS_FILE: ${{ env.molecule_vars_file }}
+        HARDENING: ${{ matrix.cis_hardening == 'hardening=on' }}
 
     - name: Molecule Test
       run: |

@@ -1,6 +1,4 @@
 ---
 collections:
-- name: kubernetes.core
-  version: 5.0.0
-# - name: homelab_ops.k3s
-#   version: 1.0.0
+- name: homelab_ops.k3s
+  version: 1.0.2

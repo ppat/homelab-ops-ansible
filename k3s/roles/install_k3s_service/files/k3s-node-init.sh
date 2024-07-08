@@ -1,8 +1,10 @@
 #!/bin/bash
 set -eo pipefail
 
-SERVER_URL=""
+SERVER_URL="-"
 NODE_TYPE="agent"
+PASSTHROUGH_ARGS=""
+
 while [[ $# -gt 0 ]]; do
   case $1 in
     -u|--url)
@@ -11,6 +13,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     -t|--type)
       NODE_TYPE="$2"
+      shift
+      ;;
+    --passthrough-args)
+      PASSTHROUGH_ARGS="$2"
       shift
       ;;
     *)
@@ -23,19 +29,23 @@ done
 
 determine_install_params() {
   local node_type="${1:?}"
-  local server_url="$2"
+  local server_url="${2:?}"
+  shift
+  shift
+  # shellcheck disable=SC2124
+  local passthrough_args="$@"
   local result=""
 
   if [[ "$node_type" == "server" ]]; then
     server_token_params="--token-file /tmp/k3s_token_server --agent-token-file /tmp/k3s_token_agent"
-    if [[ "$server_url" == "" ]]; then
+    if [[ "$server_url" == "-" ]]; then
       result="server --cluster-init ${server_token_params}"
     else
       result="server --server ${server_url:?} ${server_token_params:?}"
     fi
   elif [[ "$node_type" == "agent" ]]; then
     agent_token_params="--token-file /tmp/k3s_token_agent"
-    if [[ "$server_url" == "" ]]; then
+    if [[ "$server_url" == "-" ]]; then
       >&2 echo "server url cannot be empty for agent node type"
       exit 1
     fi
@@ -44,11 +54,12 @@ determine_install_params() {
     >&2 echo "invalid node type"
     exit 1
   fi
+  result="${result:?} ${passthrough_args:?}"
 
   echo $result
 }
 
-PARAMS="$(determine_install_params $NODE_TYPE $SERVER_URL)"
+PARAMS="$(determine_install_params "${NODE_TYPE}" "${SERVER_URL}" ${PASSTHROUGH_ARGS})"
 echo "Using commandline parameters:"
 echo "    ${PARAMS}"
 echo "All remaining parameters (from: /etc/rancher/k3s/config.yaml):"
