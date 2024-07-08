@@ -4,3 +4,5 @@ node_architecture: "{{ 'arm64' if ansible_architecture == 'aarch64' else 'amd64'
 flux_url: "https://github.com/fluxcd/flux2/releases/download/v{{ flux.version }}/flux_{{ flux.version }}_{{ ansible_system | lower }}_{{ node_architecture }}.tar.gz"
 # yamllint disable-line rule:line-length
 kustomize_url: "https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv{{ kustomize.version }}/kustomize_v{{ kustomize.version }}_{{ ansible_system | lower }}_{{ node_architecture }}.tar.gz"
+
+kubeconfig_location: "{{ flux.kubeconfig_location | default(standard_locations.kubeconfig) }}"

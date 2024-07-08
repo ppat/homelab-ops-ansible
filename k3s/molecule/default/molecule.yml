@@ -16,8 +16,6 @@ platforms:
   networks:
   - name: k3s-cluster
   volumes:
-  - /tmp/bootstrap:/tmp/bootstrap
-  - ${MOLECULE_SCENARIO_DIRECTORY}/flux-prerequisites:/tmp/flux-prerequisites
   - ~/go/bin/envsubst:/usr/local/bin/envsubst
   command: /usr/sbin/init
   runtime: sysbox-runc
@@ -33,7 +31,6 @@ platforms:
   networks:
   - name: k3s-cluster
   volumes:
-  - /tmp/bootstrap:/tmp/bootstrap
   - ~/go/bin/envsubst:/usr/local/bin/envsubst
   command: /usr/sbin/init
   runtime: sysbox-runc
@@ -48,8 +45,6 @@ platforms:
   - name: k3s-cluster
   networks:
   - name: k3s-cluster
-  volumes:
-  - /tmp/bootstrap:/tmp/bootstrap
   command: /usr/sbin/init
   runtime: sysbox-runc
   user: root
@@ -61,32 +56,24 @@ provisioner:
   inventory:
     group_vars:
       all:
-        # renovate: datasource=github-releases depName=k3s-io/k3s
-        k3s_version: "1.30.2+k3s1"
-        # renovate: datasource=github-releases depName=fluxcd/flux2
-        flux_version: "2.3.0"
-        # renovate: datasource=github-releases depName=kubernetes-sigs/kustomize
-        kustomize_version: "5.4.1"
         config:
-          flux:
-            prerequisites: "/tmp/flux-prerequisites"
-            source:
-              type: git
-              git:
-                url: ssh://git@github.com/ppat/homelab-ops-ansible.git
-                ssh_key: "/tmp/bootstrap/git_ssh_key"
-                branch: $repo_branch
-                path: "./k3s/molecule/default/flux-root"
-          k3s:
-            custom:
-              tls-san: "kubernetes-api.example.com"
-              flannel-backend: wireguard-native
-            disabled_components: [local-storage, servicelb, traefik]
-            hardening:
-              enabled: $hardening_enabled
-            secrets:
-              server_token: $k3s_server_token
-              agent_token: $k3s_agent_token
+          # renovate: datasource=github-releases depName=k3s-io/k3s
+          k3s_version: "1.30.2+k3s1"
+          # renovate: datasource=github-releases depName=fluxcd/flux2
+          flux_version: "2.3.0"
+          # renovate: datasource=github-releases depName=kubernetes-sigs/kustomize
+          kustomize_version: "5.4.1"
+          # node config dir
+          node_config_directory: ${MOLECULE_SCENARIO_DIRECTORY}/k3s-config
+          # secrets
+          server_token: $k3s_server_token
+          agent_token: $k3s_agent_token
+          # hardening
+          hardening: $hardening_enabled
+          # flux bootstrap
+          flux_prerequisites: ${MOLECULE_SCENARIO_DIRECTORY}/flux-prerequisites
+          git_ssh_key: /tmp/bootstrap/git_ssh_key
+          git_branch: $repo_branch
 
 verifier:
   name: ansible

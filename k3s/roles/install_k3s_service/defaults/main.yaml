@@ -1,32 +1,8 @@
 ---
-# agent node-types support far fewer configuration options (see: https://docs.k3s.io/cli/agent)
-agent_config_fields: [
-  "debug",
-  # Data
-  "data-dir",
-  # Node
-  "node-name",
-  "with-node-id",
-  "protect-kernel-defaults",
-  "selinux",
-  "lb-server-port",
-  # Runtime
-  "container-runtime-endpoint",
-  "docker",
-  "pause-image",
-  "snapshotter",
-  # Networking
-  "node-ip",
-  "node-external-ip",
-  "resolv-conf",
-  "flannel-iface",
-  "flannel-conf",
-  "flannel-cni-conf",
-  # Experimental
-  "rootless"
-]
-
 standard_locations:
+  k3s_config: /etc/rancher/k3s/config.yaml
+  registry: /etc/rancher/k3s/registries.yaml
+  kubeconfig: /etc/rancher/k3s/k3s.yaml
   kubelet_config: /etc/rancher/k3s/kubelet.config
   pod_security_admission: "/var/lib/rancher/k3s/server/psa.yaml"
   audit_policy: "/var/lib/rancher/k3s/server/audit.yaml"

@@ -5,7 +5,9 @@ This installs k3s on a host. It will,
 - install k3s as a server or agent node with the requested configuration (node settings, private registry, kubelet, etc)
 - if a server url is provided, it will connect this k3s node to the kubernetes cluster at that url.
 
-This is not intended for updating or upgrading k3s version or its configuration.
+This is not intended for,
+- updating or upgrading a host with an existing k3s installation (as that's best done by something like [system-upgrade-controller](https://docs.k3s.io/upgrades/automated)).
+- installing and/or configuring system software (especially configurations that require a restart) as those are best installed in the image that is used to build the host.
 
 Requirements
 ------------

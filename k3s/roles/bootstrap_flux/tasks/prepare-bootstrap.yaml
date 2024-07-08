@@ -5,6 +5,14 @@
     suffix: -flux-bootstrap
   register: bootstrap_flux_tempdir
 
+- name: "prepare | Copy git ssh key"
+  ansible.builtin.copy:
+    src: "{{ flux_bootstrap.source.git.ssh_key }}"
+    dest: "{{ bootstrap_flux_tempdir.path }}/git-ssh-key"
+    owner: root
+    group: root
+    mode: '0600'
+
 - name: "prepare | Copy bootstrap setting file"
   ansible.builtin.template:
     src: "{{ item }}"
@@ -13,4 +21,4 @@
     group: root
     mode: '0600'
   loop:
-  - "source-{{ config.flux.source.type }}.yaml"
+  - "source-git.yaml"

@@ -1,2 +1,0 @@
----
-kubeconfig_default_location: /etc/rancher/k3s/k3s.yaml

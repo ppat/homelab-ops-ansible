@@ -22,4 +22,6 @@ passthrough_params:
 - "{{ hardened.secrets_encryption | join(' ') }}"
 # other settings
 - "--kubelet-arg config={{ standard_locations.kubelet_config }}"
-- "--prefer-bundled-bin"
+
+cluster_url: "{{ k3s.discovery_url | default('') }}"
+kubeconfig_location: "{{ k3s.kubeconfig_location | default(standard_locations.kubeconfig) }}"

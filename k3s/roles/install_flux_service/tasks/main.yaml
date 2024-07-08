@@ -4,7 +4,6 @@
     that:
     - flux is defined and flux|length > 0
     - flux.version is defined
-    - flux.kubeconfig_location is defined
     - kustomize.version is defined
 
 - name: "Check for flux initialization"
@@ -19,7 +18,7 @@
     ansible.builtin.include_tasks: prepare.yaml
   - name: "Check whether flux-system namespace exists"
     kubernetes.core.k8s_info:
-      kubeconfig: "{{ flux.kubeconfig_location | mandatory }}"
+      kubeconfig: "{{ kubeconfig_location }}"
       kind: Namespace
       name: flux-system
     register: install_flux_service_namespace_status

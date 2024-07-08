@@ -2,14 +2,14 @@
 - name: "source-git | Create secret with git ssh key for flux git source"
   ansible.builtin.command: >
     flux create secret git flux-root-source-secret
-    --url {{ config.flux.source.git.url }}
-    --private-key-file {{ config.flux.source.git.ssh_key }}
+    --url {{ flux_bootstrap.source.git.url }}
+    --private-key-file {{ bootstrap_flux_tempdir.path }}/git-ssh-key
     --kubeconfig {{ kubeconfig_location }}
   no_log: true
 
 - name: "source-git | Bootstrap flux with git repository as a source"
   ansible.builtin.command: >
-    kubectl apply --kubeconfig {{ kubeconfig_location }} -f {{ bootstrap_flux_tempdir.path }}/source-{{ config.flux.source.type }}.yaml
+    kubectl apply --kubeconfig {{ kubeconfig_location }} -f {{ bootstrap_flux_tempdir.path }}/source-git.yaml
   register: bootstrap_flux_source_status
   changed_when: >
     (bootstrap_flux_source_status.stdout_lines | community.general.json_query("[?ends_with(@, 'created')]") | length > 0)
