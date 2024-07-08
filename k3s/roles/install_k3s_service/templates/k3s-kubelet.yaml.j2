@@ -1,5 +1,11 @@
 ---
 apiVersion: kubelet.config.k8s.io/v1beta1
 kind: KubeletConfiguration
+
 shutdownGracePeriod: 30s
 shutdownGracePeriodCriticalPods: 10s
+
+{% if cis_hardening_enabled -%}
+makeIPTablesUtilChains: true
+streamingConnectionIdleTimeout: 5m
+{% endif %}

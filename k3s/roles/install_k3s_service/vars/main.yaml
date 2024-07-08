@@ -3,3 +3,16 @@ node_architecture: "{{ 'arm64' if ansible_architecture == 'aarch64' else 'amd64'
 k3s_installer_script_url: "https://raw.githubusercontent.com/k3s-io/k3s/v{{ k3s.version }}/install.sh"
 # yamllint disable-line rule:line-length
 k3s_binary_url: "https://github.com/k3s-io/k3s/releases/download/v{{ k3s.version }}/{{ (node_architecture == 'amd64') | ternary('k3s', 'k3s-' + node_architecture) }}"
+
+cis_hardening_enabled: "{{ (k3s.hardening is defined and k3s.hardening.enabled is defined) | ternary(k3s.hardening.enabled, 'false') | bool }}"
+
+kube_api_server_arg: "{{ cis_hardening_enabled | ternary(defaults.kube_api_server.hardened, defaults.kube_api_server.standard) | join(' ') }}"
+kube_controller_manager_arg: "{{ cis_hardening_enabled | ternary(defaults.kube_controller_manager.hardened, defaults.kube_controller_manager.standard) | join(' ') }}"
+kubelet_arg: "{{ cis_hardening_enabled | ternary(defaults.kubelet.hardened, defaults.kubelet.standard) | join(' ') }}"
+other_arg: "{{ cis_hardening_enabled | ternary(defaults.other.hardened, defaults.other.standard) | join(' ') }}"
+
+passthrough_params:
+- "{{ (k3s.node.type == 'server' and kube_api_server_arg|length > 0) | ternary('--kube-api-server ' + kube_api_server_arg, '') }}"
+- "{{ (k3s.node.type == 'server' and kube_controller_manager_arg|length > 0) | ternary('--kube-controller-manager ' + kube_controller_manager_arg, '') }}"
+- "{{ (kubelet_arg|length > 0) | ternary('--kubelet ' + kubelet_arg, '') }}"
+- "{{ (other_arg|length > 0) | ternary(other_arg, '') }}"

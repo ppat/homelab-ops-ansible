@@ -57,9 +57,9 @@
     mode: '0600'
 
 - name: "prepare | Create kubelet config file"
-  ansible.builtin.copy:
-    src: k3s-kubelet.yaml
-    dest: /etc/rancher/k3s/kubelet.config
+  ansible.builtin.template:
+    src: k3s-kubelet.yaml.j2
+    dest: "{{ standard_locations.kubelet_config }}"
     owner: root
     group: root
     mode: '0600'
@@ -73,3 +73,17 @@
     mode: '0600'
   loop: "{{ (k3s.node.type == 'server') | ternary(['server', 'agent'], ['agent']) }}"
   no_log: true
+
+- name: "prepare | Create files necessary for meeting CIS Hardening security standard"
+  when: cis_hardening_enabled and k3s.node.type == 'server'
+  ansible.builtin.copy:
+    src: "{{ item.source }}"
+    dest: "{{ item.dest }}"
+    owner: root
+    group: root
+    mode: '0600'
+  with:
+  - source: "{{ k3s.hardening.pod_security_admission is defined | ternary(k3s.hardening.pod_security_admission, 'default-pod-security-admission.yaml') }}"
+    dest: "{{ standard_locations.pod_security_admission }}"
+  - source: "{{ k3s.hardening.audit_policy is defined | ternary(k3s.hardening.audit_policy, 'default-audit-policy.yaml') }}"
+    dest: "{{ standard_locations.audit_policy }}"
