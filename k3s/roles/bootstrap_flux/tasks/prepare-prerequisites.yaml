@@ -7,7 +7,10 @@
 
 - name: "prepare | Copy prerequisites"
   ansible.builtin.copy:
-    src: "{{ flux_bootstrap.prerequisites }}"
+    # to copy only the content from flux_bootstrap.prerequisites directory, ensure there's a trailing slash in src
+    # we strip any trailing slashes (if any) in flux_bootstrap.prerequisites parameter and add our own to guarantee
+    # there's only one.
+    src: "{{ flux_bootstrap.prerequisites | regex_replace('\\/$', '') }}/"
     dest: "{{ prerequisites_tempdir.path }}"
     owner: root
     group: root
