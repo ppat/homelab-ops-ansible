@@ -13,7 +13,7 @@
         discovery_url: ~
         node:
           type: server
-          config: /tmp/node-config/server.yaml
+          config: "{{ config.node_config_directory }}/server.yaml"
         tokens:
           server: "{{ config.server_token }}"
           agent: "{{ config.agent_token }}"
@@ -45,7 +45,7 @@
         discovery_url: https://node1-server:6443
         node:
           type: "{{ node_type }}"
-          config: /tmp/node-config/{{ node_type }}.yaml
+          config: "{{ config.node_config_directory }}/{{ node_type }}.yaml"
         tokens:
           server: "{{ config.server_token }}"
           agent: "{{ config.agent_token }}"

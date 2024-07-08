@@ -16,9 +16,6 @@ platforms:
   networks:
   - name: k3s-cluster
   volumes:
-  - /tmp/bootstrap:/tmp/bootstrap
-  - ${MOLECULE_SCENARIO_DIRECTORY}/k3s-config:/tmp/node-config
-  - ${MOLECULE_SCENARIO_DIRECTORY}/flux-prerequisites:/tmp/flux-prerequisites
   - ~/go/bin/envsubst:/usr/local/bin/envsubst
   command: /usr/sbin/init
   runtime: sysbox-runc
@@ -34,8 +31,6 @@ platforms:
   networks:
   - name: k3s-cluster
   volumes:
-  - /tmp/bootstrap:/tmp/bootstrap
-  - ${MOLECULE_SCENARIO_DIRECTORY}/k3s-config:/tmp/node-config
   - ~/go/bin/envsubst:/usr/local/bin/envsubst
   command: /usr/sbin/init
   runtime: sysbox-runc
@@ -50,9 +45,6 @@ platforms:
   - name: k3s-cluster
   networks:
   - name: k3s-cluster
-  volumes:
-  - /tmp/bootstrap:/tmp/bootstrap
-  - ${MOLECULE_SCENARIO_DIRECTORY}/k3s-config:/tmp/node-config
   command: /usr/sbin/init
   runtime: sysbox-runc
   user: root
@@ -71,14 +63,16 @@ provisioner:
           flux_version: "2.3.0"
           # renovate: datasource=github-releases depName=kubernetes-sigs/kustomize
           kustomize_version: "5.4.1"
+          # node config dir
+          node_config_directory: ${MOLECULE_SCENARIO_DIRECTORY}/k3s-config
           # secrets
           server_token: $k3s_server_token
           agent_token: $k3s_agent_token
           # hardening
           hardening: $hardening_enabled
           # flux bootstrap
-          flux_prerequisites: "/tmp/flux-prerequisites"
-          git_ssh_key: "/tmp/bootstrap/git_ssh_key"
+          flux_prerequisites: ${MOLECULE_SCENARIO_DIRECTORY}/flux-prerequisites
+          git_ssh_key: /tmp/bootstrap/git_ssh_key
           git_branch: $repo_branch
 
 verifier:
