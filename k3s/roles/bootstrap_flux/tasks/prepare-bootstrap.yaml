@@ -22,10 +22,3 @@
     mode: '0600'
   loop:
   - "source-git.yaml"
-
-- ansible.builtin.shell: >
-    ls -al {{ bootstrap_flux_tempdir.path }}
-  register: prerequisites_list
-
-- debug:
-    var: prerequisites_list
