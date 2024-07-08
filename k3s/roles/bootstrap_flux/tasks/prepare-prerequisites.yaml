@@ -15,10 +15,3 @@
     owner: root
     group: root
     mode: '0600'
-
-- ansible.builtin.shell: >
-    ls -al {{ prerequisites_tempdir.path }}
-  register: prerequisites_list
-
-- debug:
-    var: prerequisites_list

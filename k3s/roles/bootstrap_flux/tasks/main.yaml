@@ -5,7 +5,6 @@
     - flux_bootstrap is defined and flux_bootstrap|length > 0
     - flux_bootstrap.prerequisites is defined
     - flux_bootstrap.source is defined and flux_bootstrap.source|length > 0
-    - flux_bootstrap.source.type is defined
     - flux_bootstrap.source.git is defined and flux_bootstrap.source.git|length > 0
     - flux_bootstrap.source.git.url is defined and flux_bootstrap.source.git.url is url(schemes=['ssh'])
     - flux_bootstrap.source.git.ssh_key is defined
@@ -40,7 +39,7 @@
 
 - name: "Create flux source and bootstrap cluster from source"
   when: bootstrap_flux_source_secret.resources|length == 0
-  ansible.builtin.include_tasks: "source-{{ flux_bootstrap.source.type }}.yaml"
+  ansible.builtin.include_tasks: "source-git.yaml"
 
 - name: "Cleanup temp directories and files"
   when: bootstrap_flux_source_secret.resources|length == 0

@@ -74,7 +74,6 @@
       flux_bootstrap:
         prerequisites: "{{ config.flux_prerequisites }}"
         source:
-          type: git
           git:
             url: ssh://git@github.com/ppat/homelab-ops-ansible.git
             path: "./k3s/molecule/default/flux-root"

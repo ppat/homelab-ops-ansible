@@ -10,4 +10,3 @@ data:
   cluster_domain: k3s.example.com
   dns_zone: example.com
   load_balancer_ip_pool: 192.168.0.128/28
-  local_nameserver_bypass: 1.1.1.1:53
