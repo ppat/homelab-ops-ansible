@@ -14,7 +14,7 @@ kubelet_arg: "{{ cis_hardening_enabled | ternary(defaults.kubelet.hardened, defa
 other_arg: "{{ cis_hardening_enabled | ternary(defaults.other.hardened, defaults.other.standard) | join(' ') }}"
 
 passthrough_params:
-- "{{ (k3s.node.type == 'server' and kube_api_server_arg|length > 0) | ternary('--kube-api-server ' + kube_api_server_arg, '') }}"
-- "{{ (k3s.node.type == 'server' and kube_controller_manager_arg|length > 0) | ternary('--kube-controller-manager ' + kube_controller_manager_arg, '') }}"
-- "{{ (kubelet_arg|length > 0) | ternary('--kubelet ' + kubelet_arg, '') }}"
+- "{{ (k3s.node.type == 'server' and kube_api_server_arg|length > 0) | ternary('--kube-apiserver-arg ' + kube_api_server_arg, '') }}"
+- "{{ (k3s.node.type == 'server' and kube_controller_manager_arg|length > 0) | ternary('--kube-controller-manager-arg ' + kube_controller_manager_arg, '') }}"
+- "{{ (kubelet_arg|length > 0) | ternary('--kubelet-arg ' + kubelet_arg, '') }}"
 - "{{ (other_arg|length > 0) | ternary(other_arg, '') }}"
