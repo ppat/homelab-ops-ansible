@@ -17,7 +17,8 @@
         tokens:
           server: "{{ config.server_token }}"
           agent: "{{ config.agent_token }}"
-        hardening: "{{ config.hardening }}"
+        hardening:
+          enabled: "{{ config.hardening }}"
   - name: "install flux service"
     ansible.builtin.include_role:
       name: homelab_ops.k3s.install_flux_service
