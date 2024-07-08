@@ -1,0 +1,14 @@
+---
+- name: "prepare | Create temp directory for flux prerequisites"
+  ansible.builtin.tempfile:
+    state: directory
+    suffix: -flux-prerequisites
+  register: prerequisites_tempdir
+
+- name: "prepare | Copy prerequisites"
+  ansible.builtin.copy:
+    src: "{{ flux_bootstrap.prerequisites }}"
+    dest: "{{ prerequisites_tempdir.path }}"
+    owner: root
+    group: root
+    mode: '0600'

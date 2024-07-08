@@ -18,12 +18,16 @@
     name: "flux-root-source-secret"
   register: bootstrap_flux_source_secret
 
+- name: "Prepare prerequisites for flux bootstrap"
+  when: bootstrap_flux_source_secret.resources|length == 0
+  ansible.builtin.import_tasks: prepare-prerequisites.yaml
+
 - name: "Create pre-requisite kubernetes resources for flux bootstrap"
   when: bootstrap_flux_source_secret.resources|length == 0
   ansible.builtin.command: >
     kubectl apply
     --kubeconfig {{ kubeconfig_location }}
-    --kustomize {{ flux_bootstrap.prerequisites }}/
+    --kustomize {{ prerequisites_tempdir.path }}/
   register: bootstrap_flux_prerequisites_status
   changed_when: >
     (bootstrap_flux_prerequisites_status.stdout_lines | community.general.json_query("[?ends_with(@, 'created')]") | length > 0)
@@ -32,7 +36,7 @@
 
 - name: "Prepare bootstrap settings manifest for flux bootstrap"
   when: bootstrap_flux_source_secret.resources|length == 0
-  ansible.builtin.import_tasks: prepare.yaml
+  ansible.builtin.import_tasks: prepare-bootstrap.yaml
 
 - name: "Create flux source and bootstrap cluster from source"
   when: bootstrap_flux_source_secret.resources|length == 0
@@ -45,4 +49,5 @@
     state: absent
   loop:
   - "{{ bootstrap_flux_tempdir.path }}"
+  - "{{ prerequisites_tempdir.path }}"
   changed_when: false
