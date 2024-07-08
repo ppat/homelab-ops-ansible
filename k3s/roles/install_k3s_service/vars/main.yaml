@@ -13,7 +13,6 @@ hardened:
   kube_api_server: "{{ (cis_hardening_enabled and k3s.node.type == 'server') | ternary(hardening_settings.kube_api_server, []) }}"
   kube_controller_manager: "{{ (cis_hardening_enabled and k3s.node.type == 'server') | ternary(hardening_settings.kube_controller_manager, []) }}"
   secrets_encryption: "{{ (cis_hardening_enabled and k3s.node.type == 'server') | ternary(hardening_settings.secrets_encryption, []) }}"
-  other: "{{ cis_hardening_enabled | ternary(hardening_settings.other, []) }}"
 
 passthrough_params:
 # hardening settings
@@ -21,7 +20,6 @@ passthrough_params:
 - "{{ ['--kube-apiserver-arg '] | product(hardened.kube_api_server) | map('join') | list | join(' ') }}"
 - "{{ ['--kube-controller-manager-arg '] | product(hardened.kube_controller_manager) | map('join') | list | join(' ') }}"
 - "{{ hardened.secrets_encryption | join(' ') }}"
-- "{{ hardened.other | join(' ') }}"
 # other settings
 - "--kubelet-arg config={{ standard_locations.kubelet_config }}"
 - "--prefer-bundled-bin"

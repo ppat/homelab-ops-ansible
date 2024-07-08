@@ -47,5 +47,3 @@ hardening_settings:
   - "admission-control-config-file={{ standard_locations.pod_security_admission }}"
   secrets_encryption:
   - '--secrets-encryption'
-  other:
-  - '--protect-kernel-defaults'

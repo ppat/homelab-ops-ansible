@@ -5,7 +5,7 @@ kind: KubeletConfiguration
 shutdownGracePeriod: 30s
 shutdownGracePeriodCriticalPods: 10s
 
-{% if cis_hardening_enabled and k3s.node.type == 'server' -%}
+{% if cis_hardening_enabled -%}
 makeIPTablesUtilChains: true
 streamingConnectionIdleTimeout: 5m
 {% endif %}
