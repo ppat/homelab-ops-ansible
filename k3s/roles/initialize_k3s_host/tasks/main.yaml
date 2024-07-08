@@ -28,7 +28,7 @@
       registry: "{{ config.k3s.private_registry | default({}) }}"
       disabled_components: "{{ config.k3s.disabled_components | default([]) }}"
       config: "{{ config.k3s.custom | default({}) | dict2items }}"
-      hardening: "{{ config.k3s.hardening | default({'enabled': false}) | dict2items }}"
+      hardening: "{{ config.k3s.hardening | default({'enabled': false}) }}"
       kubeconfig_location: "{{ config.k3s.custom.kubeconfig | default(kubeconfig_default_location) }}"
 
 - name: "install flux service"
