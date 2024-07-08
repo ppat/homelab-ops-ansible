@@ -131,14 +131,14 @@ jobs:
         repo_branch: $BRANCH
         k3s_server_token: $SERVER_TOKEN
         k3s_agent_token: $AGENT_TOKEN
-        hardening_enabled: $HARDENING
+        hardening_enabled: "$HARDENING"
         EOF
 
         echo "Created vars file: $MOLECULE_VARS_FILE"
       shell: bash
       env:
         MOLECULE_VARS_FILE: ${{ env.molecule_vars_file }}
-        HARDENING: "${{ matrix.cis_hardening }}"
+        HARDENING: ${{ matrix.cis_hardening }}
 
     - name: Molecule Test
       run: |
