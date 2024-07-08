@@ -19,6 +19,11 @@
   ansible.builtin.debug:
     var: install_k3s_service_init_node
 
+- name: "init-node | Show journalctl output as node startup failed"
+  when: install_k3s_service_init_node.failed
+  ansible.builtin.shell: >
+    journalctl -xeu k3s.service | tail -50
+
 - name: "init-node | Fail if node initialization failed"
   when: install_k3s_service_init_node.failed
   ansible.builtin.fail:
