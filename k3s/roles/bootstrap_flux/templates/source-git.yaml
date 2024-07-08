@@ -7,10 +7,10 @@ metadata:
 spec:
   interval: 1m0s
   ref:
-    branch: "{{ config.flux.source.git.branch | default('main') }}"
+    branch: "{{ flux_bootstrap.source.git.branch | default('main') }}"
   secretRef:
     name: flux-root-source-secret
-  url: "{{ config.flux.source.git.url | mandatory }}"
+  url: "{{ flux_bootstrap.source.git.url | mandatory }}"
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
@@ -19,7 +19,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 1m0s
-  path: "{{ config.flux.source.git.path | default('/') }}"
+  path: "{{ flux_bootstrap.source.git.path | default('/') }}"
   prune: true
   sourceRef:
     kind: GitRepository

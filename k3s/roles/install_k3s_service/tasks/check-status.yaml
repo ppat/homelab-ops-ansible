@@ -16,7 +16,7 @@
 - name: "check-status | Wait till node is operational"
   when: k3s.node.type == 'server'
   kubernetes.core.k8s_info:
-    kubeconfig: "{{ k3s.kubeconfig_location | mandatory }}"
+    kubeconfig: "{{ kubeconfig_location }}"
     kind: Node
     label_selectors:
     - "kubernetes.io/hostname={{ ansible_hostname }}"
@@ -30,7 +30,7 @@
 - name: "check-status | Wait till not-ready taint is removed"
   when: k3s.node.type == 'server'
   kubernetes.core.k8s_info:
-    kubeconfig: "{{ k3s.kubeconfig_location | mandatory }}"
+    kubeconfig: "{{ kubeconfig_location }}"
     kind: Node
     label_selectors:
     - "kubernetes.io/hostname={{ ansible_hostname }}"

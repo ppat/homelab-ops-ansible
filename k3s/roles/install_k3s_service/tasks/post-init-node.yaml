@@ -7,7 +7,7 @@
     group: root
     mode: '0644'
     regexp: "^KUBECONFIG=.*"
-    line: "KUBECONFIG={{ k3s.kubeconfig_location | mandatory }}"
+    line: "KUBECONFIG={{ kubeconfig_location }}"
 
 - name: "post-init-node | Remove any temp files"
   ansible.builtin.file:

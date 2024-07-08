@@ -4,12 +4,28 @@
   become: true
   gather_facts: true
   tasks:
-  - name: install k3s as server
+  - name: install k3s service
     ansible.builtin.include_role:
-      name: homelab_ops.k3s.initialize_k3s_host
+      name: homelab_ops.k3s.install_k3s_service
     vars:
-      node_type: server
-      cluster_url: ~
+      k3s:  # noqa: var-naming[no-role-prefix]
+        version: "{{ config.k3s_version }}"
+        discovery_url: ~
+        node:
+          type: server
+          config: /tmp/node-config/server.yaml
+        tokens:
+          server: "{{ config.server_token }}"
+          agent: "{{ config.agent_token }}"
+        hardening: "{{ config.hardening }}"
+  - name: "install flux service"
+    ansible.builtin.include_role:
+      name: homelab_ops.k3s.install_flux_service
+    vars:
+      flux:  # noqa: var-naming[no-role-prefix]
+        version: "{{ config.flux_version }}"
+      kustomize:  # noqa: var-naming[no-role-prefix]
+        version: "{{ config.kustomize_version }}"
 
 - name: create the remaining cluster nodes
   hosts:
@@ -17,27 +33,49 @@
   - node3-agent
   become: true
   gather_facts: true
-  collections:
-  - homelab_ops.k3s
-  - homelab_ops.packages
+  vars:
+    node_type: "{{ inventory_hostname | split('-') | last }}"
   tasks:
-  - name: install k3s on node
+  - name: install k3s service
     ansible.builtin.include_role:
-      name: homelab_ops.k3s.initialize_k3s_host
+      name: homelab_ops.k3s.install_k3s_service
     vars:
-      node_type: "{{ inventory_hostname | split('-') | last }}"
-      cluster_url: https://node1-server:6443
+      k3s:  # noqa: var-naming[no-role-prefix]
+        version: "{{ config.k3s_version }}"
+        discovery_url: https://node1-server:6443
+        node:
+          type: "{{ node_type }}"
+          config: /tmp/node-config/{{ node_type }}.yaml
+        tokens:
+          server: "{{ config.server_token }}"
+          agent: "{{ config.agent_token }}"
+        hardening:
+          enabled: "{{ config.hardening }}"
+  - name: "install flux service"
+    when: node_type == 'server'
+    ansible.builtin.include_role:
+      name: homelab_ops.k3s.install_flux_service
+    vars:
+      flux:  # noqa: var-naming[no-role-prefix]
+        version: "{{ config.flux_version }}"
+      kustomize:  # noqa: var-naming[no-role-prefix]
+        version: "{{ config.kustomize_version }}"
 
 - name: bootstrap cluster with flux
   hosts: node1-server
   become: true
   gather_facts: true
-  collections:
-  - homelab_ops.k3s
-  - homelab_ops.packages
   tasks:
   - name: bootstrap flux on cluster
     ansible.builtin.include_role:
       name: homelab_ops.k3s.bootstrap_flux
     vars:
-      kubeconfig_location: /etc/rancher/k3s/k3s.yaml
+      flux_bootstrap:
+        prerequisites: "{{ config.flux_prerequisites }}"
+        source:
+          type: git
+          git:
+            url: ssh://git@github.com/ppat/homelab-ops-ansible.git
+            path: "./k3s/molecule/default/flux-root"
+            ssh_key: "{{ config.git_ssh_key }}"
+            branch: "{{ config.git_branch }}"

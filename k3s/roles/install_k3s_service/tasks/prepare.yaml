@@ -41,18 +41,18 @@
     mode: '0750'
 
 - name: "prepare | Configure private registries"
-  ansible.builtin.template:
-    src: k3s-registries.yaml.j2
-    dest: /etc/rancher/k3s/registries.yaml
+  when: k3s.registry is defined
+  ansible.builtin.copy:
+    src: "{{ k3s.registry }}"
+    dest: "{{ standard_locations.registry }}"
     owner: root
     group: root
     mode: '0600'
-  when: k3s.registry is defined and k3s.registry.endpoint is defined and k3s.registry.mirrors|length > 0
 
 - name: "prepare | Create k3s config file"
-  ansible.builtin.template:
-    src: k3s-config.yaml.j2
-    dest: /etc/rancher/k3s/config.yaml
+  ansible.builtin.copy:
+    src: "{{ k3s.node.config }}"
+    dest: "{{ standard_locations.k3s_config }}"
     owner: root
     group: root
     mode: '0600'
