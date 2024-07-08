@@ -9,6 +9,14 @@
     - k3s.node.type == 'server' or (k3s.node.type == 'agent' and k3s.discovery_url is url(schemes=['https']))
     - k3s.node.config is defined
 
+- ansible.builtin.debug:
+    var: k3s
+
+- ansible.builtin.debug:
+    msg:
+    - "cis_hardening_enabled={{ cis_hardening_enabled }}"
+    - "kubeconfig_location={{ kubeconfig_location }}"
+
 - name: "Check for k3s initialization"
   ansible.builtin.stat:
     path: /etc/rancher/k3s/status/k3s.node.initialized
