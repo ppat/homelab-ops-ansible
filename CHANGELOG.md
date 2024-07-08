@@ -2,6 +2,27 @@
 
 
 
+## [1.1.0](https://github.com/ppat/homelab-ops-ansible/compare/v1.0.2...v1.1.0) (2024-07-08)
+
+### ✨ Features
+
+* add support for hardening k3s according CIS Hardening standard ([#98](https://github.com/ppat/homelab-ops-ansible/issues/98)) ([f53029f](https://github.com/ppat/homelab-ops-ansible/commit/f53029ff7ed7e1e21e39fd6fd68339d326cf9c54))
+
+### 🐛 Enhancements + Bug Fixes
+
+* **k3s:** refactor to simply how k3s can be configured ([#99](https://github.com/ppat/homelab-ops-ansible/issues/99)) ([c8f46cc](https://github.com/ppat/homelab-ops-ansible/commit/c8f46cc25ebd59bc0355ddc1307bf6750ea338e3))
+
+### 📌 Dependencies
+
+* **deps:** pin dependencies ([#89](https://github.com/ppat/homelab-ops-ansible/issues/89)) ([1923b96](https://github.com/ppat/homelab-ops-ansible/commit/1923b966120a0be26a2f9a0e8b719e20c7f2a01a))
+* **deps:** update dependency ansible-core to v2.16.8 ([#88](https://github.com/ppat/homelab-ops-ansible/issues/88)) ([c1b66ff](https://github.com/ppat/homelab-ops-ansible/commit/c1b66ff19766313967d86a0928f1bdb8aa0912d4))
+* **deps:** update dependency k3s-io/k3s to v1.30.2+k3s1 ([#92](https://github.com/ppat/homelab-ops-ansible/issues/92)) ([aa76221](https://github.com/ppat/homelab-ops-ansible/commit/aa762211cdcfe17973652ee62f1ca68bcca58124))
+* **deps:** update dependency molecule to v24.6.1 ([#96](https://github.com/ppat/homelab-ops-ansible/issues/96)) ([ffee61b](https://github.com/ppat/homelab-ops-ansible/commit/ffee61b0281e141c8eddd834d1be482876057cb9))
+* **deps:** update pre-commit hook ansible/ansible-lint to v24.5.0 ([#65](https://github.com/ppat/homelab-ops-ansible/issues/65)) ([ec6a8fa](https://github.com/ppat/homelab-ops-ansible/commit/ec6a8fa207666111967a0b74395acbb845396ae6))
+* **deps:** update pre-commit hook ansible/ansible-lint to v24.6.0 ([#95](https://github.com/ppat/homelab-ops-ansible/issues/95)) ([9d6a130](https://github.com/ppat/homelab-ops-ansible/commit/9d6a1308e6775c5d7caf98d732e31f674fa4ab77))
+* **deps:** update python major dependencies to v24 (major) ([#91](https://github.com/ppat/homelab-ops-ansible/issues/91)) ([4b93090](https://github.com/ppat/homelab-ops-ansible/commit/4b930902e9a99111d8ccc3670e2c382849ed9bc7))
+* **deps:** update python non-major dependencies ([#93](https://github.com/ppat/homelab-ops-ansible/issues/93)) ([35efc54](https://github.com/ppat/homelab-ops-ansible/commit/35efc54c2674d37e7a4ecb0068e25b3302c15994))
+
 ## [1.0.2](https://github.com/ppat/homelab-ops-ansible/compare/v1.0.1...v1.0.2) (2024-06-24)
 
 ### 📌 Dependencies
