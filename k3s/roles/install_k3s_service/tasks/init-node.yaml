@@ -6,7 +6,7 @@
   ansible.builtin.command: >
     /root/k3s-node-init.sh
     --type {{ k3s.node.type }}
-    --passthrough-args {{ passthrough_args }}
+    --passthrough-args "{{ passthrough_args }}"
     {{ cluster_url_param }}
   vars:
     cluster_url_param: "{{ (k3s.discovery_url is defined and k3s.discovery_url|length > 0) | ternary('--url ' + k3s.discovery_url, '') }}"
