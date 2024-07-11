@@ -40,6 +40,8 @@
       fail_msg: "{{ item.item }} does NOT exist at expected location"
       success_msg: "{{ item.item }} has been generated"
     loop: "{{ cloudinit_stat.results }}"
+    loop_control:
+      label: "{{ item.item }}"
 
   - name: "Read generated cloudinit files"
     ansible.builtin.slurp:
@@ -49,22 +51,26 @@
 
   - name: "Display generated cloud init file"
     ansible.builtin.debug:
-      msg: "{{ item['content'] | b64decode }}"
+      msg: "{{ item.content | b64decode }}"
     loop: "{{ cloudinit_generated.results }}"
+    loop_control:
+      label: "{{ item.item }}"
 
   - name: "Parse generated cloud-init datasource file content"
-    when: (item['item'] | basename) is in ['user-data', 'meta-data']
+    when: (item.item|basename) is in ['user-data', 'meta-data']
     ansible.builtin.set_fact:
       generated_datasource: "{{ generated_datasource | default({}) | combine({ds_name: parsed_value}) }}"
     vars:
-      ds_name: "{{ item['item'] | basename }}"
-      parsed_value: "{{ item['content'] | b64decode | from_yaml }}"
+      ds_name: "{{ item.item | basename }}"
+      parsed_value: "{{ item.content | b64decode | from_yaml }}"
     loop: "{{ cloudinit_generated.results }}"
+    loop_control:
+      label: "{{ item.item }}"
 
   - name: "Display generated cloud init datasource file"
     ansible.builtin.debug:
       msg: "{{ generated_datasource[item] }}"
-    loop: "{{ generated_datasource }}"
+    loop: "{{ generated_datasource.keys() }}"
 
   - name: "Assert that required user-data keys are present"
     ansible.builtin.assert:
