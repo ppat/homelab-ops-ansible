@@ -2,9 +2,9 @@
 set -euo pipefail
 
 fetch_image() {
-  local url="$1"
-  local output_file="$2"
-  local timeout="$3"
+  local url=$1
+  local output_file=$2
+  local timeout=$3
 
   local attempt=0
   local retries=3
@@ -32,9 +32,10 @@ fetch_image() {
 main() {
   local url=$1
   local output_file=$2
+  local timeout=$3
 
   echo "Fetching image from $url..."
-  fetch_image $url $output_file
+  fetch_image $url $output_file $timeout
 
   echo "Unpacking image..."
   xz -d ${output_file}.xz
