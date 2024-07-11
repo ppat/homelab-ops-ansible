@@ -28,7 +28,7 @@
   - name: Assert that cloudinit exists at destination
     ansible.builtin.assert:
       that:
-      - "{{ item.stat.exists }}"
+      - item.stat.exists
       fail_msg: "{{ item.item }} does NOT exist at expected location"
       success_msg: "{{ item.item }} has been generated"
     loop: "{{ cloudinit_stat.results }}"
@@ -47,7 +47,7 @@
   - name: "Parse userdata and metadata file content"
     when: (item['item'] | basename) is in ['user-data', 'meta-data']
     ansible.builtin.set_fact:
-      generated_datasource: "{{ generated_datasource | default() | combine({ds_name: parsed_value} }}"
+      generated_datasource: "{{ generated_datasource | default() | combine({ds_name: parsed_value}) }}"
     vars:
       ds_name: "{{ item['item'] | basename }}"
       parsed_value: "{{ item['content'] | b64decode | from_yaml }}"
