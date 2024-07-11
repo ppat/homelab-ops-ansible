@@ -53,8 +53,8 @@ jobs:
 
     - name: Install ansible collections
       run: |
-        ansible-galaxy collection install ./block_device/
-        ansible-galaxy collection install ./configure/
+        ansible-galaxy collection install --force ./block_device/
+        ansible-galaxy collection install --force ./configure/
 
     - name: Determine molecule verbosity
       # yamllint disable-line rule:indentation

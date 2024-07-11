@@ -17,8 +17,6 @@
     - provision.cloudinit.ssh_users is defined and provision.cloudinit.ssh_users|length > 0
     - provision.cloudinit.ansible.core_version is defined
     - provision.cloudinit.ansible.collections_requirements_file is defined
-    - provision.cloudinit.ansible.playbook is defined
-    - provision.cloudinit.ansible.vars_file is defined
 
 - name: Select block device
   ansible.builtin.import_tasks: select-block-device.yaml

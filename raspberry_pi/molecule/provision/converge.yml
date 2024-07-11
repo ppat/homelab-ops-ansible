@@ -83,8 +83,6 @@
               version: "1.0.1"
               params: []
             collections_requirements_file: "{{ MOLECULE_SCENARIO_DIR }}/input/requirements.yaml"
-            playbook: "{{ MOLECULE_SCENARIO_DIR }}/input/playbook.yaml"
-            vars_file: /root/.secrets/cloudinit-playbook-vars
           ssh_users:
           - name: test-user
             authorized_keys:

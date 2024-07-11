@@ -1,37 +1,42 @@
 #cloud-config
 
+disable_root: true
+ssh_deletekeys: true
+ssh_genkeytypes: [ed25519, rsa]
 ssh_pwauth: false
+ssh:
+  emit_keys_to_console: false
 
+{% if cloudinit.users -%}
 users:
+{% endif %}
 {% for user in cloudinit.users -%}
 - name: {{ user.name }}
   groups: [sudo]
   sudo: ALL=(ALL) NOPASSWD:ALL
   ssh_authorized_keys:
-  {% for ssh_key in user.authorized_keys -%}
+{% for ssh_key in user.authorized_keys %}
   - {{ ssh_key }}
-  {% endfor %}
+{% endfor %}
   lock_passwd: true
   shell: /bin/bash
 {% endfor %}
 
 growpart:
-  mode: off
+  mode: "off"
 resize_rootfs: false
 
 package_update: false
 package_upgrade: false
 
-ssh_deletekeys: true
-ssh_genkeytypes: [ed25519]
-ssh:
-  emit_keys_to_console: false
-
+{% if cloudinit.local_hostname -%}
 hostname: {{ cloudinit.local_hostname }}
+{% endif %}
 manage_etc_hosts: true
 
+{% if cloudinit.runcmd_commands -%}
 runcmd:
-- [timedatectl, set-ntp, 'true']
-{% if cloudinit.ansible_playbook %}
-- [ANSIBLE_LOCALHOST_WARNING=false, ansible-playbook, -c, local, -i, localhost, {{ cloudinit.ansible_playbook }}, -e, @{{ cloudinit.ansible_vars_file }}]
 {% endif %}
+{% for runcmd_command in cloudinit.runcmd_commands -%}
+- {{ runcmd_command }}
+{% endfor %}

@@ -3,11 +3,35 @@
   hosts: all
   gather_facts: false
   vars:
-    cloudinit_seed_path: "/mnt/cloudinit"
+    data_source_path: "/mnt/cloudinit"
     cloud_init_files:
-    - "{{ cloudinit_seed_path }}/user-data"
-    - "{{ cloudinit_seed_path }}/meta-data"
-    - "{{ cloudinit_seed_path }}/vendor-data"
+    - "{{ data_source_path }}/user-data"
+    - "{{ data_source_path }}/meta-data"
+    - "{{ data_source_path }}/vendor-data"
+    - "{{ data_source_path }}/runcmd/playbook.yaml"
+    - "{{ data_source_path }}/runcmd/playbook-vars.yaml"
+    required_datasource_keys:
+      user-data:
+      - users
+      - hostname
+      - runcmd
+      - ssh_deletekeys
+      - ssh_genkeytypes
+      - ssh_pwauth
+      - ssh
+      - growpart
+      - resize_rootfs
+      meta-data:
+      - local-hostname
+      - instance-id
+    required_ssh_user_keys:
+    - name
+    - groups
+    - sudo
+    - ssh_authorized_keys
+    - lock_passwd
+    - shell
+    expected_runcmd_count: 2
   tasks:
   - name: Stat for generated cloud_init files
     ansible.builtin.stat:
@@ -18,10 +42,12 @@
   - name: Assert that cloudinit exists at destination
     ansible.builtin.assert:
       that:
-      - "{{ item.stat.exists }}"
+      - item.stat.exists
       fail_msg: "{{ item.item }} does NOT exist at expected location"
       success_msg: "{{ item.item }} has been generated"
     loop: "{{ cloudinit_stat.results }}"
+    loop_control:
+      label: "{{ item.item }}"
 
   - name: "Read generated cloudinit files"
     ansible.builtin.slurp:
@@ -31,5 +57,42 @@
 
   - name: "Display generated cloud init file"
     ansible.builtin.debug:
-      msg: "{{ item['content'] | b64decode }}"
+      msg: "{{ item.content | b64decode }}"
     loop: "{{ cloudinit_generated.results }}"
+    loop_control:
+      label: "{{ item.item }}"
+
+  - name: "Parse generated cloud-init datasource file content"
+    when: (item.item|basename) is in ['user-data', 'meta-data']
+    ansible.builtin.set_fact:
+      generated_datasource: "{{ generated_datasource | default({}) | combine({ds_name: parsed_value}) }}"
+    vars:
+      ds_name: "{{ item.item | basename }}"
+      parsed_value: "{{ item.content | b64decode | from_yaml }}"
+    loop: "{{ cloudinit_generated.results }}"
+    loop_control:
+      label: "{{ item.item }}"
+
+  - name: "Display generated cloud init datasource file"
+    ansible.builtin.debug:
+      msg: "{{ generated_datasource[item] }}"
+    loop: "{{ generated_datasource.keys() }}"
+
+  - name: "Assert that required user-data keys are present"
+    ansible.builtin.assert:
+      that: item in generated_datasource['user-data']
+    loop: "{{ required_datasource_keys['user-data'] }}"
+
+  - name: "Assert that required meta-data keys are present"
+    ansible.builtin.assert:
+      that: item in generated_datasource['meta-data']
+    loop: "{{ required_datasource_keys['meta-data'] }}"
+
+  - name: "Assert that the required ssh-user keys are present"
+    ansible.builtin.assert:
+      that: item in generated_datasource['user-data'].users[0]
+    loop: "{{ required_ssh_user_keys }}"
+
+  - name: "Assert that expected number of run commands are present"
+    ansible.builtin.assert:
+      that: (generated_datasource['user-data'].runcmd|length) == expected_runcmd_count

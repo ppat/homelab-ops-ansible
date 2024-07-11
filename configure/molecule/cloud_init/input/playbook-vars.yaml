@@ -1,0 +1,5 @@
+---
+# example file with variables for the ansible-playbook
+a: b
+c: d
+e: f

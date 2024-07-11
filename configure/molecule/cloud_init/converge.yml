@@ -3,19 +3,34 @@
   hosts: all
   gather_facts: false
   vars:
-    cloudinit_seed_path: "/mnt/cloudinit"
+    data_source_path: "/mnt/cloudinit"
+    ansible_playbook_invoke_cmd:
+    - ANSIBLE_LOCALHOST_WARNING=false
+    - ansible-playbook
+    - -c
+    - local
+    - -i
+    - localhost
+    - "{{ data_source_path }}/runcmd/playbook.yaml"
+    - -e
+    - "{{ ('\"@' + data_source_path + '/runcmd/playbook-vars.yaml\"') }}"
   tasks:
   - name: "Configure cloud init"
     ansible.builtin.include_role:
       name: homelab_ops.configure.cloud_init
     vars:
       cloudinit:
-        data_source_path: "{{ cloudinit_seed_path }}"
+        data_source_path: "{{ data_source_path }}"
         local_hostname: test-hostname
         instance_id: test-instance
         users:
         - name: test-user
           authorized_keys:
           - ssh-ed25519 AAAABBBBCCCCDDDDEEEEFFFF test-user@email.com
-        ansible_playbook: "playbook.yaml"
-        ansible_vars_file: "vars.yaml"
+        runcmd_commands:
+        - "[timedatectl, set-ntp, 'true']"
+        - "[{{ ansible_playbook_invoke_cmd | join(', ') }}]"
+        runcmd_files:
+        - source: "{{ playbook_dir }}/input/playbook.yaml"
+          mode: '0644'
+        - source: "{{ playbook_dir }}/input/playbook-vars.yaml"

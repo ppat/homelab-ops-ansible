@@ -18,5 +18,5 @@
       local_hostname: "{{ provision.raspberry_pi.hostname | default(default_hostname) }}"
       instance_id: "{{ provision.raspberry_pi.instance_id | default(default_instance_id) }}"
       users: "{{ provision.cloudinit.ssh_users }}"
-      ansible_playbook: "{{ provision.cloudinit.ansible.playbook }}"
-      ansible_vars_file: "{{ provision.cloudinit.ansible.vars_file }}"
+      runcmd_commands: "{{ provision.cloudinit.runcmd_commands | default([]) }}"
+      runcmd_files: "{{ provision.cloudinit.runcmd_files | default([]) }}"
