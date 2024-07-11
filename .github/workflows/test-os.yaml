@@ -127,16 +127,8 @@ jobs:
     - name: Molecule Test
       run: |
         # use of chroot connection within molecule requires running with sudo
-        # but since python virtualenv is under current user, re-use that user's virtualenv for root
-        VENV_DIR="$(poetry env list --full-path | awk '{ print $1 }')"
+        # but since python virtualenv is under current user, re-use that user's virtualenv from within sudo
         POETRY_VENV_PYTHON="$(poetry env info --executable)"
-        echo "-------------------------"
-        ls -al $VENV_DIR/bin/
-        echo "-------------------------"
-        env | sort
-        echo "-------------------------"
-        sudo --preserve-env=HOME,PATH env | sort
-        echo "-------------------------"
         set -e
         sudo --preserve-env=HOME,PATH,PIPX_BIN_DIR $PIPX_BIN_DIR/poetry env use $POETRY_VENV_PYTHON
         sudo --preserve-env=HOME,PATH,PIPX_BIN_DIR $PIPX_BIN_DIR/poetry run molecule $MOLECULE_PARAMS --env-file $MOLECULE_VARS_FILE test --all --no-parallel
