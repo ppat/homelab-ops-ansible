@@ -29,7 +29,6 @@ env:
   # As this action takes nearly an hour to run, we're running it in highest verbosity to avoid needing to re-run
   # just to get additional information.
   non_workflow_dispatch_log_verbosity: 4
-  COLLECTIONS_PATH: /usr/share/ansible/collections
   MOLECULE_VARS_FILE: /tmp/molecule_vars.yaml
 
 concurrency:
@@ -73,11 +72,6 @@ jobs:
 
     - name: Install ansible collections
       run: |
-        # poetry run ansible-galaxy collection install ./os/ -p $COLLECTIONS_PATH
-
-        # # install collection dependencies w/ --force to ensure that replaced from local repository
-        # poetry run ansible-galaxy collection install --force ./packages/ -p $COLLECTIONS_PATH
-
         poetry run ansible-galaxy collection install ./os/
 
         # install collection dependencies w/ --force to ensure that replaced from local repository
