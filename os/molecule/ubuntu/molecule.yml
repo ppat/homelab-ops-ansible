@@ -26,6 +26,7 @@ provisioner:
             ansible_connection: chroot
             ansible_remote_tmp: /tmp/.ansible
             ansible_chroot_disable_root_check: true
+            ansible_chroot_exe: "sudo chroot"
           controller:
             ansible_host: localhost
             ansible_connection: local
