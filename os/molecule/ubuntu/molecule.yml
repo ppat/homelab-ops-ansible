@@ -28,7 +28,7 @@ provisioner:
           controller:
             ansible_host: localhost
             ansible_connection: local
-            ansible_become: true
+            ansible_user: root
   playbooks:
     prepare: prepare.yml
   default_sequence:
