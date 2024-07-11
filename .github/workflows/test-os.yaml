@@ -132,4 +132,5 @@ jobs:
         ANSIBLE_FORCE_COLOR: 1
         ANSIBLE_COLLECTIONS_PATH: "/home/runner/.ansible/collections"
         PY_COLORS: 1
+        PYTHONUNBUFFERED: 1
         TERM: xterm-256color
