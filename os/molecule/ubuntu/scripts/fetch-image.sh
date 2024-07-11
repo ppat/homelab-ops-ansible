@@ -1,10 +1,10 @@
 #!/bin/bash
-set -eo pipefail
+set -euo pipefail
 
 fetch_image() {
-  local url=$1
-  local output_file=$2
-  local timeout=$3
+  local url="$1"
+  local output_file="$2"
+  local timeout="$3"
 
   local attempt=0
   local retries=3
@@ -64,8 +64,8 @@ while [ $# -gt 0 ]; do
 done
 
 if [[ -z "$IMAGE_URL" || -z "$OUTPUT_FILE" ]]; then
-  echo "All parameters required (--url, --output)"
+  echo "--url and --output are required."
   exit 1
 fi
 
-main $IMAGE_URL $OUTPUT_FILE $TIMEOUT
+main ${IMAGE_URL:?} ${OUTPUT_FILE:?} ${TIMEOUT:?}

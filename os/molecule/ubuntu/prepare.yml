@@ -5,7 +5,7 @@
   gather_facts: false
   tasks:
   - name: "Fetch and unpack image"
-    ansible.builtin.shell: >
+    ansible.builtin.shell: >-
       scripts/fetch-image.sh
       --url {{ image_url }}
       --output {{ image_file }}
@@ -14,7 +14,7 @@
       executable: /bin/bash
 
   - name: "Mount image onto system root directory"
-    ansible.builtin.shell: >
+    ansible.builtin.shell: >-
       scripts/mount-image.sh
       --image {{ image_file }}
       --system-root {{ system_root_mount }}
