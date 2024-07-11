@@ -124,8 +124,8 @@ jobs:
         # but since python virtualenv is under current user, re-use that user's virtualenv from within sudo
         POETRY_VENV_PYTHON="$(poetry env info --executable)"
         set -x
-        sudo --preserve-env=HOME,PATH,PIPX_BIN_DIR $PIPX_BIN_DIR/poetry env use $POETRY_VENV_PYTHON
-        sudo --preserve-env=HOME,PATH,PIPX_BIN_DIR $PIPX_BIN_DIR/poetry run molecule $MOLECULE_PARAMS --env-file $MOLECULE_VARS_FILE test --all --no-parallel
+        sudo --preserve-env=HOME,PATH $PIPX_BIN_DIR/poetry env use $POETRY_VENV_PYTHON
+        sudo --preserve-env=HOME,PATH $PIPX_BIN_DIR/poetry run molecule $MOLECULE_PARAMS --env-file $MOLECULE_VARS_FILE test --all --no-parallel
       shell: bash
       working-directory: ./os
       env:
