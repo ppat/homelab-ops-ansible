@@ -44,14 +44,19 @@
       msg: "{{ item['content'] | b64decode }}"
     loop: "{{ cloudinit_generated.results }}"
 
-  - name: "Parse userdata and metadata file content"
+  - name: "Parse generated cloud-init datasource file content"
     when: (item['item'] | basename) is in ['user-data', 'meta-data']
     ansible.builtin.set_fact:
-      generated_datasource: "{{ generated_datasource | default() | combine({ds_name: parsed_value}) }}"
+      generated_datasource: "{{ generated_datasource | default({}) | combine({ds_name: parsed_value}) }}"
     vars:
       ds_name: "{{ item['item'] | basename }}"
       parsed_value: "{{ item['content'] | b64decode | from_yaml }}"
     loop: "{{ cloudinit_generated.results }}"
+
+  - name: "Display generated cloud init datasource file"
+    ansible.builtin.debug:
+      msg: "{{ generated_datasource[item] }}"
+    loop: "{{ generated_datasource }}"
 
   - name: "Assert that the required user-data keys are present"
     ansible.builtin.assert:
