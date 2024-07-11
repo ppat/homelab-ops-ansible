@@ -29,6 +29,7 @@ env:
   # As this action takes nearly an hour to run, we're running it in highest verbosity to avoid needing to re-run
   # just to get additional information.
   non_workflow_dispatch_log_verbosity: 4
+  COLLECTIONS_PATH: /usr/share/ansible/collections
   MOLECULE_VARS_FILE: /tmp/molecule_vars.yaml
 
 concurrency:
@@ -72,6 +73,11 @@ jobs:
 
     - name: Install ansible collections
       run: |
+        # poetry run ansible-galaxy collection install ./os/ -p $COLLECTIONS_PATH
+
+        # # install collection dependencies w/ --force to ensure that replaced from local repository
+        # poetry run ansible-galaxy collection install --force ./packages/ -p $COLLECTIONS_PATH
+
         poetry run ansible-galaxy collection install ./os/
 
         # install collection dependencies w/ --force to ensure that replaced from local repository
@@ -123,12 +129,16 @@ jobs:
         # use of chroot connection within molecule requires running with sudo
         # but since python virtualenv is under current user, re-use that user's virtualenv for root
         VENV_DIR="$(poetry env list --full-path | awk '{ print $1 }')"
+        POETRY_VENV_PYTHON="$(poetry env info --executable)"
         echo "-------------------------"
         ls -al $VENV_DIR/bin/
         echo "-------------------------"
         env | sort
         echo "-------------------------"
-        sudo --preserve-env=HOME,PATH $VENV_DIR/bin/molecule $MOLECULE_PARAMS --env-file $MOLECULE_VARS_FILE test --all --no-parallel
+        sudo --preserve-env=HOME,PATH env | sort
+        echo "-------------------------"
+        sudo --preserve-env=HOME,PATH poetry env use $POETRY_VENV_PYTHON
+        sudo --preserve-env=HOME,PATH poetry run molecule $MOLECULE_PARAMS --env-file $MOLECULE_VARS_FILE test --all --no-parallel
       shell: bash
       working-directory: ./os
       env:
