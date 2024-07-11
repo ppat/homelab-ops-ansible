@@ -1,6 +1,7 @@
 ---
 - name: Prepare
   hosts: controller
+  become: true
   gather_facts: false
   tasks:
   - name: "Fetch and unpack image"

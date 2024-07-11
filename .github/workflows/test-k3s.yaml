@@ -45,7 +45,10 @@ jobs:
       uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
 
     - name: Setup poetry
-      run: pipx install poetry
+      run: pipx install poetry==$POETRY_VERSION
+      env:
+        # renovate: datasource=pypi depName=poetry
+        POETRY_VERSION: "1.8.3"
 
     - name: Set up python
       uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d # v5
@@ -61,7 +64,7 @@ jobs:
     - name: Install python requirements
       run: |
         poetry --version
-        poetry install
+        poetry install --no-interaction
 
     - name: Install ansible collections
       run: |

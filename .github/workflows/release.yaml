@@ -8,6 +8,9 @@ on:
     - '.github/workflows/release.yaml'
     - '.releaserc.js'
     - 'package.json'
+    - 'package-lock.json'
+    - 'poetry.lock'
+    - 'pyproject.toml'
     - '**/galaxy.yml'
   workflow_dispatch:
 
@@ -27,7 +30,10 @@ jobs:
         fetch-depth: 0
 
     - name: Setup poetry
-      run: pipx install poetry
+      run: pipx install poetry==$POETRY_VERSION
+      env:
+        # renovate: datasource=pypi depName=poetry
+        POETRY_VERSION: "1.8.3"
 
     - name: Set up python
       uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d # v5
@@ -38,7 +44,7 @@ jobs:
     - name: Install python requirements
       run: |
         poetry --version
-        poetry install
+        poetry install --no-interaction
 
     - name: Set up node
       uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4
