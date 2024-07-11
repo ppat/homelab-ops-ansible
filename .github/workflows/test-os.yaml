@@ -137,8 +137,9 @@ jobs:
         echo "-------------------------"
         sudo --preserve-env=HOME,PATH env | sort
         echo "-------------------------"
-        sudo --preserve-env=HOME,PATH poetry env use $POETRY_VENV_PYTHON
-        sudo --preserve-env=HOME,PATH poetry run molecule $MOLECULE_PARAMS --env-file $MOLECULE_VARS_FILE test --all --no-parallel
+        set -e
+        sudo --preserve-env=HOME,PATH,PIPX_BIN_DIR $PIPX_BIN_DIR/poetry env use $POETRY_VENV_PYTHON
+        sudo --preserve-env=HOME,PATH,PIPX_BIN_DIR $PIPX_BIN_DIR/poetry run molecule $MOLECULE_PARAMS --env-file $MOLECULE_VARS_FILE test --all --no-parallel
       shell: bash
       working-directory: ./os
       env:
