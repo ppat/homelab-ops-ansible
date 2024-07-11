@@ -1,0 +1,10 @@
+---
+- name: Running example playbook from cloud-init's runcmd stage
+  hosts: localhost
+  become: true
+  gather_facts: true
+
+  tasks:
+  - name: "Hello world"
+    ansible.builtin.debug:
+      msg: "Hello world"

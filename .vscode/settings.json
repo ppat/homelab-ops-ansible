@@ -16,6 +16,10 @@
     "editor.detectIndentation": false,
     "editor.indentSize": 2
   },
+  "[jinja]": {
+    "editor.formatOnPaste": false,
+    "editor.formatOnSave": false
+  },
   "[json]": {
     "editor.detectIndentation": false,
     "editor.indentSize": 2

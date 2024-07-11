@@ -3,11 +3,21 @@
   hosts: all
   gather_facts: false
   vars:
-    cloudinit_seed_path: "/mnt/cloudinit"
+    data_source_path: "/mnt/cloudinit"
     cloud_init_files:
-    - "{{ cloudinit_seed_path }}/user-data"
-    - "{{ cloudinit_seed_path }}/meta-data"
-    - "{{ cloudinit_seed_path }}/vendor-data"
+    - "{{ data_source_path }}/user-data"
+    - "{{ data_source_path }}/meta-data"
+    - "{{ data_source_path }}/vendor-data"
+    - "{{ data_source_path }}/runcmd/playbook.yaml"
+    - "{{ data_source_path }}/runcmd/playbook-vars.yaml"
+    required_datasource_keys:
+      user-data:
+      - users
+      - hostname
+      - runcmd
+      meta-data:
+      - local-hostname
+      - instance-id
   tasks:
   - name: Stat for generated cloud_init files
     ansible.builtin.stat:
@@ -33,3 +43,22 @@
     ansible.builtin.debug:
       msg: "{{ item['content'] | b64decode }}"
     loop: "{{ cloudinit_generated.results }}"
+
+  - name: "Parse userdata and metadata file content"
+    when: (item['item'] | basename) is in ['user-data', 'meta-data']
+    ansible.builtin.set_fact:
+      generated_datasource: "{{ generated_datasource | default() | combine({ds_name: parsed_value} }}"
+    vars:
+      ds_name: "{{ item['item'] | basename }}"
+      parsed_value: "{{ item['content'] | b64decode | from_yaml }}"
+    loop: "{{ cloudinit_generated.results }}"
+
+  - name: "Assert that the required user-data keys are present"
+    ansible.builtin.assert:
+      that: item in generated_datasource['user-data']
+    loop: "{{ required_datasource_keys['user-data'] }}"
+
+  - name: "Assert that the required meta-data keys are present"
+    ansible.builtin.assert:
+      that: item in generated_datasource['meta-data']
+    loop: "{{ required_datasource_keys['meta-data'] }}"

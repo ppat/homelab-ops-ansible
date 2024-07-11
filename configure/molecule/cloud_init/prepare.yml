@@ -3,11 +3,11 @@
   hosts: all
   gather_facts: false
   vars:
-    cloudinit_seed_path: "/mnt/cloudinit"
+    data_source_path: "/mnt/cloudinit"
   tasks:
   - name: "Create needed directories"
     ansible.builtin.file:
-      path: "{{ cloudinit_seed_path }}"
+      path: "{{ data_source_path }}"
       owner: root
       group: root
       mode: '0750'
