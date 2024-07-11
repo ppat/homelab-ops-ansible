@@ -29,7 +29,6 @@ env:
   # As this action takes nearly an hour to run, we're running it in highest verbosity to avoid needing to re-run
   # just to get additional information.
   non_workflow_dispatch_log_verbosity: 4
-  COLLECTIONS_PATH: /usr/share/ansible/collections
   MOLECULE_VARS_FILE: /tmp/molecule_vars.yaml
 
 concurrency:
@@ -59,6 +58,7 @@ jobs:
       uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d # v5
       with:
         python-version: '3.11'
+        cache: 'poetry'
 
     - name: Install system packages
       run: |
@@ -125,6 +125,5 @@ jobs:
       working-directory: ./os
       env:
         ANSIBLE_FORCE_COLOR: 1
-        ANSIBLE_COLLECTIONS_PATH: "${{ env.COLLECTIONS_PATH }}"
         PY_COLORS: 1
         TERM: xterm-256color
