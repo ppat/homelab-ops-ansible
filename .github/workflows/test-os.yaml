@@ -5,9 +5,10 @@ name: "test collection: os"
 on:
   pull_request:
     paths:
-    - 'os/**'
-    - 'requirements.txt'
     - '.github/workflows/test-os.yaml'
+    - 'os/**'
+    - 'poetry.lock'
+    - 'pyproject.toml'
   workflow_dispatch:
     inputs:
       log_verbosity:
@@ -60,14 +61,17 @@ jobs:
 
     - name: Install python requirements
       run: |
-        sudo python -m pip install -r requirements.txt
+        # python dependencies needed to be installed via sudo as we needed to run molecule via sudo
+        sudo poetry --version
+        sudo poetry install
 
     - name: Install ansible collections
       run: |
         sudo mkdir -p $COLLECTIONS_PATH
-        sudo ansible-galaxy collection install ./os/ -p $COLLECTIONS_PATH
-        sudo ansible-galaxy collection install ./packages/ -p $COLLECTIONS_PATH
-        sudo ansible-galaxy collection install community.general -p $COLLECTIONS_PATH
+        sudo poetry run ansible-galaxy collection install ./os/ -p $COLLECTIONS_PATH
+
+        # install collection dependencies w/ --force to ensure that replaced from local repository
+        sudo poetry run ansible-galaxy collection install --force ./packages/ -p $COLLECTIONS_PATH
 
     - name: Determine molecule verbosity
       # yamllint disable-line rule:indentation
@@ -112,7 +116,8 @@ jobs:
 
     - name: Molecule Test
       run: |
-        sudo -E molecule $MOLECULE_PARAMS --env-file $MOLECULE_VARS_FILE test --all --no-parallel
+        # packer requires running moecule via sudo
+        sudo -E poetry run molecule $MOLECULE_PARAMS --env-file $MOLECULE_VARS_FILE test --all --no-parallel
       shell: bash
       working-directory: ./os
       env:

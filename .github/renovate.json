@@ -107,6 +107,9 @@
       "matchDatasources": [
         "pypi"
       ],
+      "matchDepTypes": [
+        "dependencies"
+      ],
       "matchUpdateTypes": [
         "minor",
         "patch"
@@ -119,10 +122,49 @@
       "matchDatasources": [
         "pypi"
       ],
+      "matchDepTypes": [
+        "dependencies"
+      ],
       "matchUpdateTypes": [
         "major"
       ],
       "minimumReleaseAge": "30 days",
+      "schedule": [
+        "before 10am on Tuesday",
+        "before 10am on Thursday"
+      ]
+    },
+    {
+      "automerge": true,
+      "groupName": "python non-major dev dependencies",
+      "groupSlug": "pypi-deps-non-major",
+      "matchDatasources": [
+        "pypi"
+      ],
+      "matchDepTypes": [
+        "dev",
+        "dev-dependencies"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "minimumReleaseAge": "30 days"
+    },
+    {
+      "groupName": "python major dev dependencies",
+      "groupSlug": "pypi-deps",
+      "matchDatasources": [
+        "pypi"
+      ],
+      "matchDepTypes": [
+        "dev",
+        "dev-dependencies"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "minimumReleaseAge": "90 days",
       "schedule": [
         "before 10am on Tuesday",
         "before 10am on Thursday"

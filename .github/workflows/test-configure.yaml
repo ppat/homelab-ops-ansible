@@ -5,9 +5,10 @@ name: "test collection: configure"
 on:
   pull_request:
     paths:
-    - 'configure/**'
-    - 'requirements.txt'
     - '.github/workflows/test-configure.yaml'
+    - 'configure/**'
+    - 'poetry.lock'
+    - 'pyproject.toml'
   workflow_dispatch:
     inputs:
       log_verbosity:
@@ -43,18 +44,19 @@ jobs:
       uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d # v5
       with:
         python-version: '3.11'
-        cache: 'pip'
-        cache-dependency-path: |
-          requirements.txt
+        cache: 'poetry'
 
     - name: Install python requirements
       run: |
-        python -m pip install -r requirements.txt
+        poetry --version
+        poetry install
 
     - name: Install ansible collections
       run: |
-        ansible-galaxy collection install --force ./block_device/
-        ansible-galaxy collection install --force ./configure/
+        poetry run ansible-galaxy collection install --force ./block_device/
+
+        # install collection dependencies w/ --force to ensure that replaced from local repository
+        poetry run ansible-galaxy collection install --force ./configure/
 
     - name: Determine molecule verbosity
       # yamllint disable-line rule:indentation
@@ -76,7 +78,7 @@ jobs:
         LOG_VERBOSITY: ${{ github.event.inputs.log_verbosity || env.non_workflow_dispatch_log_verbosity }}
 
     - name: Molecule Test
-      run: molecule $MOLECULE_PARAMS test --all --no-parallel
+      run: poetry run molecule $MOLECULE_PARAMS test --all --no-parallel
       working-directory: ./configure
       env:
         ANSIBLE_FORCE_COLOR: 1

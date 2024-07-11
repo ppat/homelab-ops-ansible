@@ -30,12 +30,12 @@ jobs:
       uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d # v5
       with:
         python-version: '3.11'
-        cache: 'pip'
-        cache-dependency-path: |
-          requirements.txt
+        cache: 'poetry'
 
     - name: Install python requirements
-      run: python -m pip install -r requirements.txt
+      run: |
+        poetry --version
+        poetry install
 
     - name: Set up node
       uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4
@@ -67,17 +67,17 @@ jobs:
     - name: Build collections
       run: |
         # no dependencies on homelab_ops collections
-        ansible-galaxy collection build ./archive/ --output-path $OUTPUT_DIR
-        ansible-galaxy collection build ./block_device/ --output-path $OUTPUT_DIR
-        ansible-galaxy collection build ./configure/ --output-path $OUTPUT_DIR
-        ansible-galaxy collection build ./packages/ --output-path $OUTPUT_DIR
+        poetry run ansible-galaxy collection build ./archive/ --output-path $OUTPUT_DIR
+        poetry run ansible-galaxy collection build ./block_device/ --output-path $OUTPUT_DIR
+        poetry run ansible-galaxy collection build ./configure/ --output-path $OUTPUT_DIR
+        poetry run ansible-galaxy collection build ./packages/ --output-path $OUTPUT_DIR
 
         # depends on packages
-        ansible-galaxy collection build ./k3s/ --output-path $OUTPUT_DIR
-        ansible-galaxy collection build ./os/ --output-path $OUTPUT_DIR
+        poetry run ansible-galaxy collection build ./k3s/ --output-path $OUTPUT_DIR
+        poetry run ansible-galaxy collection build ./os/ --output-path $OUTPUT_DIR
 
         # depends on archive, block_device, configure
-        ansible-galaxy collection build ./raspberry_pi/ --output-path $OUTPUT_DIR
+        poetry run ansible-galaxy collection build ./raspberry_pi/ --output-path $OUTPUT_DIR
       env:
         OUTPUT_DIR: dist/
 
@@ -89,7 +89,7 @@ jobs:
 
         for collection in $(find dist/ -type f -name homelab_ops-*.tar.gz); do
           echo "Publishing ${collection}..."
-          ansible-galaxy collection publish --token ${AG_API_TOKEN} $collection
+          poetry run ansible-galaxy collection publish --token ${AG_API_TOKEN} $collection
           echo
         done
       shell: bash
