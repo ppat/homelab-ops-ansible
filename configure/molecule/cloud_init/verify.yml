@@ -15,10 +15,16 @@
       - users
       - hostname
       - runcmd
+      - ssh_deletekeys
+      - ssh_genkeytypes
+      - ssh_pwauth
+      - ssh
+      - growpart
+      - resize_rootfs
       meta-data:
       - local-hostname
       - instance-id
-    required_user_keys:
+    required_ssh_user_keys:
     - name
     - groups
     - sudo
@@ -85,9 +91,8 @@
   - name: "Assert that the required ssh-user keys are present"
     ansible.builtin.assert:
       that: item in generated_datasource['user-data'].users[0]
-    loop: "{{ required_user_keys'] }}"
+    loop: "{{ required_ssh_user_keys }}"
 
   - name: "Assert that expected number of run commands are present"
     ansible.builtin.assert:
       that: (generated_datasource['user-data'].runcmd|length) == expected_runcmd_count
-    loop: "{{ required_user_keys'] }}"

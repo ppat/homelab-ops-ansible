@@ -34,8 +34,6 @@ hostname: {{ cloudinit.local_hostname }}
 {% endif %}
 manage_etc_hosts: true
 
-timezone: UTC
-
 {% if cloudinit.runcmd_commands -%}
 runcmd:
 {% endif %}
