@@ -15,9 +15,9 @@ users:
   groups: [sudo]
   sudo: ALL=(ALL) NOPASSWD:ALL
   ssh_authorized_keys:
-  {% for ssh_key in user.authorized_keys -%}
+{% for ssh_key in user.authorized_keys -%}
   - {{ ssh_key }}
-  {% endfor %}
+{% endfor %}
   lock_passwd: true
   shell: /bin/bash
 {% endfor %}

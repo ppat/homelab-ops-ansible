@@ -53,10 +53,10 @@ jobs:
 
     - name: Install ansible collections
       run: |
-        ansible-galaxy collection install ./raspberry_pi/
-        ansible-galaxy collection install ./block_device/
-        ansible-galaxy collection install ./configure/
-        ansible-galaxy collection install ./archive/
+        ansible-galaxy collection install --force ./raspberry_pi/
+        ansible-galaxy collection install --force ./block_device/
+        ansible-galaxy collection install --force ./configure/
+        ansible-galaxy collection install --force ./archive/
 
     - name: Determine molecule verbosity
       # yamllint disable-line rule:indentation

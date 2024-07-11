@@ -18,6 +18,14 @@
       meta-data:
       - local-hostname
       - instance-id
+    required_user_keys:
+    - name
+    - groups
+    - sudo
+    - ssh_authorized_keys
+    - lock_passwd
+    - shell
+    expected_runcmd_count: 2
   tasks:
   - name: Stat for generated cloud_init files
     ansible.builtin.stat:
@@ -58,12 +66,22 @@
       msg: "{{ generated_datasource[item] }}"
     loop: "{{ generated_datasource }}"
 
-  - name: "Assert that the required user-data keys are present"
+  - name: "Assert that required user-data keys are present"
     ansible.builtin.assert:
       that: item in generated_datasource['user-data']
     loop: "{{ required_datasource_keys['user-data'] }}"
 
-  - name: "Assert that the required meta-data keys are present"
+  - name: "Assert that required meta-data keys are present"
     ansible.builtin.assert:
       that: item in generated_datasource['meta-data']
     loop: "{{ required_datasource_keys['meta-data'] }}"
+
+  - name: "Assert that the required ssh-user keys are present"
+    ansible.builtin.assert:
+      that: item in generated_datasource['user-data'].users[0]
+    loop: "{{ required_user_keys'] }}"
+
+  - name: "Assert that expected number of run commands are present"
+    ansible.builtin.assert:
+      that: (generated_datasource['user-data'].runcmd|length) == expected_runcmd_count
+    loop: "{{ required_user_keys'] }}"
