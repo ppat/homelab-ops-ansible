@@ -26,6 +26,9 @@ jobs:
         token: "${{ secrets.GH_RELEASE_TOKEN }}"
         fetch-depth: 0
 
+    - name: Setup poetry
+      run: pipx install poetry
+
     - name: Set up python
       uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d # v5
       with:
