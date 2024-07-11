@@ -9,6 +9,7 @@
       scripts/fetch-image.sh
       --url {{ image_url }}
       --output {{ image_file }}
+      --timeout 2m
     args:
       executable: /bin/bash
 

@@ -4,8 +4,8 @@ set -eo pipefail
 fetch_image() {
   local url=$1
   local output_file=$2
+  local timeout=$3
 
-  local timeout=300
   local attempt=0
   local retries=3
 
@@ -44,6 +44,7 @@ main() {
 
 OUTPUT_FILE=""
 IMAGE_URL=""
+TIMEOUT="5m"
 
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -52,6 +53,9 @@ while [ $# -gt 0 ]; do
       ;;
     --output)
       OUTPUT_FILE="$2"; shift
+      ;;
+    --timeout)
+      TIMEOUT="$2"; shift
       ;;
     *)
       echo "Invalid parameter: ${1}"; echo; exit 1
@@ -64,4 +68,4 @@ if [[ -z "$IMAGE_URL" || -z "$OUTPUT_FILE" ]]; then
   exit 1
 fi
 
-main $IMAGE_URL $OUTPUT_FILE
+main $IMAGE_URL $OUTPUT_FILE $TIMEOUT
