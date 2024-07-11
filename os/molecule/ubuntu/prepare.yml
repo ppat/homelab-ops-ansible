@@ -1,6 +1,7 @@
 ---
 - name: Prepare
   hosts: controller
+  become: true
   gather_facts: false
   tasks:
   - name: "Fetch and unpack image"
@@ -12,7 +13,6 @@
       executable: /bin/bash
 
   - name: "Mount image onto system root directory"
-    become: true
     ansible.builtin.shell: >
       scripts/mount-image.sh
       --image {{ image_file }}
@@ -22,13 +22,11 @@
       executable: /bin/bash
 
   - name: "Removing existing resolv conf"
-    become: true
     ansible.builtin.file:
       path: "{{ system_root_mount }}/etc/resolv.conf"
       state: absent
 
   - name: "Creating temporary resolv conf"
-    become: true
     ansible.builtin.copy:
       content: 'nameserver 1.1.1.1'
       dest: "{{ system_root_mount }}/etc/resolv.conf"
