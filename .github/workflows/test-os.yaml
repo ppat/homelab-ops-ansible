@@ -5,9 +5,10 @@ name: "test collection: os"
 on:
   pull_request:
     paths:
-    - 'os/**'
-    - 'requirements.txt'
     - '.github/workflows/test-os.yaml'
+    - 'os/**'
+    - 'poetry.lock'
+    - 'pyproject.toml'
   workflow_dispatch:
     inputs:
       log_verbosity:
@@ -28,7 +29,6 @@ env:
   # As this action takes nearly an hour to run, we're running it in highest verbosity to avoid needing to re-run
   # just to get additional information.
   non_workflow_dispatch_log_verbosity: 4
-  COLLECTIONS_PATH: /usr/share/ansible/collections
   MOLECULE_VARS_FILE: /tmp/molecule_vars.yaml
 
 concurrency:
@@ -48,10 +48,17 @@ jobs:
     - name: Checkout
       uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
 
+    - name: Setup poetry
+      run: pipx install poetry==$POETRY_VERSION
+      env:
+        # renovate: datasource=pypi depName=poetry
+        POETRY_VERSION: "1.8.3"
+
     - name: Set up python
       uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d # v5
       with:
         python-version: '3.11'
+        cache: 'poetry'
 
     - name: Install system packages
       run: |
@@ -60,14 +67,15 @@ jobs:
 
     - name: Install python requirements
       run: |
-        sudo python -m pip install -r requirements.txt
+        poetry --version
+        poetry install --no-interaction
 
     - name: Install ansible collections
       run: |
-        sudo mkdir -p $COLLECTIONS_PATH
-        sudo ansible-galaxy collection install ./os/ -p $COLLECTIONS_PATH
-        sudo ansible-galaxy collection install ./packages/ -p $COLLECTIONS_PATH
-        sudo ansible-galaxy collection install community.general -p $COLLECTIONS_PATH
+        poetry run ansible-galaxy collection install ./os/
+
+        # install collection dependencies w/ --force to ensure that replaced from local repository
+        poetry run ansible-galaxy collection install --force ./packages/
 
     - name: Determine molecule verbosity
       # yamllint disable-line rule:indentation
@@ -112,11 +120,17 @@ jobs:
 
     - name: Molecule Test
       run: |
-        sudo -E molecule $MOLECULE_PARAMS --env-file $MOLECULE_VARS_FILE test --all --no-parallel
+        # use of chroot connection within molecule requires running with sudo
+        # but since python virtualenv is under current user, re-use that user's virtualenv from within sudo
+        POETRY_VENV_PYTHON="$(poetry env info --executable)"
+        set -x
+        sudo --preserve-env=HOME,PATH $PIPX_BIN_DIR/poetry env use $POETRY_VENV_PYTHON
+        sudo --preserve-env=HOME,PATH $PIPX_BIN_DIR/poetry run molecule $MOLECULE_PARAMS --env-file $MOLECULE_VARS_FILE test --all --no-parallel
       shell: bash
       working-directory: ./os
       env:
         ANSIBLE_FORCE_COLOR: 1
-        ANSIBLE_COLLECTIONS_PATH: "${{ env.COLLECTIONS_PATH }}"
+        ANSIBLE_COLLECTIONS_PATH: "/home/runner/.ansible/collections"
         PY_COLORS: 1
+        PYTHONUNBUFFERED: 1
         TERM: xterm-256color

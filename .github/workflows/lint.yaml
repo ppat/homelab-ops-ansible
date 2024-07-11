@@ -38,13 +38,17 @@ jobs:
           - '!.github/**'
           - '!.pre-commit-config.yaml'
 
+    - name: Setup poetry
+      run: pipx install poetry==$POETRY_VERSION
+      env:
+        # renovate: datasource=pypi depName=poetry
+        POETRY_VERSION: "1.8.3"
+
     - name: Set up python
       uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d # v5
       with:
         python-version: '3.11'
-        cache: 'pip'
-        cache-dependency-path: |
-          requirements.txt
+        cache: 'poetry'
 
     - name: Set up node
       uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4
@@ -60,46 +64,48 @@ jobs:
         key: pre-commit|${{ env.pythonLocation }}|${{ hashFiles('.pre-commit-config.yaml') }}
 
     - name: Install python requirements
-      run: python -m pip install -r requirements.txt
+      run: |
+        poetry --version
+        poetry install --no-interaction
 
     - name: Install node packages
       run: npm ci --no-fund --no-audit
 
     - name: Install pre-commit hooks
-      run: pre-commit install --install-hooks --hook-type pre-commit
+      run: poetry run pre-commit install --install-hooks --hook-type pre-commit
 
     - name: check-added-large-files
-      run: pre-commit run --all-files --color=always check-added-large-files
+      run: poetry run pre-commit run --all-files --color=always check-added-large-files
 
     - name: check-executables-have-shebangs
-      run: pre-commit run --all-files --color=always check-executables-have-shebangs
+      run: poetry run pre-commit run --all-files --color=always check-executables-have-shebangs
 
     - name: check-json
-      run: pre-commit run --all-files --color=always check-json
+      run: poetry run pre-commit run --all-files --color=always check-json
 
     - name: check-shebang-scripts-are-executable
-      run: pre-commit run --all-files --color=always check-shebang-scripts-are-executable
+      run: poetry run pre-commit run --all-files --color=always check-shebang-scripts-are-executable
 
     - name: detect-private-key
-      run: pre-commit run --all-files --color=always detect-private-key
+      run: poetry run pre-commit run --all-files --color=always detect-private-key
 
     - name: end-of-file-fixer
-      run: pre-commit run --all-files --color=always end-of-file-fixer
+      run: poetry run pre-commit run --all-files --color=always end-of-file-fixer
 
     - name: forbid-new-submodules
-      run: pre-commit run --all-files --color=always forbid-new-submodules
+      run: poetry run pre-commit run --all-files --color=always forbid-new-submodules
 
     - name: mixed-line-ending
-      run: pre-commit run --all-files --color=always mixed-line-ending
+      run: poetry run pre-commit run --all-files --color=always mixed-line-ending
 
     - name: trailing-whitespace
-      run: pre-commit run --all-files --color=always trailing-whitespace
+      run: poetry run pre-commit run --all-files --color=always trailing-whitespace
 
     - name: shellcheck
-      run: pre-commit run --all-files --color=always shellcheck
+      run: poetry run pre-commit run --all-files --color=always shellcheck
 
     - name: yamllint
-      run: yamllint -c .yamllint --strict --format github .
+      run: poetry run yamllint -c .yamllint --strict --format github .
 
     - name: actionlint
       if: steps.changed-files-yaml.outputs.actions_any_changed == 'true' || github.event_name == 'workflow_dispatch'
@@ -130,4 +136,4 @@ jobs:
       env:
         changes_output: ${{ toJson(steps.changed-files-yaml.outputs) }}
       run: |
-        ansible-lint -c .ansible-lint -i .ansible-lint-ignore --skip-list=yaml --force-color .
+        poetry run ansible-lint -c .ansible-lint -i .ansible-lint-ignore --skip-list=yaml --force-color .

@@ -1,11 +1,11 @@
 #!/bin/bash
-set -eo pipefail
+set -euo pipefail
 
 fetch_image() {
   local url=$1
   local output_file=$2
+  local timeout=$3
 
-  local timeout=300
   local attempt=0
   local retries=3
 
@@ -32,9 +32,10 @@ fetch_image() {
 main() {
   local url=$1
   local output_file=$2
+  local timeout=$3
 
   echo "Fetching image from $url..."
-  fetch_image $url $output_file
+  fetch_image $url $output_file $timeout
 
   echo "Unpacking image..."
   xz -d ${output_file}.xz
@@ -44,6 +45,7 @@ main() {
 
 OUTPUT_FILE=""
 IMAGE_URL=""
+TIMEOUT="5m"
 
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -53,6 +55,9 @@ while [ $# -gt 0 ]; do
     --output)
       OUTPUT_FILE="$2"; shift
       ;;
+    --timeout)
+      TIMEOUT="$2"; shift
+      ;;
     *)
       echo "Invalid parameter: ${1}"; echo; exit 1
   esac
@@ -60,8 +65,8 @@ while [ $# -gt 0 ]; do
 done
 
 if [[ -z "$IMAGE_URL" || -z "$OUTPUT_FILE" ]]; then
-  echo "All parameters required (--url, --output)"
+  echo "--url and --output are required."
   exit 1
 fi
 
-main $IMAGE_URL $OUTPUT_FILE
+main ${IMAGE_URL:?} ${OUTPUT_FILE:?} ${TIMEOUT:?}

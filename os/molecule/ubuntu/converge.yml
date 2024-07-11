@@ -1,6 +1,7 @@
 ---
 - name: Converge
   hosts: instance
+  become: true
   gather_facts: true
   tasks:
   - name: "Setup Ubuntu OS"
