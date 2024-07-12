@@ -24,6 +24,12 @@
       "k3s/roles/bootstrap_flux/templates/.+\\.yaml$"
     ]
   },
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": [
+      "every 30 day"
+    ]
+  },
   "packageRules": [
     {
       "groupName": "github-action dependencies",
