@@ -78,61 +78,72 @@ jobs:
       run: poetry run pre-commit run --all-files --color=always check-added-large-files
 
     - name: check-executables-have-shebangs
+      if: success() || failure()
       run: poetry run pre-commit run --all-files --color=always check-executables-have-shebangs
 
     - name: check-json
+      if: success() || failure()
       run: poetry run pre-commit run --all-files --color=always check-json
 
     - name: check-shebang-scripts-are-executable
+      if: success() || failure()
       run: poetry run pre-commit run --all-files --color=always check-shebang-scripts-are-executable
 
     - name: detect-private-key
+      if: success() || failure()
       run: poetry run pre-commit run --all-files --color=always detect-private-key
 
     - name: end-of-file-fixer
+      if: success() || failure()
       run: poetry run pre-commit run --all-files --color=always end-of-file-fixer
 
     - name: forbid-new-submodules
+      if: success() || failure()
       run: poetry run pre-commit run --all-files --color=always forbid-new-submodules
 
     - name: mixed-line-ending
+      if: success() || failure()
       run: poetry run pre-commit run --all-files --color=always mixed-line-ending
 
     - name: trailing-whitespace
+      if: success() || failure()
       run: poetry run pre-commit run --all-files --color=always trailing-whitespace
 
     - name: shellcheck
+      if: success() || failure()
       run: poetry run pre-commit run --all-files --color=always shellcheck
 
     - name: yamllint
+      if: success() || failure()
       run: poetry run yamllint -c .yamllint --strict --format github .
 
     - name: actionlint
-      if: steps.changed-files-yaml.outputs.actions_any_changed == 'true' || github.event_name == 'workflow_dispatch'
+      if: (success() || failure()) && (steps.changed-files-yaml.outputs.actions_any_changed == 'true' || github.event_name == 'workflow_dispatch')
       shell: bash
       run: |
         [[ "$RUNNER_ARCH" == "ARM64" ]] && export PKG_ARCH=arm64 || export PKG_ARCH=amd64
-        wget --progress=dot:giga -c https://github.com/rhysd/actionlint/releases/download/v${ACTIONLINT_VERSION}/actionlint_${ACTIONLINT_VERSION}_linux_${PKG_ARCH}.tar.gz -O /tmp/actionlint.tar.gz
-        tar -xzvf /tmp/actionlint.tar.gz -C /tmp
+        wget --quiet -c https://github.com/rhysd/actionlint/releases/download/v${ACTIONLINT_VERSION}/actionlint_${ACTIONLINT_VERSION}_linux_${PKG_ARCH}.tar.gz -O /tmp/actionlint.tar.gz
+        tar -xzf /tmp/actionlint.tar.gz -C /tmp
         sudo install -o root -g root -m 0755 /tmp/actionlint /usr/local/sbin/actionlint
+        set -x
         actionlint -shellcheck "shellcheck -c .shellcheckrc"
       env:
         # renovate: datasource=github-releases depName=rhysd/actionlint
         ACTIONLINT_VERSION: "1.7.1"
 
     - name: commitlint
-      if: github.event_name == 'pull_request'
+      if: (success() || failure()) && (github.event_name == 'pull_request')
       run: npx commitlint --color --from ${{ github.event.pull_request.head.sha }}~${{ github.event.pull_request.commits }} --to ${{ github.event.pull_request.head.sha }} --verbose
 
     - name: validate-renovate-config
-      if: steps.changed-files-yaml.outputs.renovate_any_changed == 'true' || github.event_name == 'workflow_dispatch'
+      if: (success() || failure()) && (steps.changed-files-yaml.outputs.renovate_any_changed == 'true' || github.event_name == 'workflow_dispatch')
       shell: bash
       run: |
         npm install --no-fund --no-audit renovate
         npx --yes --package renovate -- renovate-config-validator
 
     - name: ansible-lint
-      if: steps.changed-files-yaml.outputs.ansible_any_changed == 'true' || github.event_name == 'workflow_dispatch'
+      if: (success() || failure()) && (steps.changed-files-yaml.outputs.ansible_any_changed == 'true' || github.event_name == 'workflow_dispatch')
       env:
         changes_output: ${{ toJson(steps.changed-files-yaml.outputs) }}
       run: |
