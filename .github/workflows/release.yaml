@@ -36,7 +36,7 @@ jobs:
         POETRY_VERSION: "1.8.3"
 
     - name: Set up python
-      uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d # v5
+      uses: actions/setup-python@39cd14951b08e74b54015e9e001cdefcf80e669f # v5
       with:
         python-version: '3.11'
         cache: 'poetry'
@@ -47,7 +47,7 @@ jobs:
         poetry install --no-interaction
 
     - name: Set up node
-      uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4
+      uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b # v4
       with:
         node-version-file: '.node-version'
         cache: 'npm'
