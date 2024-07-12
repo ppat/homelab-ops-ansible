@@ -2,6 +2,23 @@
 
 
 
+## [1.2.0](https://github.com/ppat/homelab-ops-ansible/compare/v1.1.0...v1.2.0) (2024-07-12)
+
+### ✨ Features
+
+* switch homelab_ops.configure.cloud_init role to enable running specified runcmd commands ([#103](https://github.com/ppat/homelab-ops-ansible/issues/103)) ([d051811](https://github.com/ppat/homelab-ops-ansible/commit/d0518117bdd543862ec1410e80603c7c9e050d8a))
+
+### 🐛 Enhancements + Bug Fixes
+
+* **deps:** separate dependencies into dependencies and dev-dependencies ([#104](https://github.com/ppat/homelab-ops-ansible/issues/104)) ([75b845b](https://github.com/ppat/homelab-ops-ansible/commit/75b845b4baf858e60c9df06666df14a4bbe48a22))
+
+### 📌 Dependencies
+
+* **deps:** lock file maintenance ([#110](https://github.com/ppat/homelab-ops-ansible/issues/110)) ([8b8744c](https://github.com/ppat/homelab-ops-ansible/commit/8b8744c90668f050258000567d57f43561889308))
+* **deps:** update dependency homelab_ops.k3s to v1.1.0 ([#101](https://github.com/ppat/homelab-ops-ansible/issues/101)) ([ec56e3b](https://github.com/ppat/homelab-ops-ansible/commit/ec56e3bbe08b112ac6a3a59e88ee368cde8dfaaf))
+* **deps:** update dependency node to v20.15.1 ([#100](https://github.com/ppat/homelab-ops-ansible/issues/100)) ([ac3b90b](https://github.com/ppat/homelab-ops-ansible/commit/ac3b90b8f5919a848446095a125d5f30fb2d3188))
+* **deps:** update nginx docker digest to 67682bd ([#109](https://github.com/ppat/homelab-ops-ansible/issues/109)) ([daa543c](https://github.com/ppat/homelab-ops-ansible/commit/daa543c09ee949fafdf068e5d70c9867eb52b3f6))
+
 ## [1.1.0](https://github.com/ppat/homelab-ops-ansible/compare/v1.0.2...v1.1.0) (2024-07-08)
 
 ### ✨ Features
