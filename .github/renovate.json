@@ -25,7 +25,10 @@
     ]
   },
   "lockFileMaintenance": {
+    "automerge": true,
+    "automergeType": "pr",
     "enabled": true,
+    "platformAutomerge": true,
     "schedule": [
       "every 30 day"
     ]
@@ -48,6 +51,7 @@
     },
     {
       "automerge": true,
+      "automergeType": "pr",
       "groupName": "github-release non-major dependencies",
       "groupSlug": "github-release-non-major-deps",
       "matchDatasources": [
@@ -57,7 +61,8 @@
         "minor",
         "patch"
       ],
-      "minimumReleaseAge": "1 days"
+      "minimumReleaseAge": "1 days",
+      "platformAutomerge": true
     },
     {
       "groupName": "github-release major dependencies",
@@ -76,6 +81,7 @@
     },
     {
       "automerge": true,
+      "automergeType": "pr",
       "groupName": "npm non-major dependencies",
       "groupSlug": "npm-deps-non-major",
       "matchDatasources": [
@@ -86,6 +92,7 @@
         "patch"
       ],
       "minimumReleaseAge": "30 days",
+      "platformAutomerge": true,
       "schedule": [
         "before 10am on Tuesday",
         "before 10am on Thursday"
@@ -108,6 +115,7 @@
     },
     {
       "automerge": true,
+      "automergeType": "pr",
       "groupName": "python non-major dependencies",
       "groupSlug": "pypi-deps-non-major",
       "matchDatasources": [
@@ -120,7 +128,8 @@
         "minor",
         "patch"
       ],
-      "minimumReleaseAge": "1 days"
+      "minimumReleaseAge": "1 days",
+      "platformAutomerge": true
     },
     {
       "groupName": "python major dependencies",
@@ -142,6 +151,7 @@
     },
     {
       "automerge": true,
+      "automergeType": "pr",
       "groupName": "python non-major dev dependencies",
       "groupSlug": "pypi-deps-non-major",
       "matchDatasources": [
@@ -155,7 +165,8 @@
         "minor",
         "patch"
       ],
-      "minimumReleaseAge": "30 days"
+      "minimumReleaseAge": "30 days",
+      "platformAutomerge": true
     },
     {
       "groupName": "python major dev dependencies",
@@ -177,15 +188,19 @@
       ]
     },
     {
+      "automerge": true,
+      "automergeType": "pr",
       "groupName": "pre-commit dependencies",
       "groupSlug": "pre-commit-deps",
       "matchManagers": [
         "pre-commit"
       ],
-      "minimumReleaseAge": "30 days"
+      "minimumReleaseAge": "30 days",
+      "platformAutomerge": true
     },
     {
       "automerge": true,
+      "automergeType": "pr",
       "groupName": "galaxy-collection non-major dependencies",
       "groupSlug": "galaxy-collection-non-major-deps",
       "matchDatasources": [
@@ -195,7 +210,8 @@
         "minor",
         "patch"
       ],
-      "minimumReleaseAge": "1 days"
+      "minimumReleaseAge": "1 days",
+      "platformAutomerge": true
     },
     {
       "groupName": "galaxy-collection major dependencies",
@@ -228,7 +244,8 @@
       "matchUpdateTypes": [
         "patch"
       ],
-      "minimumReleaseAge": "7 days"
+      "minimumReleaseAge": "7 days",
+      "platformAutomerge": true
     },
     {
       "description": "stability required dependencies: minor versions",
