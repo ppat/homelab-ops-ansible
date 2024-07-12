@@ -59,10 +59,29 @@ module.exports = {
         set -e
 
         for galaxy_file in $(find . -type f -name galaxy.yml -print); do
+          echo "Updating $galaxy_file...";
           sed -i 's/^version:.*/version: \${nextRelease.version}/g' $galaxy_file;
           sed -E -i 's|^  (homelab_ops..*): \">=(.*)\"|  \\1: \">=\${nextRelease.version}\"|g' $galaxy_file;
         done;
+        echo "Galaxy files updated.";
+        echo;
+        for req_file in $(find . -type f -name requirements.yaml); do
+          echo "Updating $req_file if needed...";
+          temp=$(mktemp);
+          cat $req_file | tr '\n' '!' > $temp;
+          if grep -q -E '\- name: (homelab_ops\..*)\!  version: (.*)\!' $temp; then
+            sed -E -i -n 's|\- name: (homelab_ops\..*)\!  version: (.*)\!|\- name: \\1\n  version: \${nextRelease.version}\n|p' $temp;
+            cat $temp | tr '\!' '\n' > $req_file;
+            echo "... updated." | pr -t -o 4;
+          else
+            echo "... update not neccessary." | pr -t -o 4;
+          fi
+          rm $temp;
+        done;
+        echo "Requirement files updated.";
+        echo "Outputing new release version...";
         echo \${nextRelease.version} > /tmp/released.version;
+        echo "Prepare complete.";
       `
     }],
 
