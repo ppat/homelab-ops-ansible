@@ -4,12 +4,12 @@ package-mode = false
 [tool.poetry.dependencies]
 python = "^3.10"
 ansible-core = "2.16.8"
-docker = "7.1.0"
 jmespath = "1.0.1"
 kubernetes = "30.1.0"
 
 [tool.poetry.group.dev.dependencies]
 ansible-lint = { version = "24.7.0", markers = "platform_system != 'Windows'" }
+docker = "7.1.0"
 molecule = "24.6.1"
 molecule-plugins = {version = "23.5.3", extras = ["docker"]}
 pre-commit = "3.7.1"
