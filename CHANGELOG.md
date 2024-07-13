@@ -2,6 +2,17 @@
 
 
 
+## [1.3.0](https://github.com/ppat/homelab-ops-ansible/compare/v1.2.0...v1.3.0) (2024-07-13)
+
+### ✨ Features
+
+* **os:** support for ubuntu release - noble ([#113](https://github.com/ppat/homelab-ops-ansible/issues/113)) ([1af593a](https://github.com/ppat/homelab-ops-ansible/commit/1af593a54ffc1ec1a15045db022c2f88974b04da))
+
+### 📌 Dependencies
+
+* **deps:** move docker pypi package from dependencies to dev-dependencies as only molecule-plugins depend on it ([#115](https://github.com/ppat/homelab-ops-ansible/issues/115)) ([17fa43f](https://github.com/ppat/homelab-ops-ansible/commit/17fa43f715bc90cfbf091a829e3ababf242f0dc8))
+* **deps:** update dependency homelab_ops.k3s to v1.2.0 ([#112](https://github.com/ppat/homelab-ops-ansible/issues/112)) ([b02d839](https://github.com/ppat/homelab-ops-ansible/commit/b02d839d9cd3eb8e8f9d8578f2beea0c17ea8dbb))
+
 ## [1.2.0](https://github.com/ppat/homelab-ops-ansible/compare/v1.1.0...v1.2.0) (2024-07-12)
 
 ### ✨ Features
