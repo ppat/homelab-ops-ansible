@@ -24,6 +24,7 @@ default_system_packages:
   by_release:
     "20.04": []
     "22.04": [linux-modules-extra-raspi]
+    "24.04": []
 
 device_type: any
 

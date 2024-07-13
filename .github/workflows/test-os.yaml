@@ -39,7 +39,7 @@ jobs:
   test:
     strategy:
       matrix:
-        ubuntu_code_name: ["jammy"]
+        ubuntu_code_name: ["jammy", "noble"]
         arch: ["arm64"]
         device_type: ["raspi"]
     runs-on: ubuntu-latest
