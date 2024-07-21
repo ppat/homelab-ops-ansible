@@ -140,15 +140,16 @@ jobs:
         k3s_server_token: $SERVER_TOKEN
         k3s_agent_token: $AGENT_TOKEN
         hardening_enabled: "$HARDENING"
-        metrics_exposed: "$METRICS"
+        metrics_exposed: "$METRICS_EXPOSED"
         EOF
 
         echo "Created vars file: $MOLECULE_VARS_FILE"
+        cat $MOLECULE_VARS_FILE
       shell: bash
       env:
         MOLECULE_VARS_FILE: ${{ env.molecule_vars_file }}
         HARDENING: ${{ matrix.cis_hardening == 'hardening=on' }}
-        METRICS: ${{ matrix.expose_metrics == 'metrics=on' }}
+        METRICS_EXPOSED: ${{ matrix.expose_metrics == 'metrics=on' }}
 
     - name: Molecule Test
       run: |
