@@ -2,6 +2,21 @@
 
 
 
+## [1.5.0](https://github.com/ppat/homelab-ops-ansible/compare/v1.4.0...v1.5.0) (2024-07-21)
+
+### ✨ Features
+
+* **k3s:** add playbook for installing k3s + flux using homelab_ops.k3s.* roles ([#124](https://github.com/ppat/homelab-ops-ansible/issues/124)) ([20cabb3](https://github.com/ppat/homelab-ops-ansible/commit/20cabb3e8d7ef1d9166b282f47753652963acf21))
+* **k3s:** provide server/agent tokens to k3s installer script via environment variables instead of files ([#121](https://github.com/ppat/homelab-ops-ansible/issues/121)) ([04fcbf1](https://github.com/ppat/homelab-ops-ansible/commit/04fcbf1fdaf1dff9381f7313ec2bfb5525879c17))
+
+### 🛠 Improvements
+
+* **k3s:** fix missed metrics exposure for server nodes after the first one ([#122](https://github.com/ppat/homelab-ops-ansible/issues/122)) ([6df61ee](https://github.com/ppat/homelab-ops-ansible/commit/6df61ee8987a9f91ac9f7124dc368637e5030434))
+
+### 📌 Dependencies
+
+* **deps:** update pre-commit hook ansible/ansible-lint to v24.6.1 ([#123](https://github.com/ppat/homelab-ops-ansible/issues/123)) ([245f106](https://github.com/ppat/homelab-ops-ansible/commit/245f106f2bd80931d662e948bb7ec68088430dbf))
+
 ## [1.4.0](https://github.com/ppat/homelab-ops-ansible/compare/v1.3.0...v1.4.0) (2024-07-21)
 
 ### ✨ Features
