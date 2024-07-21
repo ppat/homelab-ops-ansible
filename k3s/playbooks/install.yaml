@@ -61,6 +61,17 @@
       - k3s_config_file|length == 0 or k3s_config_file is file
       - k3s_private_registry_file|length == 0 or k3s_private_registry_file is file
 
+  - name: Install required python packages
+    ansible.builtin.pip:
+      name:
+      - "kubernetes=={{ kubernetes_python_package_version }}"
+      - "jmespath=={{ jmespath_pypi_package_version }}"
+    vars:
+      # renovate: datasource=pypi depName=kubernetes
+      kubernetes_pypi_package_version: "30.1.0"
+      # renovate: datasource=pypi depName=jmespath
+      jmespath_pypi_package_version: "1.0.1"
+
   tasks:
   - name: install k3s service
     ansible.builtin.include_role:
