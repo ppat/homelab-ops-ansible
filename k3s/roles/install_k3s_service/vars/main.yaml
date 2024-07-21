@@ -14,12 +14,16 @@ hardened:
   kube_controller_manager: "{{ (cis_hardening_enabled and k3s.node.type == 'server') | ternary(hardening_settings.kube_controller_manager, []) }}"
   secrets_encryption: "{{ (cis_hardening_enabled and k3s.node.type == 'server') | ternary(hardening_settings.secrets_encryption, []) }}"
 
+requested_metrics_exposure: "{{ ((k3s.expose_metrics | default(false)) and k3s.node.type == 'server') | ternary(settings_for_metrics_exposure, []) }}"
+
 passthrough_params:
 # hardening settings
 - "{{ ['--kube-apiserver-arg '] | product(hardened.admission_control) | map('join') | list | join(' ') }}"
 - "{{ ['--kube-apiserver-arg '] | product(hardened.kube_api_server) | map('join') | list | join(' ') }}"
 - "{{ ['--kube-controller-manager-arg '] | product(hardened.kube_controller_manager) | map('join') | list | join(' ') }}"
 - "{{ hardened.secrets_encryption | join(' ') }}"
+# metrics exposure
+- "{{ requested_metrics_exposure | join(' ') }}"
 # other settings
 - "--kubelet-arg config={{ standard_locations.kubelet_config }}"
 
