@@ -1,7 +1,7 @@
 ---
 namespace: homelab_ops
 name: k3s
-version: 1.3.0
+version: 1.4.0
 readme: README.md
 authors:
 - homelab-ops@homelab-ops.com
@@ -13,7 +13,7 @@ tags: [homelab, k3s, flux]
 dependencies:
   community.general: ">=9.0.0"
   kubernetes.core: ">=5.0.0"
-  homelab_ops.packages: ">=1.3.0"
+  homelab_ops.packages: ">=1.4.0"
 
 repository: https://github.com/ppat/homelab-ops-ansible
 documentation: https://github.com/ppat/homelab-ops-ansible/blob/main/k3s/README.md

@@ -2,6 +2,17 @@
 
 
 
+## [1.4.0](https://github.com/ppat/homelab-ops-ansible/compare/v1.3.0...v1.4.0) (2024-07-21)
+
+### ✨ Features
+
+* **k3s:** expose k3s metrics externally (i.e. on 0.0.0.0) when k3s.expose_metrics is set to true ([#119](https://github.com/ppat/homelab-ops-ansible/issues/119)) ([83b9ab0](https://github.com/ppat/homelab-ops-ansible/commit/83b9ab01ac998bba0a792e3dbffa21540b3cda65))
+
+### 📌 Dependencies
+
+* **deps:** update dependency community.general to v9.2.0 ([#117](https://github.com/ppat/homelab-ops-ansible/issues/117)) ([bde4df7](https://github.com/ppat/homelab-ops-ansible/commit/bde4df7c417e9c0f2ea7c552c7b8c836fcb11dbc))
+* **deps:** update dependency homelab_ops.k3s to v1.3.0 ([#116](https://github.com/ppat/homelab-ops-ansible/issues/116)) ([5464ae6](https://github.com/ppat/homelab-ops-ansible/commit/5464ae6f88719248b380ca6ac37352420cf1a6ab))
+
 ## [1.3.0](https://github.com/ppat/homelab-ops-ansible/compare/v1.2.0...v1.3.0) (2024-07-13)
 
 ### ✨ Features
