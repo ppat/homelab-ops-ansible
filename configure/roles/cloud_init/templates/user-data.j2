@@ -38,7 +38,7 @@ manage_etc_hosts: true
 write_files:
 {% for write_file in cloudinit.write_files -%}
 - content: |
-{% for write_file_line in write_file.lines -%}
+{% for write_file_line in write_file.content|split('\n') %}
     {{ write_file_line }}
 {% endfor %}
   path: {{ write_file.path }}
