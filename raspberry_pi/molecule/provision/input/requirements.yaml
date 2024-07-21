@@ -1,4 +1,0 @@
----
-collections:
-- name: homelab_ops.k3s
-  version: 1.3.0
