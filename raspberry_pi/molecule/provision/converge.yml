@@ -74,16 +74,26 @@
               - wifi
               - act_led
         cloudinit:
-          ansible:
-            # renovate: datasource=pypi depName=ansible-core
-            core_version: "2.16.8"
-            dependencies:
-            - name: jmespath
-              # renovate: datasource=pypi depName=jmespath
-              version: "1.0.1"
-              params: []
-            collections_requirements_file: "{{ MOLECULE_SCENARIO_DIR }}/input/requirements.yaml"
           ssh_users:
           - name: test-user
             authorized_keys:
             - ssh-ed25519 AAAABBBBCCCCDDDDEEEEFFFF test-user@email.com
+          runcmd_commands:
+          - "[timedatectl, set-ntp, 'true']"
+          write_files:
+          - path: /var/lib/cloud/scripts/per-once/run-once-script.sh
+            owner: 'root:root'
+            permissions: '0750'
+            # yamllint disable-line rule:indentation
+            content: |
+              #!/bin/bash
+              set -eo pipefail
+              echo "Example script that's only run once (unless you run cloud-init clean)"
+          - path: /var/lib/cloud/scripts/per-boot/run-per-boot-script.sh
+            owner: 'root:root'
+            permissions: '0750'
+            # yamllint disable-line rule:indentation
+            content: |
+              #!/bin/bash
+              set -eo pipefail
+              echo "Example script that's run on every boot"
