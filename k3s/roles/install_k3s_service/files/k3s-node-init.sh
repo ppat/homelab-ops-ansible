@@ -37,19 +37,17 @@ determine_install_params() {
   local result=""
 
   if [[ "$node_type" == "server" ]]; then
-    server_token_params="--token-file /tmp/k3s_token_server --agent-token-file /tmp/k3s_token_agent"
     if [[ "$server_url" == "-" ]]; then
-      result="server --cluster-init ${server_token_params}"
+      result="server --cluster-init"
     else
-      result="server --server ${server_url:?} ${server_token_params:?}"
+      result="server --server ${server_url:?}"
     fi
   elif [[ "$node_type" == "agent" ]]; then
-    agent_token_params="--token-file /tmp/k3s_token_agent"
     if [[ "$server_url" == "-" ]]; then
       >&2 echo "server url cannot be empty for agent node type"
       exit 1
     fi
-    result="agent --server ${server_url:?} ${agent_token_params:?}"
+    result="agent --server ${server_url:?}"
   else
     >&2 echo "invalid node type"
     exit 1
@@ -59,13 +57,24 @@ determine_install_params() {
   echo $result
 }
 
+echo "Determining installation parameters..."
 PARAMS="$(determine_install_params "${NODE_TYPE}" "${SERVER_URL}" ${PASSTHROUGH_ARGS})"
+echo "Determining installation environment variables..."
+export INSTALL_K3S_SKIP_DOWNLOAD=true
+if [[ "$NODE_TYPE" == "server" ]]; then
+  export K3S_TOKEN="$(cat /tmp/k3s_token_server)"
+  export K3S_AGENT_TOKEN="$(cat /tmp/k3s_token_agent)"
+else
+  export K3S_TOKEN="$(cat /tmp/k3s_token_agent)"
+fi
+echo "Using environment variables:"
+env | sort | grep 'K3S' | cut -d'=' -f1 | sed -E 's|(.*)|    \1|g'
 echo "Using commandline parameters:"
 echo "    ${PARAMS}"
 echo "All remaining parameters (from: /etc/rancher/k3s/config.yaml):"
 pr -t -o 4 /etc/rancher/k3s/config.yaml
 echo
-export INSTALL_K3S_SKIP_DOWNLOAD=true
+
 set -x
 /usr/bin/timeout --verbose 90s /bin/sh /root/k3s-install.sh ${PARAMS:?}
 set +x
