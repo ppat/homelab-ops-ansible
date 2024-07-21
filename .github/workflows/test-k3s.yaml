@@ -144,7 +144,6 @@ jobs:
         EOF
 
         echo "Created vars file: $MOLECULE_VARS_FILE"
-        cat $MOLECULE_VARS_FILE
       shell: bash
       env:
         MOLECULE_VARS_FILE: ${{ env.molecule_vars_file }}
