@@ -2,6 +2,12 @@
 
 
 
+## [1.6.1](https://github.com/ppat/homelab-ops-ansible/compare/v1.6.0...v1.6.1) (2024-07-21)
+
+### 🐛 Enhancements + Bug Fixes
+
+* **k3s:** update playbook homelab_ops.k3s.install to automatically install pypi dependencies ([#127](https://github.com/ppat/homelab-ops-ansible/issues/127)) ([50ca1d3](https://github.com/ppat/homelab-ops-ansible/commit/50ca1d35a3a3e70a6e3e1396f36f6fe17c2a0152))
+
 ## [1.6.0](https://github.com/ppat/homelab-ops-ansible/compare/v1.5.0...v1.6.0) (2024-07-21)
 
 ### ✨ Features

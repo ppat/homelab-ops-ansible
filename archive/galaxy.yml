@@ -1,7 +1,7 @@
 ---
 namespace: homelab_ops
 name: archive
-version: 1.6.0
+version: 1.6.1
 readme: README.md
 authors:
 - homelab-ops@homelab-ops.com
