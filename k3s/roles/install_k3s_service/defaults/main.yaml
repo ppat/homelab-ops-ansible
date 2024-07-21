@@ -23,3 +23,9 @@ hardening_settings:
   - "admission-control-config-file={{ standard_locations.pod_security_admission }}"
   secrets_encryption:
   - '--secrets-encryption'
+
+settings_for_metrics_exposure:
+- "--kube-controller-manager-arg bind-address=0.0.0.0"
+- "--kube-proxy-arg metrics-bind-address=0.0.0.0"
+- "--kube-scheduler-arg bind-address=0.0.0.0"
+- "--etcd-expose-metrics"

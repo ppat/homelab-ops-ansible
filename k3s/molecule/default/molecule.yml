@@ -70,6 +70,8 @@ provisioner:
           agent_token: $k3s_agent_token
           # hardening
           hardening: $hardening_enabled
+          # expose metrics
+          metrics_exposed: $metrics_exposed
           # flux bootstrap
           flux_prerequisites: ${MOLECULE_SCENARIO_DIRECTORY}/flux-prerequisites
           git_ssh_key: /tmp/bootstrap/git_ssh_key
