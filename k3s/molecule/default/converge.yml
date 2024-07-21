@@ -53,6 +53,7 @@
           agent: "{{ config.agent_token }}"
         hardening:
           enabled: "{{ config.hardening }}"
+        expose_metrics: "{{ config.metrics_exposed }}"
   - name: "install flux service"
     when: node_type == 'server'
     ansible.builtin.include_role:
