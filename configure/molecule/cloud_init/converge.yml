@@ -4,16 +4,6 @@
   gather_facts: false
   vars:
     data_source_path: "/mnt/cloudinit"
-    ansible_playbook_invoke_cmd:
-    - ANSIBLE_LOCALHOST_WARNING=false
-    - ansible-playbook
-    - -c
-    - local
-    - -i
-    - localhost
-    - "{{ data_source_path }}/runcmd/playbook.yaml"
-    - -e
-    - "{{ ('\"@' + data_source_path + '/runcmd/playbook-vars.yaml\"') }}"
   tasks:
   - name: "Configure cloud init"
     ansible.builtin.include_role:
@@ -29,8 +19,27 @@
           - ssh-ed25519 AAAABBBBCCCCDDDDEEEEFFFF test-user@email.com
         runcmd_commands:
         - "[timedatectl, set-ntp, 'true']"
-        - "[{{ ansible_playbook_invoke_cmd | join(', ') }}]"
-        runcmd_files:
-        - source: "{{ playbook_dir }}/input/playbook.yaml"
-          mode: '0644'
-        - source: "{{ playbook_dir }}/input/playbook-vars.yaml"
+        - "[ANSIBLE_LOCALHOST_WARNING=false, ansible-playbook, -c, local, -i, localhost, /playbook.yaml, -e, @/playbook-vars.yaml]"
+        write_files:
+        - path: /playbook.yaml
+          owner: 'root:root'
+          permissions: '0600'
+          lines:
+          - '---'
+          - '- name: "Example playbook"'
+          - '  hosts: localhost'
+          - '  become: true'
+          - '  gather_facts: true'
+          - '  tasks:'
+          - '  - name: "Example task"'
+          - '    ansible.builtin.debug:'
+          - '      msg: "Example"'
+        - path: /playbook-vars.yaml
+          owner: 'root:root'
+          permissions: '0600'
+          lines:
+          - '---'
+          - '# example file with variables for the ansible-playbook'
+          - 'a: b'
+          - 'c: d'
+          - 'e: f'

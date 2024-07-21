@@ -19,4 +19,4 @@
       instance_id: "{{ provision.raspberry_pi.instance_id | default(default_instance_id) }}"
       users: "{{ provision.cloudinit.ssh_users }}"
       runcmd_commands: "{{ provision.cloudinit.runcmd_commands | default([]) }}"
-      runcmd_files: "{{ provision.cloudinit.runcmd_files | default([]) }}"
+      write_files: "{{ provision.cloudinit.write_files | default([]) }}"
