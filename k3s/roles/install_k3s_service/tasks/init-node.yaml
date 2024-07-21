@@ -33,10 +33,10 @@
 - name: "init-node | Read syslog output as node startup failed"
   when: install_k3s_service_init_node.failed
   ansible.builtin.shell: >
-    grep --color=never -E 'k3s\[.*\]' /var/log/syslog
+    grep --color=never -E 'k3s\[.*\]' /var/log/syslog | tail -100
   register: install_k3s_service_syslog_out
 
-- name: "init-node | Show journalctl output as node startup failed"
+- name: "init-node | Show syslog output as node startup failed"
   when: install_k3s_service_init_node.failed
   ansible.builtin.debug:
     var: install_k3s_service_syslog_out
