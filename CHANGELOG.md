@@ -2,6 +2,20 @@
 
 
 
+## [1.6.0](https://github.com/ppat/homelab-ops-ansible/compare/v1.5.0...v1.6.0) (2024-07-21)
+
+### ✨ Features
+
+* **configure:** add support for cloudinit write_files directive to homelab_ops.configure.cloud_init role ([#125](https://github.com/ppat/homelab-ops-ansible/issues/125)) ([fd0559f](https://github.com/ppat/homelab-ops-ansible/commit/fd0559f20ce98b4438a883db6cabf08b33be7c3b))
+
+### 🐛 Enhancements + Bug Fixes
+
+* **raspberry_pi:** remove ansible setup from homelab_ops.raspberry_pi.provision role ([#126](https://github.com/ppat/homelab-ops-ansible/issues/126)) ([0888e02](https://github.com/ppat/homelab-ops-ansible/commit/0888e02424868040c13798a51930b5e2e24f6b6f))
+
+### 📌 Dependencies
+
+* **deps:** update github-action dependencies ([#118](https://github.com/ppat/homelab-ops-ansible/issues/118)) ([454f4dd](https://github.com/ppat/homelab-ops-ansible/commit/454f4dd902af141497ec1286094225ea8ee0ef1b))
+
 ## [1.5.0](https://github.com/ppat/homelab-ops-ansible/compare/v1.4.0...v1.5.0) (2024-07-21)
 
 ### ✨ Features
