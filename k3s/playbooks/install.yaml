@@ -1,0 +1,91 @@
+---
+- name: Install k3s and flux services
+  hosts: all
+  become: true
+  gather_facts: true
+
+  vars_prompt:
+  - name: k3s_version
+    prompt: Desired k3s version
+    private: false
+    # renovate: datasource=github-releases depName=k3s-io/k3s
+    default: "1.30.2+k3s1"
+  - name: flux_version
+    prompt: Desired flux version
+    private: false
+    # renovate: datasource=github-releases depName=fluxcd/flux2
+    default: "2.3.0"
+  - name: kustomize_version
+    prompt: Desired kustomize version
+    private: false
+    # renovate: datasource=github-releases depName=kubernetes-sigs/kustomize
+    default: "5.4.1"
+  - name: node_type
+    prompt: K3S node type (server/agent)
+    private: false
+  - name: api_server_url
+    prompt: API server URL for joining existing cluster (Leave blank for first server node. Required for agent nodes)
+    private: false
+  - name: server_token
+    prompt: Server Token (for joining server nodes to the cluster. Required for server nodes)
+    private: true
+  - name: agent_token
+    prompt: Agent Token (for joining agent nodes to the cluster. Required for agent and server nodes)
+    private: true
+  - name: k3s_config_file
+    prompt: K3S config file (Local path on Ansible controller node. Optional)
+    private: false
+  - name: k3s_private_registry_file
+    prompt: K3S private registry file (Local path on Ansible controller node. Optional)
+    private: false
+  - name: enable_cis_hardening
+    prompt: Enable CIS Hardening
+    default: "false"
+    private: false
+  - name: expose_metrics
+    prompt: Expose metrics externally (i.e. bind k3s services on 0.0.0.0)
+    default: "false"
+    private: false
+
+  pre_tasks:
+  - name: Check for mandatory variables definitions
+    ansible.builtin.assert:
+      that:
+      - k3s_version is defined and k3s_version|length > 0
+      - flux_version is defined and flux_version|length > 0
+      - kustomize_version is defined and kustomize_version|length > 0
+      - node_type is defined and ['agent', 'server'] is contains(node_type)
+      - api_server_url|length == 0 or api_server_url is url(schemes=['https'])
+      - node_type == 'agent' or (server_token is defined and server_token|length > 0)
+      - agent_token is defined and agent_token|length > 0
+      - k3s_config_file|length == 0 or k3s_config_file is file
+      - k3s_private_registry_file|length == 0 or k3s_private_registry_file is file
+
+  tasks:
+  - name: install k3s service
+    ansible.builtin.include_role:
+      name: homelab_ops.k3s.install_k3s_service
+    vars:
+      k3s:
+        version: "{{ k3s_version }}"
+        discovery_url: "{{ api_server_url | default('') }}"
+        node:
+          type: "{{ node_type }}"
+          config: "{{ k3s_config_file | default('') }}"
+        tokens:
+          server: "{{ server_token }}"
+          agent: "{{ agent_token }}"
+        hardening:
+          enabled: "{{ enable_cis_hardening | bool }}"
+        expose_metrics: "{{ expose_metrics | bool }}"
+        registry: "{{ k3s_private_registry_file | default('') }}"
+
+  - name: "install flux service"
+    when: node_type == 'server'
+    ansible.builtin.include_role:
+      name: homelab_ops.k3s.install_flux_service
+    vars:
+      flux:
+        version: "{{ flux_version }}"
+      kustomize:
+        version: "{{ kustomize_version }}"
