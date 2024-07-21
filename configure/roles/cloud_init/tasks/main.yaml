@@ -8,24 +8,6 @@
     - cloudinit.instance_id is defined
     - cloudinit.users is defined and cloudinit.users|length > 0
 
-- name: "Create cloud-init runcmd files directory"
-  when: cloudinit.runcmd_files is defined and cloudinit.runcmd_files|length > 0
-  ansible.builtin.file:
-    path: "{{ cloudinit.data_source_path }}/runcmd"
-    state: directory
-    mode: '0755'
-    owner: root
-    group: root
-
-- name: "Add needed files for cloud-init runcmd commands"
-  ansible.builtin.copy:
-    src: "{{ item.source }}"
-    dest: "{{ cloudinit.data_source_path }}/runcmd/{{ item.source | basename }}"
-    owner: root
-    group: root
-    mode: "{{ item.mode | default('0600') }}"
-  loop: "{{ cloudinit.runcmd_files }}"
-
 - name: "Create configuration"
   ansible.builtin.include_tasks: configure.yaml
   loop:

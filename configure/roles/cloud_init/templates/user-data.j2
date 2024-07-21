@@ -34,9 +34,22 @@ hostname: {{ cloudinit.local_hostname }}
 {% endif %}
 manage_etc_hosts: true
 
+{% if cloudinit.write_files -%}
+write_files:
+{% for write_file in cloudinit.write_files -%}
+- content: |
+{% for write_file_line in write_file.content|split('\n') %}
+    {{ write_file_line }}
+{% endfor %}
+  path: {{ write_file.path }}
+  owner: {{ write_file.owner }}
+  permissions: '{{ write_file.permissions }}'
+{% endfor %}
+{% endif %}
+
 {% if cloudinit.runcmd_commands -%}
 runcmd:
-{% endif %}
 {% for runcmd_command in cloudinit.runcmd_commands -%}
 - {{ runcmd_command }}
 {% endfor %}
+{% endif %}
