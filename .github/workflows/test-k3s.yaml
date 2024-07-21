@@ -40,6 +40,7 @@ jobs:
     strategy:
       matrix:
         cis_hardening: ["hardening=on", "hardening=off"]
+        expose_metrics: ["metrics=on", "metrics=off"]
     steps:
     - name: Checkout
       uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
@@ -139,6 +140,7 @@ jobs:
         k3s_server_token: $SERVER_TOKEN
         k3s_agent_token: $AGENT_TOKEN
         hardening_enabled: "$HARDENING"
+        metrics_exposed: "$METRICS"
         EOF
 
         echo "Created vars file: $MOLECULE_VARS_FILE"
@@ -146,6 +148,7 @@ jobs:
       env:
         MOLECULE_VARS_FILE: ${{ env.molecule_vars_file }}
         HARDENING: ${{ matrix.cis_hardening == 'hardening=on' }}
+        METRICS: ${{ matrix.expose_metrics == 'metrics=on' }}
 
     - name: Molecule Test
       run: |
