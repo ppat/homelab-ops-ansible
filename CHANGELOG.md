@@ -2,6 +2,12 @@
 
 
 
+## [1.6.2](https://github.com/ppat/homelab-ops-ansible/compare/v1.6.1...v1.6.2) (2024-07-22)
+
+### 🐛 Enhancements + Bug Fixes
+
+* **k3s:** fix typo in homelab_ops.k3s.install playbook ([#128](https://github.com/ppat/homelab-ops-ansible/issues/128)) ([3f4244f](https://github.com/ppat/homelab-ops-ansible/commit/3f4244f64b7e49278fa5800d9a0748c24e77edd6))
+
 ## [1.6.1](https://github.com/ppat/homelab-ops-ansible/compare/v1.6.0...v1.6.1) (2024-07-21)
 
 ### 🐛 Enhancements + Bug Fixes
