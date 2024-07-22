@@ -64,7 +64,7 @@
   - name: Install required python packages
     ansible.builtin.pip:
       name:
-      - "kubernetes=={{ kubernetes_python_package_version }}"
+      - "kubernetes=={{ kubernetes_pypi_package_version }}"
       - "jmespath=={{ jmespath_pypi_package_version }}"
     vars:
       # renovate: datasource=pypi depName=kubernetes
