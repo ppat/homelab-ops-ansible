@@ -24,13 +24,13 @@ test = ["coverage", "pip-tools", "pytest (>=7.2.0)", "pytest-mock", "pytest-plus
 
 [[package]]
 name = "ansible-core"
-version = "2.16.8"
+version = "2.16.9"
 description = "Radically simple IT automation"
 optional = false
 python-versions = ">=3.10"
 files = [
-    {file = "ansible_core-2.16.8-py3-none-any.whl", hash = "sha256:8fab9f08049e3cbc181f0566a17dfb896d9164ef5048c63e9e07fda4624686c7"},
-    {file = "ansible_core-2.16.8.tar.gz", hash = "sha256:59e4aa40ed5acdb4ef9bbf3d058918fff93f66a149373d8159c8a29604410bda"},
+    {file = "ansible_core-2.16.9-py3-none-any.whl", hash = "sha256:37766b0a298f3295408c9713320242d38b42f7e449c8ca2bfb23b3aec4d6dd11"},
+    {file = "ansible_core-2.16.9.tar.gz", hash = "sha256:0c761a5e1df15bbc497ccf66d10f0e4c20f148dc6f9aac40b63390f83d8c33f1"},
 ]
 
 [package.dependencies]
@@ -1542,4 +1542,4 @@ test = ["big-O", "importlib-resources", "jaraco.functools", "jaraco.itertools", 
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "a0185f129204e6f5f1b492786bec3013eac861500027d363d3f06061fdadf336"
+content-hash = "e70d28a3708464c54f880c11836a599b5293f59666e5624da2652df4e05bf3fe"
