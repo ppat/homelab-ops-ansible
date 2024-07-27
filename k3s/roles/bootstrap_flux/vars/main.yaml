@@ -1,2 +1,0 @@
----
-kubeconfig_location: "{{ flux_bootstrap.kubeconfig_location | default(standard_locations.kubeconfig) }}"

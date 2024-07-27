@@ -64,20 +64,27 @@
       kustomize:  # noqa: var-naming[no-role-prefix]
         version: "{{ config.kustomize_version }}"
 
-- name: bootstrap cluster with flux
+- name: fetch kubeconfig from remote node
   hosts: node1-server
   become: true
   gather_facts: true
   tasks:
-  - name: bootstrap flux on cluster
+  - name: fetch kubeconfig
     ansible.builtin.include_role:
-      name: homelab_ops.k3s.bootstrap_flux
+      name: homelab_ops.k3s.fetch_kubeconfig
     vars:
-      flux_bootstrap:
-        prerequisites: "{{ config.flux_prerequisites }}"
-        source:
-          git:
-            url: ssh://git@github.com/ppat/homelab-ops-ansible.git
-            path: "./k3s/molecule/default/flux-root"
-            ssh_key: "{{ config.git_ssh_key }}"
-            branch: "{{ config.git_branch }}"
+      kubeconfig:  # noqa: var-naming[no-role-prefix]
+        local_location: "/tmp/kubeconfig/test"
+        remote_location: "/etc/rancher/k3s/k3s.yaml"
+        remote_hostname: "localhost"
+
+- name: create test resources
+  hosts: localhost
+  become: true
+  gather_facts: true
+  tasks:
+  - name: Create test resource(s) from local file
+    kubernetes.core.k8s:
+      state: present
+      src: test-resources/test.yaml
+      kubeconfig: /tmp/kubeconfig/test
