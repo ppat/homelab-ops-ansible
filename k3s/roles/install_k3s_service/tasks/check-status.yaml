@@ -60,6 +60,11 @@
   retries: 5
   delay: 10
 
+- name: "check-status | Show node"
+  when: install_k3s_service_kubeconfig_stat.stat.exists
+  ansible.builtin.debug:
+    msg: "{{ install_k3s_service_node_status }}"
+
 - name: "check-status | Show node status"
   when: install_k3s_service_kubeconfig_stat.stat.exists
   ansible.builtin.debug:
