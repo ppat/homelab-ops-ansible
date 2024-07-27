@@ -1,2 +1,3 @@
 ---
 current_local_user: "{{ lookup('ansible.builtin.env', 'USER') }}"
+current_node_default_ipaddress: "{{ ansible_default_ipv4.address | default(ansible_all_ipv4_addresses[0]) }}"

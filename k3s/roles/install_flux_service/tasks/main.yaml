@@ -4,6 +4,7 @@
     that:
     - flux is defined and flux|length > 0
     - flux.version is defined
+    - flux.local_kubeconfig is defined and flux.local_kubeconfig is file
     - kustomize.version is defined
 
 - name: "Check for flux initialization"
@@ -11,14 +12,15 @@
     path: /etc/rancher/k3s/status/flux.system.initialized
   register: install_flux_service_initialized
 
-- name: "install flux if not installed before"
+- name: "Install flux if not installed before"
   when: not install_flux_service_initialized.stat.exists
   block:
   - name: "Prepare configuration and binaries"
     ansible.builtin.include_tasks: prepare.yaml
   - name: "Check whether flux-system namespace exists"
-    kubernetes.core.k8s_info:
-      kubeconfig: "{{ kubeconfig_location }}"
+    local_action:
+      module: "kubernetes.core.k8s_info"
+      kubeconfig: "{{ flux.local_kubeconfig }}"
       kind: Namespace
       name: flux-system
     register: install_flux_service_namespace_status

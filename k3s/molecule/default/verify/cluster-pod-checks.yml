@@ -4,7 +4,7 @@
 # ----------------------------------------------------------------------------------------------------------
 - name: "cluster-pod-checks | Get cluster pods"
   kubernetes.core.k8s_info:
-    kubeconfig: /etc/rancher/k3s/k3s.yaml
+    kubeconfig: "{{ local_kubeconfig }}"
     kind: Pod
   register: cluster_pod_state
 

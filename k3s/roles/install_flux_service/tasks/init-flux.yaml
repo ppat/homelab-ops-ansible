@@ -1,13 +1,13 @@
 ---
 - name: "init-flux | check for pre-requisites"
-  ansible.builtin.command: "flux check --pre --kubeconfig {{ kubeconfig_location }}"
+  ansible.builtin.command: "flux check --pre --kubeconfig {{ standard_locations.kubeconfig }}"
   changed_when: false
 
 - name: "init-flux | install flux into kubernetes cluster"
   ansible.builtin.command: >
     flux install
     --version v{{ flux.version }}
-    --kubeconfig {{ kubeconfig_location }}
+    --kubeconfig {{ standard_locations.kubeconfig }}
     --toleration-keys=node-role.kubernetes.io/control-plane
   register: install_flux_service_init_flux
   ignore_errors: true
@@ -23,5 +23,5 @@
     msg: "flux initialization failed, please see above output for error message."
 
 - name: "init-flux | check that flux installation is healthy"
-  ansible.builtin.command: flux check --kubeconfig {{ kubeconfig_location }}
+  ansible.builtin.command: "flux check --kubeconfig {{ standard_locations.kubeconfig }}"
   changed_when: false

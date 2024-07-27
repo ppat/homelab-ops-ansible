@@ -8,6 +8,7 @@
     - k3s.node.type is defined
     - k3s.node.type == 'server' or (k3s.node.type == 'agent' and k3s.discovery_url is url(schemes=['https']))
     - k3s.node.config is defined
+    - k3s.local_kubeconfig is defined and k3s.local_kubeconfig|length > 0
 
 - name: "Check for k3s initialization"
   ansible.builtin.stat:
