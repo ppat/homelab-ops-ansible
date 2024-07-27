@@ -31,7 +31,7 @@
     # yamllint disable-line rule:line-length
     fetch_kubeconfig_target: "{{ fetch_kubeconfig_source | combine({'clusters': [{'name': fetch_kubeconfig_clustername, 'cluster': {'server': fetch_kubeconfig_apiserver, 'certificate-authority-data': fetch_kubeconfig_certificateauthority}}]}) }}"
   vars:
-    fetch_kubeconfig_apiserver: "https://{{ kubeconfig.remote_hostname | default(inventory_hostname) }}:{{ kubeconfig.remote_port | default('6443') }}"
+    fetch_kubeconfig_apiserver: "https://{{ kubeconfig.remote_hostname | default(current_node_default_ipaddress) }}:{{ kubeconfig.remote_port | default('6443') }}"
     fetch_kubeconfig_clustername: "{{ fetch_kubeconfig_source.clusters[0].name }}"
     fetch_kubeconfig_certificateauthority: "{{ fetch_kubeconfig_source.clusters[0].cluster['certificate-authority-data'] }}"
   no_log: true

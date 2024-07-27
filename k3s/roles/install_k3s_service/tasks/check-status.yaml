@@ -23,7 +23,6 @@
       local_mode: "0700"
       local_location: "{{ k3s.local_kubeconfig }}"
       remote_location: "{{ standard_locations.kubeconfig }}"
-      remote_hostname: "localhost"
 
 - name: "check-status | Check if kubeconfig was fetched is available"
   local_action:
@@ -59,11 +58,6 @@
   until: "'taints' not in install_k3s_service_node_status.resources[0].spec or 'node.kubernetes.io/not-ready' not in (install_k3s_service_node_status.resources | map(attribute='spec.taints') | flatten | map(attribute='key'))"
   retries: 5
   delay: 10
-
-- name: "check-status | Show node"
-  when: install_k3s_service_kubeconfig_stat.stat.exists
-  ansible.builtin.debug:
-    msg: "{{ install_k3s_service_node_status }}"
 
 - name: "check-status | Show node status"
   when: install_k3s_service_kubeconfig_stat.stat.exists
