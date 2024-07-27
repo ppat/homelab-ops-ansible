@@ -25,8 +25,14 @@
       remote_location: "{{ standard_locations.kubeconfig }}"
       remote_hostname: "localhost"
 
+- name: "check-status | Check if kubeconfig was fetched is available"
+  local_action:
+    module: "ansible.builtin.stat"
+    path: "{{ k3s.local_kubeconfig }}"
+  register: install_k3s_service_kubeconfig_stat
+
 - name: "check-status | Wait till kubelet is operational"
-  when: k3s.node.type == 'server' or fetch_kubeconfig_stat.stat.exists
+  when: install_k3s_service_kubeconfig_stat.stat.exists
   local_action:
     module: "kubernetes.core.k8s_info"
     kubeconfig: "{{ k3s.local_kubeconfig }}"
@@ -41,7 +47,7 @@
     wait_timeout: 180
 
 - name: "check-status | Wait till not-ready taint is removed"
-  when: k3s.node.type == 'server' or fetch_kubeconfig_stat.stat.exists
+  when: install_k3s_service_kubeconfig_stat.stat.exists
   local_action:
     module: "kubernetes.core.k8s_info"
     kubeconfig: "{{ k3s.local_kubeconfig }}"
@@ -55,7 +61,7 @@
   delay: 10
 
 - name: "check-status | Show node status"
-  when: k3s.node.type == 'server' or fetch_kubeconfig_stat.stat.exists
+  when: install_k3s_service_kubeconfig_stat.stat.exists
   ansible.builtin.debug:
     msg: "{{ install_k3s_service_node_status | community.general.json_query(query) | flatten }}"
   vars:
