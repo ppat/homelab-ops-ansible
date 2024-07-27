@@ -26,7 +26,7 @@ on:
   - cron: '0 10 */30 * *'
 
 env:
-  non_workflow_dispatch_log_verbosity: '1'
+  non_workflow_dispatch_log_verbosity: '0'
   molecule_vars_file: /tmp/molecule_vars.yaml
 
 concurrency:
@@ -57,11 +57,6 @@ jobs:
         python-version: '3.12'
         cache: 'poetry'
 
-    - name: Set up go
-      uses: actions/setup-go@0a12ed9d6a96ab950c8f026ed9f722fe0da7ef32 # v5
-      with:
-        go-version: 'stable'
-
     - name: Install python requirements
       run: |
         poetry --version
@@ -74,10 +69,6 @@ jobs:
 
         # install collection dependencies w/ --force to ensure that replaced from local repository
         poetry run ansible-galaxy collection install --force ./packages/
-
-    - name: Build envsubst binary
-      run: |
-        go install github.com/drone/envsubst/cmd/envsubst@latest
 
     - name: Install sysbox
       run: |
