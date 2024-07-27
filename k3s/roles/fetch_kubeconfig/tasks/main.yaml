@@ -1,0 +1,57 @@
+---
+- name: "Check for mandatory variables definitions"
+  ansible.builtin.assert:
+    that:
+    - kubeconfig is defined and kubeconfig|length > 0
+    - kubeconfig.local_location is defined
+    - kubeconfig.remote_location is defined and kubeconfig.remote_location|length > 0
+
+- name: "Check if local kubeconfig already exists"
+  ansible.builtin.stat:
+    path: "{{ kubeconfig.local_location }}"
+  register: fetch_kubeconfig_stat
+
+- name: "Fetch kubeconfig for the following node status check"
+  when: not fetch_kubeconfig_stat.stat.exists
+  ansible.builtin.slurp:
+    src: "{{ kubeconfig.remote_location }}"
+  register: fetch_kubeconfig_slurp
+
+- name: "Extract kubeconfig content"
+  when: not fetch_kubeconfig_stat.stat.exists
+  ansible.builtin.set_fact:
+    fetch_kubeconfig_source: "{{ fetch_kubeconfig_slurp['content'] | b64decode | from_yaml }}"
+  no_log: true
+
+- name: "Replace api-server with corresponding remote reference"
+  when: not fetch_kubeconfig_stat.stat.exists
+  ansible.builtin.set_fact:
+    # yamllint disable-line rule:line-length
+    fetch_kubeconfig_target: "{{ fetch_kubeconfig_source | combine({'clusters': [{'name': fetch_kubeconfig_clustername, 'cluster': {'server': fetch_kubeconfig_apiserver, 'certificate-authority-data': fetch_kubeconfig_certificateauthority}}]}) }}"
+  vars:
+    fetch_kubeconfig_apiserver: "https://{{ kubeconfig.remote_hostname | default(inventory_hostname) }}:{{ kubeconfig.remote_port | default('6443') }}"
+    fetch_kubeconfig_clustername: "{{ fetch_kubeconfig_source.clusters[0].name }}"
+    fetch_kubeconfig_certificateauthority: "{{ fetch_kubeconfig_source.clusters[0].cluster['certificate-authority-data'] }}"
+  no_log: true
+
+- name: "Create directory for kubeconfig"
+  when: not fetch_kubeconfig_stat.stat.exists
+  local_action:
+    module: "ansible.builtin.file"
+    path: "{{ kubeconfig.local_location | dirname }}"
+    owner: "{{ kubeconfig.local_owner | default(current_local_user) }}"
+    group: "{{ kubeconfig.local_group | default(omit) }}"
+    mode: "{{ kubeconfig.local_mode | default('0700') }}"
+    state: directory
+  run_once: true
+
+- name: "Write kubeconfig file locally"
+  when: not fetch_kubeconfig_stat.stat.exists
+  local_action:
+    module: "ansible.builtin.copy"
+    content: "{{ fetch_kubeconfig_target | to_yaml }}"
+    dest: "{{ kubeconfig.local_location }}"
+    owner: "{{ kubeconfig.local_owner | default(current_local_user) }}"
+    group: "{{ kubeconfig.local_group | default(omit) }}"
+    mode: "{{ kubeconfig.local_mode | default('0700') }}"
+  no_log: true

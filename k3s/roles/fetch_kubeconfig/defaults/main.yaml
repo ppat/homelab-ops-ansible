@@ -1,0 +1,2 @@
+---
+current_local_user: "{{ lookup('ansible.builtin.env', 'USER') }}"
