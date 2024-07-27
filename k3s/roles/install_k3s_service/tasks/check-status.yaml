@@ -56,7 +56,7 @@
     - "kubernetes.io/hostname={{ inventory_hostname }}"
   register: install_k3s_service_node_status
     # yamllint disable-line rule:line-length
-  until: "'node.kubernetes.io/not-ready' not in (install_k3s_service_node_status.resources | map(attribute='spec.taints') | flatten | map(attribute='key'))"
+  until: "'taints' not in install_k3s_service_node_status.resources[0].spec or 'node.kubernetes.io/not-ready' not in (install_k3s_service_node_status.resources | map(attribute='spec.taints') | flatten | map(attribute='key'))"
   retries: 5
   delay: 10
 
