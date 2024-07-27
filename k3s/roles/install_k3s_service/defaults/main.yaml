@@ -25,7 +25,10 @@ hardening_settings:
   - '--secrets-encryption'
 
 settings_for_metrics_exposure:
-- "--kube-controller-manager-arg bind-address=0.0.0.0"
-- "--kube-proxy-arg metrics-bind-address=0.0.0.0"
-- "--kube-scheduler-arg bind-address=0.0.0.0"
-- "--etcd-expose-metrics"
+  server:
+  - "--kube-controller-manager-arg bind-address=0.0.0.0"
+  - "--kube-proxy-arg metrics-bind-address=0.0.0.0"
+  - "--kube-scheduler-arg bind-address=0.0.0.0"
+  - "--etcd-expose-metrics"
+  agent:
+  - "--kube-proxy-arg metrics-bind-address=0.0.0.0"
