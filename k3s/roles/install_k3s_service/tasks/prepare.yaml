@@ -40,7 +40,7 @@
     group: root
     mode: '0750'
 
-- name: "prepare | Configure private registries"
+- name: "prepare | Configure user-defined registry config"
   when: k3s.registry is defined
   ansible.builtin.copy:
     src: "{{ k3s.registry }}"
@@ -49,7 +49,8 @@
     group: root
     mode: '0600'
 
-- name: "prepare | Create k3s config file"
+- name: "prepare | Create user-defined k3s config file"
+  when: k3s.node.config is defined
   ansible.builtin.copy:
     src: "{{ k3s.node.config }}"
     dest: "{{ standard_locations.k3s_config }}"
@@ -57,7 +58,17 @@
     group: root
     mode: '0600'
 
-- name: "prepare | Create kubelet config file"
+- name: "prepare | Create user-defined kubelet config file"
+  when: k3s.node.kubelet_config is defined
+  ansible.builtin.copy:
+    src: "{{ k3s.node.kubelet_config }}"
+    dest: "{{ standard_locations.kubelet_config }}"
+    owner: root
+    group: root
+    mode: '0600'
+
+- name: "prepare | Create homelab-ops standard kubelet config file"
+  when: k3s.node.kubelet_config is not defined
   ansible.builtin.template:
     src: k3s-kubelet.yaml.j2
     dest: "{{ standard_locations.kubelet_config }}"
