@@ -71,4 +71,4 @@
     msg: "{{ install_k3s_service_node_status | community.general.json_query(query) | flatten }}"
   vars:
     # yamllint disable-line rule:line-length
-    query: "resources[*].{created: metadata.creationTimestamp, name: metadata.name, labels: metadata.labels, status: status.conditions[*].join('=', [type,status]), taints: spec.taints[*].join('=', [key,effect]), resources: {allocatable: status.allocatable, capacity: status.capacity}, nodeInfo: nodeInfo}"  # noqa: var-naming[no-role-prefix]
+    query: "resources[*].{created: metadata.creationTimestamp, name: metadata.name, labels: metadata.labels, status: status.conditions[*].join('=', [type,status]), taints: spec.taints[*].join('=', [key,effect]), resources: {allocatable: status.allocatable, capacity: status.capacity}, nodeInfo: status.nodeInfo}"  # noqa: var-naming[no-role-prefix]
