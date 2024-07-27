@@ -7,7 +7,8 @@
     - kubeconfig.remote_location is defined and kubeconfig.remote_location|length > 0
 
 - name: "Check if local kubeconfig already exists"
-  ansible.builtin.stat:
+  local_action:
+    module: "ansible.builtin.stat"
     path: "{{ kubeconfig.local_location }}"
   register: fetch_kubeconfig_stat
 
@@ -16,6 +17,7 @@
   ansible.builtin.slurp:
     src: "{{ kubeconfig.remote_location }}"
   register: fetch_kubeconfig_slurp
+  no_log: true
 
 - name: "Extract kubeconfig content"
   when: not fetch_kubeconfig_stat.stat.exists

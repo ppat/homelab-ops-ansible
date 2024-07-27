@@ -4,7 +4,7 @@
 # ----------------------------------------------------------------------------------------------------------
 - name: "kubernetes-resource-checks | Fetch resources from cluster"
   kubernetes.core.k8s_info:
-    kubeconfig: /tmp/kubeconfig/k3s
+    kubeconfig: "{{ local_kubeconfig }}"
     namespace: "{{ item.namespace }}"
     kind: "{{ item.kind }}"
     name: "{{ item.name }}"
