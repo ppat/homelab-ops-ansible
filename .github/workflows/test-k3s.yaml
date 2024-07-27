@@ -101,8 +101,6 @@ jobs:
     - name: Determine molecule verbosity
       # yamllint disable-line rule:indentation
       run: |
-        set -eo pipefail
-
         MOLECULE_PARAMS="--no-debug"
         if [[ $LOG_VERBOSITY -gt 2 ]]; then
           MOLECULE_PARAMS="--debug"
@@ -120,23 +118,12 @@ jobs:
     - name: Create molecule vars file
       # yamllint disable-line rule:indentation
       run: |
-        set -eo pipefail
-
-        echo "Setting branch..."
-        if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
-          BRANCH="${GITHUB_HEAD_REF}"
-        else
-          BRANCH="main"
-        fi
-        echo "... to ${BRANCH}"
-
         echo "Generating k3s tokens..."
         export SERVER_TOKEN="$(openssl rand -base64 32 | tr -dc A-Za-z0-9 | head -c 16)"
         export AGENT_TOKEN="$(openssl rand -base64 32 | tr -dc A-Za-z0-9 | head -c 16)"
         echo "... Done"
 
         cat > $MOLECULE_VARS_FILE << EOF
-        repo_branch: $BRANCH
         k3s_server_token: $SERVER_TOKEN
         k3s_agent_token: $AGENT_TOKEN
         hardening_enabled: "$HARDENING"
@@ -152,17 +139,10 @@ jobs:
 
     - name: Molecule Test
       run: |
-        set -eo pipefail
-
-        # prepare ssh key needed for flux bootstrap
-        mkdir -p /tmp/bootstrap
-        echo "${GIT_SSH_KEY}" | base64 -d | sudo tee /tmp/bootstrap/git_ssh_key > /dev/null
-
         poetry run molecule $MOLECULE_PARAMS --env-file $MOLECULE_VARS_FILE test --all --no-parallel
       working-directory: ./k3s
       shell: bash
       env:
         ANSIBLE_FORCE_COLOR: 1
         PY_COLORS: 1
-        GIT_SSH_KEY: ${{ secrets.FLUX_REPO_READER_SSH_KEY }}
         MOLECULE_VARS_FILE: ${{ env.molecule_vars_file }}

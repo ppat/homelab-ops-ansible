@@ -2,18 +2,18 @@
 # ----------------------------------------------------------------------------------------------------------
 # kubernetes resources
 # ----------------------------------------------------------------------------------------------------------
-- name: "kubernetes-resource-checks | {{ required_resources_type }} | Fetch resources from cluster"
+- name: "kubernetes-resource-checks | Fetch resources from cluster"
   kubernetes.core.k8s_info:
     kubeconfig: /etc/rancher/k3s/k3s.yaml
     namespace: "{{ item.namespace }}"
     kind: "{{ item.kind }}"
     name: "{{ item.name }}"
   register: resource_state
-  loop: "{{ required_resources[required_resources_type] }}"
+  loop: "{{ required_resources }}"
   loop_control:
     label: "{{ item.kind }}/{{ item.name }}"
 
-- name: "kubernetes-resource-checks | {{ required_resources_type }} | Group resources into map by key"
+- name: "kubernetes-resource-checks | Group resources into map by key"
   ansible.builtin.set_fact:
     resource_state_map: "{{ resource_state_map | default({}) | combine({resource_key: item | community.general.json_query(query) | flatten | first}) }}"
   vars:
@@ -24,23 +24,23 @@
   loop_control:
     label: "{{ resource_key }}"
 
-- name: "kubernetes-resource-checks | {{ required_resources_type }} | Show resource map"
+- name: "kubernetes-resource-checks | Show resource map"
   when: ansible_verbosity > 0
   debug:
     msg: "{{ resource_state_map }}"
 
-- name: "kubernetes-resource-checks | {{ required_resources_type }} | Assert that required resources exist"
+- name: "kubernetes-resource-checks | Assert that required resources exist"
   ansible.builtin.assert:
     that: expected_key in actual_keys
   vars:
     actual_keys: "{{ resource_state_map.keys() }}"
     expected_key: "{{ expected.kind }}/{{ expected.name }}"
-  loop: "{{ required_resources[required_resources_type] }}"
+  loop: "{{ required_resources }}"
   loop_control:
     loop_var: expected
     label: "{{ expected_key }}"
 
-- name: "kubernetes-resource-checks | {{ required_resources_type }} | Assert that required resources are in ready state"
+- name: "kubernetes-resource-checks | Assert that required resources are in ready state"
   ansible.builtin.assert:
     that: >
       not resource_state_map[expected_key].status
@@ -50,7 +50,7 @@
       'Available=True' in resource_state_map[expected_key].status
   vars:
     expected_key: "{{ expected.kind }}/{{ expected.name }}"
-  loop: "{{ required_resources[required_resources_type] }}"
+  loop: "{{ required_resources }}"
   loop_control:
     loop_var: expected
     label: "{{ expected_key }}"

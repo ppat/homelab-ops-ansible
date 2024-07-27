@@ -11,6 +11,8 @@ platforms:
   pre_build_image: true
   exposed_ports:
   - 6443/tcp
+  published_ports:
+  - 0.0.0.0:6443:6443/tcp
   docker_networks:
   - name: k3s-cluster
   networks:
@@ -74,8 +76,6 @@ provisioner:
           metrics_exposed: $metrics_exposed
           # flux bootstrap
           flux_prerequisites: ${MOLECULE_SCENARIO_DIRECTORY}/flux-prerequisites
-          git_ssh_key: /tmp/bootstrap/git_ssh_key
-          git_branch: $repo_branch
 
 verifier:
   name: ansible

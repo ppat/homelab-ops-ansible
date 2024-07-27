@@ -15,8 +15,6 @@
     ansible.builtin.include_vars: vars/expected-api.yml
   - name: Load required resources
     ansible.builtin.include_vars: vars/expected-resources.yml
-  - name: Load required bootstrap settings
-    ansible.builtin.include_vars: vars/expected-bootstrap-resources.yml
 
   tasks:
   - name: verify cluster nodes
@@ -28,15 +26,5 @@
   - name: verify cluster api
     ansible.builtin.import_tasks: verify/cluster-api-checks.yml
 
-  - name: verify bootstrap configuration
-    ansible.builtin.import_tasks: verify/bootstrap-config-checks.yml
-
-  - name: verify flux configuration resources
+  - name: verify test resources
     ansible.builtin.import_tasks: verify/kubernetes-resource-checks.yml
-    vars:
-      required_resources_type: flux_config
-
-  - name: verify git source resources
-    ansible.builtin.import_tasks: verify/kubernetes-resource-checks.yml
-    vars:
-      required_resources_type: git_source
