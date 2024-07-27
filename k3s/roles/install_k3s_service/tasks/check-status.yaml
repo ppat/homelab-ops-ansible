@@ -13,13 +13,26 @@
   vars:
     system_service_name: "{{ (k3s.node.type == 'server') | ternary('k3s.service', 'k3s-agent.service') }}"
 
-- name: "check-status | Wait till node is operational"
+- name: "check-status | Fetch kubeconfig for the following node status check"
   when: k3s.node.type == 'server'
-  kubernetes.core.k8s_info:
-    kubeconfig: "{{ kubeconfig_location }}"
+  ansible.builtin.include_role:
+    name: homelab_ops.k3s.fetch_kubeconfig
+  vars:
+    kubeconfig:  # noqa: var-naming[no-role-prefix]
+      local_owner: "{{ lookup('ansible.builtin.env', 'USER') }}"
+      local_mode: "0700"
+      local_location: "{{ k3s.local_kubeconfig }}"
+      remote_location: "{{ standard_locations.kubeconfig }}"
+      remote_hostname: "localhost"
+
+- name: "check-status | Wait till kubelet is operational"
+  when: k3s.node.type == 'server'
+  local_action:
+    module: "kubernetes.core.k8s_info"
+    kubeconfig: "{{ k3s.local_kubeconfig }}"
     kind: Node
     label_selectors:
-    - "kubernetes.io/hostname={{ ansible_hostname }}"
+    - "kubernetes.io/hostname={{ inventory_hostname }}"
     wait: true
     wait_condition:
       reason: KubeletReady
@@ -29,11 +42,12 @@
 
 - name: "check-status | Wait till not-ready taint is removed"
   when: k3s.node.type == 'server'
-  kubernetes.core.k8s_info:
-    kubeconfig: "{{ kubeconfig_location }}"
+  local_action:
+    module: "kubernetes.core.k8s_info"
+    kubeconfig: "{{ k3s.local_kubeconfig }}"
     kind: Node
     label_selectors:
-    - "kubernetes.io/hostname={{ ansible_hostname }}"
+    - "kubernetes.io/hostname={{ inventory_hostname }}"
   register: install_k3s_service_node_status
     # yamllint disable-line rule:line-length
   until: "'node.kubernetes.io/not-ready' not in (install_k3s_service_node_status.resources | map(attribute='spec.taints') | flatten | map(attribute='key'))"
@@ -42,7 +56,7 @@
 
 - name: "check-status | Show node status"
   when: k3s.node.type == 'server'
-  debug:
+  ansible.builtin.debug:
     msg: "{{ install_k3s_service_node_status | community.general.json_query(query) | flatten }}"
   vars:
     # yamllint disable-line rule:line-length

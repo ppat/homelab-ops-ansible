@@ -53,8 +53,6 @@ platforms:
 
 provisioner:
   name: ansible
-  playbooks:
-    prepare: prepare.yml
   inventory:
     group_vars:
       all:
@@ -65,17 +63,13 @@ provisioner:
           flux_version: "2.3.0"
           # renovate: datasource=github-releases depName=kubernetes-sigs/kustomize
           kustomize_version: "5.4.1"
-          # node config dir
           node_config_directory: ${MOLECULE_SCENARIO_DIRECTORY}/k3s-config
-          # secrets
           server_token: $k3s_server_token
           agent_token: $k3s_agent_token
-          # hardening
           hardening: $hardening_enabled
-          # expose metrics
           metrics_exposed: $metrics_exposed
-          # flux bootstrap
-          flux_prerequisites: ${MOLECULE_SCENARIO_DIRECTORY}/flux-prerequisites
+          test_resources_manifest: ${MOLECULE_SCENARIO_DIRECTORY}/test-resources/test.yaml
+          local_kubeconfig: /tmp/kubeconfig/k3s
 
 verifier:
   name: ansible

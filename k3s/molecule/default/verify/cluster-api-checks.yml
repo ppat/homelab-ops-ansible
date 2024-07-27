@@ -4,7 +4,7 @@
 # ----------------------------------------------------------------------------------------------------------
 - name: "cluster-api-checks | Fetch supported cluster APIs"
   kubernetes.core.k8s_cluster_info:
-    kubeconfig: /etc/rancher/k3s/k3s.yaml
+    kubeconfig: "{{ local_kubeconfig }}"
   register: cluster_info
 
 - name: "cluster-api-checks | Extract cluster api facts into map grouped by api version"

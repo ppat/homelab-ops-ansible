@@ -7,12 +7,14 @@
     group: root
     mode: '0644'
     regexp: "^KUBECONFIG=.*"
-    line: "KUBECONFIG={{ kubeconfig_location }}"
+    line: "KUBECONFIG={{ standard_locations.kubeconfig }}"
 
 - name: "post-init-node | Remove any temp files"
   ansible.builtin.file:
     path: "{{ item }}"
     state: absent
   loop:
-  - '/tmp/k3s_token_server'
-  - '/tmp/k3s_token_agent'
+  - /tmp/k3s_token_server
+  - /tmp/k3s_token_agent
+  - /root/k3s-install.sh
+  - /root/k3s-node-init.sh

@@ -20,12 +20,14 @@
         hardening:
           enabled: "{{ config.hardening }}"
         expose_metrics: "{{ config.metrics_exposed }}"
+        local_kubeconfig: "{{ config.local_kubeconfig }}"
   - name: "install flux service"
     ansible.builtin.include_role:
       name: homelab_ops.k3s.install_flux_service
     vars:
       flux:  # noqa: var-naming[no-role-prefix]
         version: "{{ config.flux_version }}"
+        local_kubeconfig: "{{ config.local_kubeconfig }}"
       kustomize:  # noqa: var-naming[no-role-prefix]
         version: "{{ config.kustomize_version }}"
 
@@ -54,6 +56,7 @@
         hardening:
           enabled: "{{ config.hardening }}"
         expose_metrics: "{{ config.metrics_exposed }}"
+        local_kubeconfig: "{{ config.local_kubeconfig }}"
   - name: "install flux service"
     when: node_type == 'server'
     ansible.builtin.include_role:
@@ -61,22 +64,9 @@
     vars:
       flux:  # noqa: var-naming[no-role-prefix]
         version: "{{ config.flux_version }}"
+        local_kubeconfig: "{{ config.local_kubeconfig }}"
       kustomize:  # noqa: var-naming[no-role-prefix]
         version: "{{ config.kustomize_version }}"
-
-- name: fetch kubeconfig from remote node
-  hosts: node1-server
-  become: true
-  gather_facts: true
-  tasks:
-  - name: fetch kubeconfig
-    ansible.builtin.include_role:
-      name: homelab_ops.k3s.fetch_kubeconfig
-    vars:
-      kubeconfig:  # noqa: var-naming[no-role-prefix]
-        local_location: "/tmp/kubeconfig/test"
-        remote_location: "/etc/rancher/k3s/k3s.yaml"
-        remote_hostname: "localhost"
 
 - name: create test resources
   hosts: localhost
@@ -86,5 +76,5 @@
   - name: Create test resource(s) from local file
     kubernetes.core.k8s:
       state: present
-      src: test-resources/test.yaml
-      kubeconfig: /tmp/kubeconfig/test
+      src: "{{ config.test_resources_manifest }}"
+      kubeconfig: "{{ config.local_kubeconfig }}"

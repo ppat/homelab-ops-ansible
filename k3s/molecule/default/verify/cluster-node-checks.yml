@@ -4,7 +4,7 @@
 # ----------------------------------------------------------------------------------------------------------
 - name: "cluster-node-checks | Get cluster nodes"
   kubernetes.core.k8s_info:
-    kubeconfig: /etc/rancher/k3s/k3s.yaml
+    kubeconfig: "{{ local_kubeconfig }}"
     kind: Node
   register: cluster_node_state
 

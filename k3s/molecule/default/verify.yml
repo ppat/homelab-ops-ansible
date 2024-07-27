@@ -1,13 +1,13 @@
 ---
 - name: Verify cluster
-  hosts: node2-server
+  hosts: localhost
   gather_facts: false
   vars:
     required_nodes:
     - node1-server
     - node2-server
     - node3-agent
-
+    local_kubeconfig: /tmp/kubeconfig/k3s
   pre_tasks:
   - name: Load required pods
     ansible.builtin.include_vars: vars/expected-pods.yml

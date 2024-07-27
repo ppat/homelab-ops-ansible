@@ -2,9 +2,6 @@
 tls-san: "kubernetes-api.example.com"
 flannel-backend: wireguard-native
 
-write-kubeconfig: /etc/rancher/k3s/k3s.yaml
-write-kubeconfig-mode: '600'
-
 disable:
 - local-storage
 - servicelb
