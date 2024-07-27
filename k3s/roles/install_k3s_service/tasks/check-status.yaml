@@ -13,18 +13,16 @@
   vars:
     system_service_name: "{{ (k3s.node.type == 'server') | ternary('k3s.service', 'k3s-agent.service') }}"
 
-- name: "check-status | Fetch kubeconfig for the following node status check"
+- name: "check-status | Fetch kubeconfig if not present"
   when: k3s.node.type == 'server'
   ansible.builtin.include_role:
     name: homelab_ops.k3s.fetch_kubeconfig
   vars:
     kubeconfig:  # noqa: var-naming[no-role-prefix]
-      local_owner: "{{ lookup('ansible.builtin.env', 'USER') }}"
-      local_mode: "0700"
       local_location: "{{ k3s.local_kubeconfig }}"
       remote_location: "{{ standard_locations.kubeconfig }}"
 
-- name: "check-status | Check if kubeconfig was fetched is available"
+- name: "check-status | Check if kubeconfig is available"
   local_action:
     module: "ansible.builtin.stat"
     path: "{{ k3s.local_kubeconfig }}"
