@@ -17,8 +17,6 @@ platforms:
   - name: k3s-cluster
   networks:
   - name: k3s-cluster
-  volumes:
-  - ~/go/bin/envsubst:/usr/local/bin/envsubst
   command: /usr/sbin/init
   runtime: sysbox-runc
   user: root
@@ -32,8 +30,6 @@ platforms:
   - name: k3s-cluster
   networks:
   - name: k3s-cluster
-  volumes:
-  - ~/go/bin/envsubst:/usr/local/bin/envsubst
   command: /usr/sbin/init
   runtime: sysbox-runc
   user: root
