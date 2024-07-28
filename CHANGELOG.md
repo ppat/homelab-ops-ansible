@@ -2,6 +2,25 @@
 
 
 
+## [1.7.0](https://github.com/ppat/homelab-ops-ansible/compare/v1.6.2...v1.7.0) (2024-07-28)
+
+### ✨ Features
+
+* **k3s:** add role homelab_ops.k3s.fetch_kubeconfig ([#134](https://github.com/ppat/homelab-ops-ansible/issues/134)) ([ef7613c](https://github.com/ppat/homelab-ops-ansible/commit/ef7613c2897295289033fda84c7efb17ed49d665))
+* **k3s:** enable users to supply custom kublet configuration file ([#137](https://github.com/ppat/homelab-ops-ansible/issues/137)) ([906599b](https://github.com/ppat/homelab-ops-ansible/commit/906599b5601e6a1d4fae1a2f1f131b9fd67f0117))
+
+### 🐛 Enhancements + Bug Fixes
+
+* **deps:** update dependency ansible-core to v2.16.9 ([#130](https://github.com/ppat/homelab-ops-ansible/issues/130)) ([95a3ed2](https://github.com/ppat/homelab-ops-ansible/commit/95a3ed29da8210f5c626d1e4651ba57b26482c69))
+* **k3s:** drop role homelab_ops.k3s.bootstrap_flux ([#135](https://github.com/ppat/homelab-ops-ansible/issues/135)) ([44263d7](https://github.com/ppat/homelab-ops-ansible/commit/44263d79d961d9c0cda9836699911f943bcde7b4))
+* **k3s:** fix issue where kube-proxy metrics were not exposed on agent nodes ([#138](https://github.com/ppat/homelab-ops-ansible/issues/138)) ([de21ec9](https://github.com/ppat/homelab-ops-ansible/commit/de21ec9b1671aa26c472de8eadd236d5a2167ebc))
+* **k3s:** remove inclusion envsubst binary in k3s test ([#139](https://github.com/ppat/homelab-ops-ansible/issues/139)) ([e9063d3](https://github.com/ppat/homelab-ops-ansible/commit/e9063d38d7728a4fca6202bb6bf4c603ce3bb43a))
+* **k3s:** remove the need for pypi packages to be installed on inventory hosts ([#133](https://github.com/ppat/homelab-ops-ansible/issues/133)) ([5392d05](https://github.com/ppat/homelab-ops-ansible/commit/5392d05d97604e8efd3fcbca5cc142a6cee967be))
+
+### 📌 Dependencies
+
+* **deps:** update dependency ansible-core to v2.16.9 ([#129](https://github.com/ppat/homelab-ops-ansible/issues/129)) ([d7b3529](https://github.com/ppat/homelab-ops-ansible/commit/d7b3529312e01989d04be1854c1e0b79efdd39dc))
+
 ## [1.6.2](https://github.com/ppat/homelab-ops-ansible/compare/v1.6.1...v1.6.2) (2024-07-22)
 
 ### 🐛 Enhancements + Bug Fixes
