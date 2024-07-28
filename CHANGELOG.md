@@ -2,6 +2,14 @@
 
 
 
+## [1.7.1](https://github.com/ppat/homelab-ops-ansible/compare/v1.7.0...v1.7.1) (2024-07-28)
+
+### 🐛 Enhancements + Bug Fixes
+
+* **k3s:** fix bug where k3s installation couldn't select node by hostname ([#140](https://github.com/ppat/homelab-ops-ansible/issues/140)) ([dd38475](https://github.com/ppat/homelab-ops-ansible/commit/dd384751ef42f69aa211a0ee58e247313599d4cd))
+* **k3s:** homelab_ops.k3s.fetch_kubeconfig should output formatted yaml for kubeconfig ([#142](https://github.com/ppat/homelab-ops-ansible/issues/142)) ([2cac765](https://github.com/ppat/homelab-ops-ansible/commit/2cac76561143f58fe8433ad38c1c530b2696d382))
+* **k3s:** misc updates to homelab_ops.k3s.install playbook ([#141](https://github.com/ppat/homelab-ops-ansible/issues/141)) ([f8537b2](https://github.com/ppat/homelab-ops-ansible/commit/f8537b2312cd16bd91aabbc44b807c2efb6e9b24))
+
 ## [1.7.0](https://github.com/ppat/homelab-ops-ansible/compare/v1.6.2...v1.7.0) (2024-07-28)
 
 ### ✨ Features
