@@ -35,7 +35,7 @@
     kubeconfig: "{{ k3s.local_kubeconfig }}"
     kind: Node
     label_selectors:
-    - "kubernetes.io/hostname={{ inventory_hostname }}"
+    - "kubernetes.io/hostname={{ ansible_hostname }}"
     wait: true
     wait_condition:
       reason: KubeletReady
@@ -50,7 +50,7 @@
     kubeconfig: "{{ k3s.local_kubeconfig }}"
     kind: Node
     label_selectors:
-    - "kubernetes.io/hostname={{ inventory_hostname }}"
+    - "kubernetes.io/hostname={{ ansible_hostname }}"
   register: install_k3s_service_node_status
     # yamllint disable-line rule:line-length
   until: "'taints' not in install_k3s_service_node_status.resources[0].spec or 'node.kubernetes.io/not-ready' not in (install_k3s_service_node_status.resources | map(attribute='spec.taints') | flatten | map(attribute='key'))"
