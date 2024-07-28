@@ -51,7 +51,7 @@
   when: not fetch_kubeconfig_stat.stat.exists
   local_action:
     module: "ansible.builtin.copy"
-    content: "{{ fetch_kubeconfig_target | to_yaml }}"
+    content: "{{ fetch_kubeconfig_target | to_nice_yaml }}"
     dest: "{{ kubeconfig.local_location }}"
     owner: "{{ kubeconfig.local_owner | default(current_local_user) }}"
     group: "{{ kubeconfig.local_group | default(omit) }}"
