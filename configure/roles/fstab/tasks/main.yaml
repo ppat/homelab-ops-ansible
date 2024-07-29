@@ -10,37 +10,22 @@
   register: fstab_generator_dir
   changed_when: false
 
-- name: "Fetch fstab generator"
-  ansible.builtin.get_url:
-    url: "http://mirrors.kernel.org/ubuntu/pool/universe/a/arch-install-scripts/arch-install-scripts_24-1_all.deb"
-    dest: "{{ fstab_generator_dir.path }}/arch-install-scripts.deb"
+- name: "Prepare fstab generator"
+  ansible.builtin.copy:
+    src: "genfstab"
+    dest: "{{ fstab_generator_dir.path }}/genfstab"
     owner: root
     group: root
-    mode: '0644'
-  changed_when: false
-
-# we don't install arch-install-scripts package (or the genfstab script from it) permanently, we just use it
-# to generate the fstab
-- name: "Extract fstab generator"
-  ansible.builtin.shell: |
-    #!/bin/bash
-    set -eo pipefail
-    ar -x arch-install-scripts.deb
-    tar -axvf data.tar.zst
-    chmod 755 {{ fstab_generator_dir.path }}/usr/bin/genfstab
-  args:
-    chdir: "{{ fstab_generator_dir.path }}"
-    executable: /bin/bash
+    mode: "755"
   changed_when: false
 
 - name: "Generate fstab from mounted filesystems"
   ansible.builtin.shell: |
     #!/bin/bash
     set -eo pipefail
-    export PATH=$PATH:{{ fstab_generator_dir.path }}/usr/bin
     export FSTAB_FILE={{ fstab_generator_dir.path }}/fstab.generated
     export TAG={{ source_partition_identifier | upper }}
-    genfstab -t $TAG -f {{ system_root_mount_path }} {{ system_root_mount_path }} > $FSTAB_FILE
+    {{ fstab_generator_dir.path }}/genfstab -t $TAG -f {{ system_root_mount_path }} {{ system_root_mount_path }} > $FSTAB_FILE
   args:
     executable: /bin/bash
   become: true
