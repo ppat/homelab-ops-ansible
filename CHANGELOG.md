@@ -2,6 +2,12 @@
 
 
 
+## [1.7.3](https://github.com/ppat/homelab-ops-ansible/compare/v1.7.2...v1.7.3) (2024-07-29)
+
+### 🐛 Enhancements + Bug Fixes
+
+* **configure:** include fstab generator (genfstab) from within homelab_ops.configure.fstab role ([#144](https://github.com/ppat/homelab-ops-ansible/issues/144)) ([d8d3bc3](https://github.com/ppat/homelab-ops-ansible/commit/d8d3bc35d913a96617716d7a34955814228f0cf6))
+
 ## [1.7.2](https://github.com/ppat/homelab-ops-ansible/compare/v1.7.1...v1.7.2) (2024-07-29)
 
 ### 🐛 Enhancements + Bug Fixes
