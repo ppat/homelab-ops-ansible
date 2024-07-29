@@ -2,8 +2,6 @@
 - name: Prepare
   hosts: all
   gather_facts: false
-  vars:
-    boot_path: "/mnt/boot"
   tasks:
   - name: "Create needed directories"
     ansible.builtin.file:
@@ -12,3 +10,7 @@
       group: root
       mode: '0750'
       state: directory
+    loop:
+    - /mnt/boot/focal
+    - /mnt/boot/jammy
+    - /mnt/boot/noble
