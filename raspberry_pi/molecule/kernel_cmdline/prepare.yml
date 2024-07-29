@@ -5,7 +5,7 @@
   tasks:
   - name: "Create needed directories"
     ansible.builtin.file:
-      path: "{{ boot_path }}"
+      path: "{{ item }}"
       owner: root
       group: root
       mode: '0750'
