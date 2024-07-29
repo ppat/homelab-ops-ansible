@@ -19,8 +19,16 @@ kernel_cmdline:
     - "dwc_otg.lpm_enable=0"
     - "console=tty1"
     - "fixrtc"
+    noble:
+    - "dwc_otg.lpm_enable=0"
+    - "console=tty1"
+    - "fixrtc"
+    - "multipath=off"
 
 additional_kernel_params: []
 
 supported_filesystem_types: ['btrfs', 'ext4', 'vfat']
-supported_ubuntu_releases: ['focal', 'jammy']
+supported_ubuntu_releases:
+- focal
+- jammy
+- noble

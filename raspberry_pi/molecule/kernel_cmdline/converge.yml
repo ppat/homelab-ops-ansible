@@ -10,9 +10,13 @@
     ansible.builtin.include_role:
       name: homelab_ops.raspberry_pi.kernel_cmdline
     vars:
-      ubuntu_distribution_release: jammy
+      ubuntu_distribution_release: "{{ item }}"
       root_filesystem:
         uuid: "{{ root_partition_uuid }}"
         fstype: btrfs
         partlabel: root
         name: /dev/something
+    loop:
+    - focal
+    - jammy
+    - noble
