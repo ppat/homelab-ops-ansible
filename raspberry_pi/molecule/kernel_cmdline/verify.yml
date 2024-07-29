@@ -4,7 +4,7 @@
   gather_facts: false
   tasks:
   - name: verify kernel cmdline file
-    ansible.builtin.include_tasks: verify-cmdline-file.yaml
+    ansible.builtin.include_tasks: verify/verify-cmdline-file.yaml
     vars:
       kernel_cmdline_path: "/mnt/boot/{{ item }}/cmdline.txt"
     loop:
