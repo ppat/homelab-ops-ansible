@@ -2,6 +2,12 @@
 
 
 
+## [1.7.2](https://github.com/ppat/homelab-ops-ansible/compare/v1.7.1...v1.7.2) (2024-07-29)
+
+### 🐛 Enhancements + Bug Fixes
+
+* **raspberry_pi:** fix role homelab_ops.raspberry_pi.kernel_cmdline to support ubuntu:noble release ([#143](https://github.com/ppat/homelab-ops-ansible/issues/143)) ([96f5d4d](https://github.com/ppat/homelab-ops-ansible/commit/96f5d4d91fd31049b149127431685cae7cb01cd1))
+
 ## [1.7.1](https://github.com/ppat/homelab-ops-ansible/compare/v1.7.0...v1.7.1) (2024-07-28)
 
 ### 🐛 Enhancements + Bug Fixes
