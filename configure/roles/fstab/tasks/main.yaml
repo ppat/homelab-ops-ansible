@@ -17,6 +17,7 @@
     owner: root
     group: root
     mode: "755"
+  changed_when: false
 
 - name: "Generate fstab from mounted filesystems"
   ansible.builtin.shell: |
