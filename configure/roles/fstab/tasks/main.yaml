@@ -13,7 +13,7 @@
 - name: "Prepare fstab generator"
   ansible.builtin.copy:
     src: "genfstab"
-    dest: "{{ fstab_generator_dir.path }}/usr/bin/genfstab"
+    dest: "{{ fstab_generator_dir.path }}/genfstab"
     owner: root
     group: root
     mode: "755"
@@ -22,10 +22,9 @@
   ansible.builtin.shell: |
     #!/bin/bash
     set -eo pipefail
-    export PATH=$PATH:{{ fstab_generator_dir.path }}/usr/bin
     export FSTAB_FILE={{ fstab_generator_dir.path }}/fstab.generated
     export TAG={{ source_partition_identifier | upper }}
-    genfstab -t $TAG -f {{ system_root_mount_path }} {{ system_root_mount_path }} > $FSTAB_FILE
+    {{ fstab_generator_dir.path }}/genfstab -t $TAG -f {{ system_root_mount_path }} {{ system_root_mount_path }} > $FSTAB_FILE
   args:
     executable: /bin/bash
   become: true
