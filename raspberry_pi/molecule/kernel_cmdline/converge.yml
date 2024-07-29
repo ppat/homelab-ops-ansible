@@ -3,16 +3,20 @@
   hosts: all
   gather_facts: false
   vars:
-    boot_path: "/mnt/boot"
     root_partition_uuid: "{{ 'anything-goes-here' | ansible.builtin.to_uuid }}"
   tasks:
   - name: "Configure raspberry pi kernel cmdline.txt"
     ansible.builtin.include_role:
       name: homelab_ops.raspberry_pi.kernel_cmdline
     vars:
-      ubuntu_distribution_release: jammy
+      boot_path: "/mnt/boot/{{ item }}"
+      ubuntu_distribution_release: "{{ item }}"
       root_filesystem:
         uuid: "{{ root_partition_uuid }}"
         fstype: btrfs
         partlabel: root
         name: /dev/something
+    loop:
+    - focal
+    - jammy
+    - noble

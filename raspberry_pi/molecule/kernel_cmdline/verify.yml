@@ -2,27 +2,12 @@
 - name: Verify
   hosts: all
   gather_facts: false
-  vars:
-    boot_path: "/mnt/boot"
-    kernel_cmdline_path: "{{ boot_path }}/cmdline.txt"
   tasks:
-  - name: Stat for generated kernel cmdline
-    ansible.builtin.stat:
-      path: "{{ kernel_cmdline_path }}"
-    register: kernel_cmdline_stat
-
-  - name: Assert that kernel cmdline exists at destination
-    ansible.builtin.assert:
-      that:
-      - "{{ kernel_cmdline_stat.stat.exists }}"
-      fail_msg: "{{ kernel_cmdline_path }} does NOT exist at expected location"
-      success_msg: "{{ kernel_cmdline_path }} has been generated"
-
-  - name: "Read generated cmdline.txt"
-    ansible.builtin.slurp:
-      src: "{{ kernel_cmdline_path }}"
-    register: cmdline_generated
-
-  - name: "Display generated cmdline.txt"
-    ansible.builtin.debug:
-      msg: "{{ cmdline_generated['content'] | b64decode }}"
+  - name: verify kernel cmdline file
+    ansible.builtin.include_tasks: verify/verify-cmdline-file.yaml
+    vars:
+      kernel_cmdline_path: "/mnt/boot/{{ item }}/cmdline.txt"
+    loop:
+    - focal
+    - jammy
+    - noble
