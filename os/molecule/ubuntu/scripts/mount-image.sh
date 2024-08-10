@@ -23,7 +23,7 @@ grow_partition() {
   echo "Growing partition to fill available space..."
   growpart $device $partition
   echo "Fsck'ing the partition..."
-  e2fsck -p -y -f ${device}p${partition}
+  e2fsck -y -f ${device}p${partition}
   echo "Resizing file system..."
   resize2fs ${device}p${partition}
   echo
