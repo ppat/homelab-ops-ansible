@@ -8,7 +8,7 @@ select_root_partition() {
 
 select_boot_partition() {
   local device=$1
-  parted $device unit B print --script --machine | grep 'boot, esp;' | cut -d':' -f1
+  parted $device unit B print --script --machine | grep 'fat32::boot' | cut -d':' -f1
 }
 
 grow_partition() {
@@ -23,7 +23,7 @@ grow_partition() {
   echo "Growing partition to fill available space..."
   growpart $device $partition
   echo "Fsck'ing the partition..."
-  e2fsck -f ${device}p${partition}
+  e2fsck -p -y -f ${device}p${partition}
   echo "Resizing file system..."
   resize2fs ${device}p${partition}
   echo
@@ -144,4 +144,4 @@ if [[ -z "$IMAGE_FILE" || -z "$SYSTEM_ROOT" ]]; then
   exit 1
 fi
 
-main $IMAGE_FILE $SYSTEM_ROOT $BOOT_ROOT
+main $IMAGE_FILE $SYSTEM_ROOT $BOOT_ROOT 2>&1

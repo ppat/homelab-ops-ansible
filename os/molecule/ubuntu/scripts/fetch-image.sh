@@ -69,4 +69,4 @@ if [[ -z "$IMAGE_URL" || -z "$OUTPUT_FILE" ]]; then
   exit 1
 fi
 
-main ${IMAGE_URL:?} ${OUTPUT_FILE:?} ${TIMEOUT:?}
+main ${IMAGE_URL:?} ${OUTPUT_FILE:?} ${TIMEOUT:?} 2>&1
