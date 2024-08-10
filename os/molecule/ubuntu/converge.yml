@@ -3,6 +3,7 @@
   hosts: instance
   become: true
   gather_facts: true
+
   vars:
     system_packages:
       baseline:
@@ -26,9 +27,9 @@
       - parted
       - vim
       - wget
-      - zstd 
+      - zstd
       by_release:
-        focal: 
+        focal:
           raspi: []
           any: []
         jammy:
@@ -37,7 +38,7 @@
         noble:
           raspi: []
           any: []
-    
+
   tasks:
   - name: "Setup Ubuntu OS"
     ansible.builtin.include_role:
