@@ -24,9 +24,10 @@ main() {
   local url=$1
   local output_file=$2
   local timeout=$3
+  local retries=$4
 
   echo "Fetching image from $url..."
-  fetch_image $url $output_file $timeout
+  fetch_image $url $output_file $timeout $retries
 
   echo "Unpacking image..."
   xz -d ${output_file}.xz

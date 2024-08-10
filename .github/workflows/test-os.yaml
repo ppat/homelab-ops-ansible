@@ -101,12 +101,14 @@ jobs:
       run: |
         if [[ "$ARCH_PLUS_DEVICE" == "arm64+raspi" ]]; then
           DEVICE_TYPE="raspi"
+          BOOT_FIRMWARE_SOURCE="/mnt/boot-firmware"
         else
           DEVICE_TYPE="any"
+          BOOT_FIRMWARE_SOURCE="-"
         fi
 
         cat > $MOLECULE_VARS_FILE << EOF
-        boot_firmware_source: /mnt/boot-firmware
+        boot_firmware_source: "$BOOT_FIRMWARE_SOURCE"
         device_type: $DEVICE_TYPE
         image_url: $SERVER_URL/$SERVER_PATH/$SERVER_FILENAME
         image_file: $IMAGE_FILE
