@@ -99,7 +99,6 @@ jobs:
     - name: Create molecule vars file
       # yamllint disable-line rule:indentation
       run: |
-        export ARCH="$(echo $ARCH_PLUS_DEVICE | cut -d'+' f1)"
         if [[ "$ARCH_PLUS_DEVICE" == "arm64+raspi" ]]; then
           DEVICE_TYPE="raspi"
         else
