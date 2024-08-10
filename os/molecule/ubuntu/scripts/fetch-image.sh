@@ -13,7 +13,7 @@ fetch_image() {
     echo "Attempt $attempt"
     rm -f ${output_file}.xz
     set +e
-    /usr/bin/timeout --verbose $timeout wget -q $url -O ${output_file}.xz
+    /usr/bin/timeout --verbose $timeout wget -nv $url -O ${output_file}.xz
     exit_code=$?
     set -e
     if [[ $exit_code -eq 0 ]]; then

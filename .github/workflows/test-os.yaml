@@ -28,7 +28,7 @@ on:
 env:
   # As this action takes nearly an hour to run, we're running it in highest verbosity to avoid needing to re-run
   # just to get additional information.
-  non_workflow_dispatch_log_verbosity: 4
+  non_workflow_dispatch_log_verbosity: 3
   MOLECULE_VARS_FILE: /tmp/molecule_vars.yaml
 
 concurrency:
