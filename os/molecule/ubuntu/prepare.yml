@@ -14,6 +14,7 @@
       executable: /bin/bash
 
   - name: "Mount image onto system root directory"
+    when: device_type == "raspi"
     ansible.builtin.shell: >-
       scripts/mount-image.sh
       --image {{ image_file }}
@@ -21,6 +22,26 @@
       --boot-root {{ boot_firmware_source }}
     args:
       executable: /bin/bash
+
+  - name: "Mount image onto system root directory"
+    when: device_type != "raspi"
+    ansible.builtin.shell: >-
+      scripts/mount-image.sh
+      --image {{ image_file }}
+      --system-root {{ system_root_mount }}
+    args:
+      executable: /bin/bash
+
+  - name: "Re-locate boot firmware from mounted boot partition to expected location"
+    when: device_type == "raspi"
+    ansible.builtin.copy:
+      # src has trailing slash so that contents of directory will be copied instead of directory as well
+      src: "{{ system_root_mount }}/{{ boot_firmware_source }}/"
+      dest: "{{ system_root_mount }}/boot/firmware"
+      remote_src: true
+      owner: root
+      group: root
+      mode: '0755'
 
   - name: "Removing existing resolv conf"
     ansible.builtin.file:

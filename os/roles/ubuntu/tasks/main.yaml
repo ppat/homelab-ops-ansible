@@ -6,7 +6,6 @@
     - ubuntu.kernel is defined and ubuntu.kernel|length > 0
     - ubuntu.packages is defined and ubuntu.packages|length > 0
     - ubuntu.services is defined and ubuntu.services|length > 0
-    - boot_firmware_source is defined
     - device_type is defined
 
 - name: "Prepare pre-requisites"

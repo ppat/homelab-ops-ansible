@@ -1,24 +1,43 @@
 #!/bin/bash
 set -eo pipefail
 
+select_root_partition() {
+  local device=$1
+  parted $device unit B print --script --machine | grep ext4 | cut -d':' -f1
+}
+
+select_boot_partition() {
+  local device=$1
+  parted $device unit B print --script --machine | grep 'boot, esp;' | cut -d':' -f1
+}
+
 grow_partition() {
   local device=$1
   local partition=$2
 
   # print partition table before growing it
-  parted $device print unit MiB
+  parted --script $device unit MiB print
   echo
 
   # resize last partition of image file to fill all available space
   echo "Growing partition to fill available space..."
   growpart $device $partition
+  echo "Fsck'ing the partition..."
+  e2fsck -f ${device}p${partition}
   echo "Resizing file system..."
   resize2fs ${device}p${partition}
   echo
 
   # print partition table after growing it
-  parted $device print unit MiB
+  parted --script $device unit MiB print
   echo
+}
+
+grow_root_partition() {
+  local device=$1
+  local partition=$(select_root_partition $device)
+
+  grow_partition $device $partition
 }
 
 mount_image_partitions() {
@@ -26,12 +45,20 @@ mount_image_partitions() {
   local root_mount=$2
   local boot_mount=$3
 
-  echo "Mounting root file system..."
+  local root_partition="$(select_root_partition $device)"
+  local boot_partition="$(select_boot_partition $device)"
+
+  echo "Mounting root partition..."
   mkdir -p $root_mount
-  mount -t ext4 ${device}p2 $root_mount
-  echo "Mounting boot file system..."
-  mkdir -p ${root_mount}${boot_mount}
-  mount -t vfat ${device}p1 $root_mount${boot_mount}
+  mount -t ext4 ${device}p${root_partition} $root_mount
+
+  if [[ "$boot_mount" != "-" ]]; then
+    echo "Mounting boot partition..."
+    mkdir -p ${root_mount}${boot_mount}
+    mount -t vfat ${device}p${boot_partition} $root_mount${boot_mount}
+  else
+    echo "Skipping mounting of boot partition..."
+  fi
   echo
 }
 
@@ -79,7 +106,7 @@ main() {
   losetup -P $device $image_file
   echo "assigned."
 
-  grow_partition $device 2
+  grow_root_partition $device
   mount_image_partitions $device $system_mount $boot_mount
   mount_system_partitions_for_chroot $system_mount
   display_mounted_partitions $device $system_mount
@@ -93,7 +120,7 @@ fi
 
 IMAGE_FILE=""
 SYSTEM_ROOT=""
-BOOT_ROOT=""
+BOOT_ROOT="-"
 
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -112,7 +139,7 @@ while [ $# -gt 0 ]; do
   shift
 done
 
-if [[ -z "$IMAGE_FILE" || -z "$SYSTEM_ROOT" || -z "$BOOT_ROOT" ]]; then
+if [[ -z "$IMAGE_FILE" || -z "$SYSTEM_ROOT" ]]; then
   echo "All parameters required (--image, --system-root, --boot-root)"
   exit 1
 fi

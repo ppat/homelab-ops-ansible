@@ -9,10 +9,10 @@ platforms:
 provisioner:
   name: ansible
   inventory:
-    host_vars:
-      instance:
+    group_vars:
+      all:
         device_type: $device_type
-        boot_firmware_source: $boot_firmware_source
+    host_vars:
       controller:
         image_url: $image_url
         image_file: $image_file
