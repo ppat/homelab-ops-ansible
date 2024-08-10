@@ -1,6 +1,6 @@
 ---
 - name: "update-initramfs | Indicate that iscsi support should be available within initramfs for use at boot time"
-  when: "{{ ubuntu.initrd.iscsi_root_fs_enabled | default(false) }}"
+  when: ubuntu.initrd.iscsi_root_fs_enabled|default(false)
   ansible.builtin.file:
     path: /etc/iscsi/iscsi.initramfs
     state: touch

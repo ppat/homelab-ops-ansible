@@ -100,8 +100,9 @@ jobs:
       # yamllint disable-line rule:indentation
       run: |
         export ARCH="$(echo $ARCH_PLUS_DEVICE | cut -d'+' f1)"
-        export DEVICE_TYPE="$(echo $ARCH_PLUS_DEVICE | cut -d'+' f2)"
-        if [[ -z "${DEVICE_TYPE}" ]]; then
+        if [[ "$ARCH_PLUS_DEVICE" == "arm64+raspi" ]]; then
+          DEVICE_TYPE="raspi"
+        else
           DEVICE_TYPE="any"
         fi
 
