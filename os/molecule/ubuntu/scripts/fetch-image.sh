@@ -1,6 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
+
 fetch_image() {
   local url=$1
   local output_file=$2
@@ -17,7 +18,7 @@ fetch_image() {
     --no-dns-cache \
     --continue \
     -O ${output_file}.xz \
-    $url 
+    $url
 }
 
 main() {
