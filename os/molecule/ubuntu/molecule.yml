@@ -9,11 +9,11 @@ platforms:
 provisioner:
   name: ansible
   inventory:
-    group_vars:
-      all:
-        device_type: $device_type
     host_vars:
+      instance:
+        device_type: $device_type
       controller:
+        device_type: $device_type
         image_url: $image_url
         image_file: $image_file
         system_root_mount: $system_root_mount
