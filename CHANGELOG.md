@@ -2,6 +2,25 @@
 
 
 
+## [1.8.0](https://github.com/ppat/homelab-ops-ansible/compare/v1.7.3...v1.8.0) (2024-08-11)
+
+### ✨ Features
+
+* **os:** add support for amd64 architecture (in addition to arm64) for homelab_ops.os collection ([#136](https://github.com/ppat/homelab-ops-ansible/issues/136)) ([33118ba](https://github.com/ppat/homelab-ops-ansible/commit/33118baea60dd3c7c241fe315559a93c99ec9534))
+
+### 🐛 Enhancements + Bug Fixes
+
+* **k3s:** minor validation fix to homelab_ops.k3s.install playbook ([#151](https://github.com/ppat/homelab-ops-ansible/issues/151)) ([95af52c](https://github.com/ppat/homelab-ops-ansible/commit/95af52c4d992236e2c6fcd262cce5979a6c3d780))
+
+### 📌 Dependencies
+
+* **deps:** lock file maintenance ([#145](https://github.com/ppat/homelab-ops-ansible/issues/145)) ([4175ab4](https://github.com/ppat/homelab-ops-ansible/commit/4175ab459f7c1b37f36fa8219b7bc5e0a8e88055))
+* **deps:** update dependency @semantic-release/github to v10.0.7 ([#147](https://github.com/ppat/homelab-ops-ansible/issues/147)) ([5a9b6f3](https://github.com/ppat/homelab-ops-ansible/commit/5a9b6f3fdd099ea1ddbf3811cac7afd875a9e842))
+* **deps:** update dependency @semantic-release/github to v10.1.0 ([#148](https://github.com/ppat/homelab-ops-ansible/issues/148)) ([81eb0d7](https://github.com/ppat/homelab-ops-ansible/commit/81eb0d7a2ddc28ea5546a4e9aa11e76ff88fc655))
+* **deps:** update dependency molecule to v24.7.0 ([#150](https://github.com/ppat/homelab-ops-ansible/issues/150)) ([4006299](https://github.com/ppat/homelab-ops-ansible/commit/4006299177e7a65e86897195f46dd582c41b686c))
+* **deps:** update pre-commit hook ansible/ansible-lint to v24.7.0 ([#149](https://github.com/ppat/homelab-ops-ansible/issues/149)) ([b60c30a](https://github.com/ppat/homelab-ops-ansible/commit/b60c30a7f6c5916637b318a3a3a27165fd624121))
+* **deps:** update tj-actions/changed-files digest to c65cd88 ([#146](https://github.com/ppat/homelab-ops-ansible/issues/146)) ([fde03af](https://github.com/ppat/homelab-ops-ansible/commit/fde03af898dca9a214117742821d24a5ec8a793b))
+
 ## [1.7.3](https://github.com/ppat/homelab-ops-ansible/compare/v1.7.2...v1.7.3) (2024-07-29)
 
 ### 🐛 Enhancements + Bug Fixes
