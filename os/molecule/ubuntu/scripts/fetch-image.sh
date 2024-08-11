@@ -25,12 +25,10 @@ fetch_image() {
     /usr/bin/timeout --verbose $timeout wget \
       -nv \
       --connect-timeout=10 \
-      --dns-timeout=5 \
-      --no-dns-cache \
       --continue \
       --no-check-certificate \
-      -O ${output_file}.xz \
-      $attempt_url       
+      --output-document=${output_file}.xz \
+      $attempt_url
     exit_code=$?
     set -e
     if [[ $exit_code -eq 0 ]]; then
