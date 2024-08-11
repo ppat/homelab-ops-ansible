@@ -9,8 +9,8 @@
       scripts/fetch-image.sh
       --url {{ image_url }}
       --output {{ image_file }}
-      --timeout 2m
-      --retries 5
+      --timeout 1m
+      --retries 10
     args:
       executable: /bin/bash
 
