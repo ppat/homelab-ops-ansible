@@ -1,24 +1,32 @@
 #!/bin/bash
 set -euo pipefail
 
-
 fetch_image() {
   local url=$1
   local output_file=$2
   local timeout=$3
   local retries=$4
 
-  wget \
-    -nv \
-    --tries=$retries \
-    --connect-timeout=10 \
-    --dns-timeout=5 \
-    --read-timeout=$timeout \
-    --wait=5 \
-    --no-dns-cache \
-    --continue \
-    -O ${output_file}.xz \
-    $url
+  rm -f ${output_file}.xz
+
+  local attempt=0
+  while [ $attempt -lt $retries ]; do
+    echo "Attempt $attempt"
+    set +e
+    /usr/bin/timeout --verbose $timeout wget --connect-timeout=10 --dns-timeout=5 --no-dns-cache --continue $url -O ${output_file}.xz
+    exit_code=$?
+    set -e
+    if [[ $exit_code -eq 0 ]]; then
+      echo "  Success"
+      return 0
+    elif [[ $exit_code -eq 124 ]]; then
+      echo "  Timed out"
+      attempt=$(( attempt + 1 ))
+    else
+      echo "  Failed"
+      exit $exit_code
+    fi
+  done
 }
 
 main() {

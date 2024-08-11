@@ -3,7 +3,6 @@
   hosts: instance
   become: true
   gather_facts: true
-
   vars:
     system_packages:
       baseline:
