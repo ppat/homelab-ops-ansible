@@ -22,7 +22,7 @@ fetch_image() {
     local attempt_url="$(url_resolved_to_random_ip $url)"
     echo "    URL: $attempt_url"
     set +e
-    /usr/bin/timeout --verbose $timeout -- wget \
+    /usr/bin/timeout --verbose $timeout wget \
       -nv \
       --connect-timeout=10 \
       --dns-timeout=5 \
