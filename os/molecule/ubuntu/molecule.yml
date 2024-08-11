@@ -12,12 +12,12 @@ provisioner:
     host_vars:
       instance:
         device_type: $device_type
-        boot_firmware_source: $boot_firmware_source
       controller:
+        device_type: $device_type
         image_url: $image_url
         image_file: $image_file
         system_root_mount: $system_root_mount
-        boot_firmware_source: $boot_firmware_source
+        boot_firmware_source: "$boot_firmware_source"
     hosts:
       all:
         hosts:

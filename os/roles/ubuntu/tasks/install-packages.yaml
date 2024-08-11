@@ -1,12 +1,7 @@
 ---
-- name: "install-packages | Select packages to install"
-  ansible.builtin.set_fact:
-    needed_packages: "{{ ubuntu.packages.install | default([]) | union(required_system_packages) | unique }}"
-  vars:
-    required_system_packages: "{{ default_system_packages.baseline + default_system_packages.by_release[ansible_distribution_version] }}"
-
 - name: "install-packages | Install latest versions of selected packages"
+  when: ubuntu.packages.install|length > 0
   ansible.builtin.include_role:
     name: "homelab_ops.packages.apt_install"
   vars:
-    packages: "{{ needed_packages }}"
+    packages: "{{ ubuntu.packages.install }}"

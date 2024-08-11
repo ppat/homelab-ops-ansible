@@ -28,7 +28,7 @@ on:
 env:
   # As this action takes nearly an hour to run, we're running it in highest verbosity to avoid needing to re-run
   # just to get additional information.
-  non_workflow_dispatch_log_verbosity: 4
+  non_workflow_dispatch_log_verbosity: 3
   MOLECULE_VARS_FILE: /tmp/molecule_vars.yaml
 
 concurrency:
@@ -40,8 +40,7 @@ jobs:
     strategy:
       matrix:
         ubuntu_code_name: ["jammy", "noble"]
-        arch: ["arm64"]
-        device_type: ["raspi"]
+        arch_plus_device: ["arm64+raspi", "amd64"]
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -100,11 +99,17 @@ jobs:
     - name: Create molecule vars file
       # yamllint disable-line rule:indentation
       run: |
-        set -eo pipefail
+        if [[ "$ARCH_PLUS_DEVICE" == "arm64+raspi" ]]; then
+          DEVICE_TYPE="raspi"
+          BOOT_FIRMWARE_SOURCE="/mnt/boot-firmware"
+        else
+          DEVICE_TYPE="any"
+          BOOT_FIRMWARE_SOURCE="-"
+        fi
 
         cat > $MOLECULE_VARS_FILE << EOF
-        boot_firmware_source: /mnt/boot-firmware
-        device_type: ${{ matrix.device_type }}
+        boot_firmware_source: "$BOOT_FIRMWARE_SOURCE"
+        device_type: $DEVICE_TYPE
         image_url: $SERVER_URL/$SERVER_PATH/$SERVER_FILENAME
         image_file: $IMAGE_FILE
         system_root_mount: $SYSTEM_ROOT
@@ -115,8 +120,9 @@ jobs:
       env:
         SERVER_URL: https://cdimage.ubuntu.com
         SERVER_PATH: "ubuntu-server/${{ matrix.ubuntu_code_name }}/daily-preinstalled/current"
-        SERVER_FILENAME: "${{ matrix.ubuntu_code_name }}-preinstalled-server-${{ matrix.arch }}+${{ matrix.device_type }}.img.xz"
+        SERVER_FILENAME: "${{ matrix.ubuntu_code_name }}-preinstalled-server-${{ matrix.arch_plus_device }}.img.xz"
         IMAGE_FILE: "${{ matrix.ubuntu_code_name }}.img"
+        ARCH_PLUS_DEVICE: "${{ matrix.arch_plus_device }}"
         SYSTEM_ROOT: /mnt/sysroot
 
     - name: Molecule Test

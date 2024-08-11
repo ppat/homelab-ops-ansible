@@ -3,12 +3,49 @@
   hosts: instance
   become: true
   gather_facts: true
+  vars:
+    system_packages:
+      baseline:
+      - apt-transport-https
+      - bsdextrautils
+      - btrfs-progs
+      - ca-certificates
+      - curl
+      - dnsutils
+      - dosfstools
+      - e2fsprogs
+      - fdisk
+      - gnupg
+      - jq
+      - less
+      - lsof
+      - netcat-openbsd
+      - net-tools
+      - openssl
+      - open-iscsi
+      - parted
+      - vim
+      - wget
+      - zstd
+      by_release:
+        focal:
+          raspi: []
+          any: []
+        jammy:
+          raspi: ['linux-modules-extra-raspi']
+          any: []
+        noble:
+          raspi: []
+          any: []
+
   tasks:
   - name: "Setup Ubuntu OS"
     ansible.builtin.include_role:
       name: homelab_ops.os.ubuntu
     vars:
       ubuntu:
+        initrd:
+          iscsi_root_fs_enabled: true
         kernel:
           modules:
           - br_netfilter
@@ -19,8 +56,7 @@
             net.ipv6.conf.all.forwarding: 1
           upgrade: true
         packages:
-          install:
-          - vim
+          install: "{{ system_packages.baseline + system_packages.by_release[ansible_distribution_release][device_type] }}"
           remove:
           - name: snapd
             systemd_services: [snapd]

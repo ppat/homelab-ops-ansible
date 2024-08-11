@@ -16,14 +16,9 @@
   ansible.builtin.shell: "find {{ boot_firmware_dest[device_type] }}/* -name *.bak -print -delete"
   changed_when: false
 
-- name: "cleanup | kernel sources"
-  ansible.builtin.shell: "find {{ boot_firmware_source }}/* -type f -print -delete"
-  changed_when: false
-
 - name: "cleanup | specific files and directories..."
   ansible.builtin.file:
     path: "{{ item }}"
     state: absent
   loop:
   - "/.disk"
-  - "{{ boot_firmware_source }}/*"

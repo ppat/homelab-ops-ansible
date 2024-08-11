@@ -9,7 +9,8 @@
       scripts/fetch-image.sh
       --url {{ image_url }}
       --output {{ image_file }}
-      --timeout 2m
+      --timeout 1m
+      --retries 10
     args:
       executable: /bin/bash
 
@@ -21,6 +22,17 @@
       --boot-root {{ boot_firmware_source }}
     args:
       executable: /bin/bash
+
+  - name: "Device[raspi] | Re-locate boot firmware from mounted boot partition to expected location"
+    when: device_type == "raspi" and boot_firmware_source != "-"
+    ansible.builtin.copy:
+      # src has trailing slash so that contents of directory will be copied instead of directory as well
+      src: "{{ system_root_mount }}/{{ boot_firmware_source }}/"
+      dest: "{{ system_root_mount }}/boot/firmware"
+      remote_src: true
+      owner: root
+      group: root
+      mode: '0755'
 
   - name: "Removing existing resolv conf"
     ansible.builtin.file:
