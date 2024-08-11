@@ -10,6 +10,7 @@
       --url {{ image_url }}
       --output {{ image_file }}
       --timeout 2m
+      --retries 5
     args:
       executable: /bin/bash
 

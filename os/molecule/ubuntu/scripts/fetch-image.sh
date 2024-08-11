@@ -1,6 +1,13 @@
 #!/bin/bash
 set -euo pipefail
 
+url_resolved_to_random_ip() {
+  local url=$1
+  local hostname="$(echo $url | sed -E -n 's|([a-z0-9]*\:\/\/)([^\\/]+)\/.*|\2|p')"
+  local random_ip="$(dig +short $hostname | sort --random-sort | head -1)"
+  echo $url | sed -E -n 's|([a-z0-9]*\:\/\/)([^\\/]+)(\/.*)|\1'$random_ip'\3|p'
+}
+
 fetch_image() {
   local url=$1
   local output_file=$2
@@ -12,8 +19,10 @@ fetch_image() {
   local attempt=0
   while [ $attempt -lt $retries ]; do
     echo "Attempt $attempt"
+    local attempt_url="$(url_resolved_to_random_ip $url)"
+    echo "    URL: $attempt_url"
     set +e
-    /usr/bin/timeout --verbose $timeout wget --connect-timeout=10 --dns-timeout=5 --no-dns-cache --continue $url -O ${output_file}.xz
+    /usr/bin/timeout --verbose $timeout wget -nv --connect-timeout=10 --dns-timeout=5 --no-dns-cache --continue $attempt_url -O ${output_file}.xz
     exit_code=$?
     set -e
     if [[ $exit_code -eq 0 ]]; then
@@ -47,7 +56,7 @@ main() {
 OUTPUT_FILE=""
 IMAGE_URL=""
 TIMEOUT="5m"
-RETRIES="5"
+RETRIES="3"
 
 while [ $# -gt 0 ]; do
   case "$1" in
