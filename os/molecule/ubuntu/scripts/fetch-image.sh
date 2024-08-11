@@ -22,7 +22,15 @@ fetch_image() {
     local attempt_url="$(url_resolved_to_random_ip $url)"
     echo "    URL: $attempt_url"
     set +e
-    /usr/bin/timeout --verbose $timeout wget -nv --connect-timeout=10 --dns-timeout=5 --no-dns-cache --continue $attempt_url -O ${output_file}.xz
+    /usr/bin/timeout --verbose $timeout -- wget \
+      -nv \
+      --connect-timeout=10 \
+      --dns-timeout=5 \
+      --no-dns-cache \
+      --continue \
+      --no-check-certificate \
+      -O ${output_file}.xz \
+      $attempt_url       
     exit_code=$?
     set -e
     if [[ $exit_code -eq 0 ]]; then
