@@ -64,7 +64,8 @@
       - agent_token is defined and agent_token|length > 0
       - k3s_config_file|length == 0 or k3s_config_file is file
       - k3s_private_registry_file|length == 0 or k3s_private_registry_file is file
-      - local_kubeconfig|length > 0 and not local_kubeconfig is exists
+      - local_kubeconfig|length > 0
+      - (api_server_url|length == 0 and not local_kubeconfig is exists) or (api_server_url|length > 0 and local_kubeconfig is exists)
 
   - name: Install required python packages on controller
     local_action:
@@ -77,6 +78,7 @@
       kubernetes_pypi_package_version: "30.1.0"
       # renovate: datasource=pypi depName=jmespath
       jmespath_pypi_package_version: "1.0.1"
+    run_once: true
 
   tasks:
   - name: install k3s service
