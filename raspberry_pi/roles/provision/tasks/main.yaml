@@ -1,5 +1,4 @@
 ---
----
 - name: "Check for mandatory variables definitions"
   assert:
     that:
