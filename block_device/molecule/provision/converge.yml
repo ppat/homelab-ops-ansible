@@ -27,8 +27,6 @@
     vars:
       block_device:
         additional_bind_mounts:
-        - src: /srv/longhorn
-          target: /var/lib/longhorn
         - src: /tmp
           target: /var/tmp
         partitions:
@@ -36,24 +34,8 @@
             size: 100
           root:
             size: 200
-            filesystem_type: btrfs
-            filesystem_options:
-              subvolumes:
-              - name: home
-                path: home
-                copy_on_write: true
-              - name: snapshots
-                path: .snapshots
-                copy_on_write: true
-              - name: tmp
-                path: tmp
-                copy_on_write: false
-              - name: var
-                path: var
-                copy_on_write: false
           data:
             size: ~
-            filesystem_type: ext4
         root_mount_point: "{{ sysroot_mount }}"
         selector:
           include:
