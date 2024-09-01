@@ -1,0 +1,44 @@
+---
+- name: Converge
+  hosts: all
+  gather_facts: false
+  vars:
+    block_device_file: /tmp/test_block_device.img
+    sysroot_mount: /mnt/sysroot
+  tasks:
+  - name: Detect loopback device by file
+    ansible.builtin.shell: |
+      #!/bin/bash
+      set -eo pipefail
+      losetup --associated {{ block_device_file }} | cut -d':' -f1
+    args:
+      executable: /bin/bash
+    become: true
+    register: loopback_device_detect_register
+    changed_when: false
+
+  - name: Extract detected loopback device
+    ansible.builtin.set_fact:
+      loopback_device: "{{ loopback_device_detect_register.stdout }}"
+
+  - name: "Provision block device"
+    ansible.builtin.include_role:
+      name: homelab_ops.block_device.provision
+    vars:
+      block_device:
+        additional_bind_mounts:
+        - src: /tmp
+          target: /var/tmp
+        partitions:
+          boot:
+            size: 100
+          root:
+            size: 200
+          data:
+            size: ~
+        root_mount_point: "{{ sysroot_mount }}"
+        selector:
+          include:
+            type: loop
+            path: "{{ loopback_device }}"
+        size_unit: MiB

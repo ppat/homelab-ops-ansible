@@ -5,7 +5,7 @@
   vars:
     cloudinit:
       # place data source under boot filesystem mount path
-      data_source_path: "{{ partition_config.boot.mount_path }}"
+      data_source_path: "{{ partition_mount_points['boot'].current }}"
       local_hostname: "{{ provision.raspberry_pi.hostname | default(default_hostname) }}"
       instance_id: "{{ provision.raspberry_pi.instance_id | default(default_instance_id) }}"
       users: "{{ provision.cloudinit.ssh_users }}"

@@ -7,7 +7,7 @@
 
 - name: "configure-bind-mounts | Check if any device is mounted at requested bind mount locations"
   ansible.builtin.command: "findmnt --mtab --json {{ system_root_mount_point }}{{ item.target }}"
-  loop: "{{ provision.block_device.additional_bind_mounts | default([]) }}"
+  loop: "{{ block_device.additional_bind_mounts | default([]) }}"
   loop_control:
     label: "{{ item.target }}"
   register: existing_bind_mounts_register

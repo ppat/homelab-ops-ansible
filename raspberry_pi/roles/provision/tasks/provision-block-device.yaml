@@ -1,0 +1,18 @@
+---
+- name: "provision-block-device | provision block device's partitions and filesystem"
+  ansible.builtin.include_role:
+    name: homelab_ops.block_device.provision
+  vars:
+    block_device: "{{ provision.block_device }}"
+    host_type: raspi
+
+- name: "provision-block-device | set partition_mount_points based on provisioned partitions"
+  ansible.builtin.set_fact:
+    partition_mount_points: "{{ partition_mount_points | default({}) | combine({item.key: derived_item}) }}"
+  vars:
+    derived_item:
+      fstab: "{{ (item.key == 'root') | ternary('/', item.value['mount_path'].removeprefix(filesystem_derived_params['root'].mount_path)) }}"
+      current: "{{ item.value['mount_path'] }}"
+  loop: "{{ filesystem_derived_params | default({}) | dict2items }}"
+  loop_control:
+    label: "{{ item.key }}"

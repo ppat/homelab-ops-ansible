@@ -6,15 +6,15 @@
     additional_kernel_params:
     # configure cloudinit to look for nocloud datasource on local filesystem
     # see: method 2 under https://cloudinit.readthedocs.io/en/latest/reference/datasources/nocloud.html
-    - "ds=nocloud;s=file://{{ conventions.raspberry_pi.partitions.boot.mount_path }}"
-    boot_path: "{{ partition_config.boot.mount_path }}"
+    - "ds=nocloud;s=file://{{ partition_mount_points['boot'].fstab }}"
+    boot_path: "{{ partition_mount_points['boot'].current }}"
     ubuntu_distribution_release: "{{ provision.os_image.distribution_release }}"
 
 - name: "configure-boot | set up kernel config.txt"
   ansible.builtin.include_role:
     name: homelab_ops.raspberry_pi.kernel_config
   vars:
-    boot_path: "{{ partition_config.boot.mount_path }}"
+    boot_path: "{{ partition_mount_points['boot'].current }}"
     kernel:
       config: "{{ provision.raspberry_pi.kernel.config | default({}) }}"
       # use the uncompressed kernel (vmlinux) instead of standard compressed kernel (vmlinuz) on usb mass-storage device
@@ -25,4 +25,4 @@
   ansible.builtin.include_role:
     name: homelab_ops.configure.fstab
   vars:
-    system_root_mount_path: "{{ system_root_mount_point }}"
+    system_root_mount_path: "{{ partition_mount_points['root'].current }}"
