@@ -32,3 +32,4 @@ partitions_baseline:
 
 default_size_unit: MiB
 default_partition_table_type: gpt
+host_type: "default"
