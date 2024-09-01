@@ -1,0 +1,4 @@
+---
+system_root_mount_point: "{{ block_device.root_mount_point.rstrip('/') }}"
+host_type: "{{ host_type | default('default') }}"
+partition_defaults: "{{ partitions_baseline | combine(partitions_by_host_type[host_type]) }}"

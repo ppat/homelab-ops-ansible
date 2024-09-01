@@ -1,29 +1,18 @@
 ---
+---
 - name: "Check for mandatory variables definitions"
   assert:
     that:
     - provision is defined and provision|length > 0
+    - provision.block_device is defined and provision.block_device|length > 0
     - provision.os_image is defined and provision.os_image|length > 0
     - provision.os_image.url is defined and provision.os_image.url is url
     - provision.os_image.distribution_release is defined
-    - provision.block_device.partitions is defined and provision.block_device.partitions|length > 0
-    - provision.block_device.partitions|list is ansible.builtin.subset(['boot', 'root', 'data'])
-    - provision.block_device.partitions.root.size is defined and provision.block_device.partitions.root.size|int > 0
-    - provision.block_device.partitions.boot.size is defined and provision.block_device.partitions.boot.size|int > 0
-    - provision.block_device.selector is defined and provision.block_device.selector|length > 0
-    - provision.block_device.selector|list is ansible.builtin.subset(['include', 'exclude', 'no_partitions'])
-    - provision.block_device.root_mount_point is defined and provision.block_device.root_mount_point != '/'
     - provision.raspberry_pi.serial is defined and provision.raspberry_pi.serial|length == 8
     - provision.cloudinit.ssh_users is defined and provision.cloudinit.ssh_users|length > 0
 
-- name: Select block device
-  ansible.builtin.import_tasks: select-block-device.yaml
-
-- name: Prepare block device
-  ansible.builtin.import_tasks: prepare-block-device.yaml
-
-- name: Configure bind mounts
-  ansible.builtin.import_tasks: configure-bind-mounts.yaml
+- name: Provision block device
+  ansible.builtin.import_tasks: provision-block-device.yaml
 
 - name: Image block device
   ansible.builtin.import_tasks: image-block-device.yaml

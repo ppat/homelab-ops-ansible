@@ -1,0 +1,38 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  vars:
+    block_device_file: /tmp/test_block_device.img
+    sysroot_mount: /mnt/sysroot
+
+  tasks:
+  - name: Detect loopback device by file (for when it already exists)
+    ansible.builtin.shell: |
+      #!/bin/bash
+      set -eo pipefail
+      losetup --associated {{ block_device_file }} | cut -d':' -f1
+    args:
+      executable: /bin/bash
+    become: true
+    register: loopback_device_detect_register
+    changed_when: false
+
+  - name: Extract detected loopback device
+    ansible.builtin.set_fact:
+      loopback_device: "{{ loopback_device_detect_register.stdout }}"
+
+  - name: Read partitions of loopback_device
+    ansible.builtin.shell: |
+      #!/bin/bash
+      set -eo pipefail
+      lsblk {{ loopback_device | mandatory }} --fs --paths --list
+    args:
+      executable: /bin/bash
+    become: true
+    register: filesystem_lsblk_register
+    changed_when: false
+
+  - name: "Display lsblk output"
+    ansible.builtin.debug:
+      msg: "{{ filesystem_lsblk_register.stdout_lines }}"

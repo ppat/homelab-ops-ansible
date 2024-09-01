@@ -1,7 +1,3 @@
 ---
-partition_defaults: "{{ conventions.raspberry_pi.partitions | combine(conventions.homelab_ops.partitions) }}"
-
-system_root_mount_point: "{{ provision.block_device.root_mount_point.rstrip('/') }}"
-
 default_hostname: "{{ 'rpi-' + provision.raspberry_pi.serial }}"
 default_instance_id: "{{ 'rpi-' + provision.raspberry_pi.serial + '-' + lookup('pipe', 'date --utc +%Y%m%d%H%M%S --utc') }}"

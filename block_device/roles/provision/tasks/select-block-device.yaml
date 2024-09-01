@@ -3,7 +3,7 @@
   ansible.builtin.include_role:
     name: homelab_ops.block_device.select
   vars:
-    device: "{{ provision.block_device.selector }}"
+    device: "{{ block_device.selector }}"
 
 - name: Ensure that there is exactly one matching block device
   fail:

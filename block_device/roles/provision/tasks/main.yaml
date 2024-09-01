@@ -1,0 +1,21 @@
+---
+- name: "Check for mandatory variables definitions"
+  assert:
+    that:
+    - block_device is defined and block_device|length > 0
+    - block_device.partitions is defined and block_device.partitions|length > 0
+    - block_device.partitions|list is ansible.builtin.subset(['boot', 'root', 'data'])
+    - block_device.partitions.root.size is defined and block_device.partitions.root.size|int > 0
+    - block_device.partitions.boot.size is defined and block_device.partitions.boot.size|int > 0
+    - block_device.selector is defined and block_device.selector|length > 0
+    - block_device.selector|list is ansible.builtin.subset(['include', 'exclude', 'no_partitions'])
+    - block_device.root_mount_point is defined and block_device.root_mount_point != '/'
+
+- name: Select block device
+  ansible.builtin.import_tasks: select-block-device.yaml
+
+- name: Prepare block device
+  ansible.builtin.import_tasks: prepare-block-device.yaml
+
+- name: Configure bind mounts
+  ansible.builtin.import_tasks: configure-bind-mounts.yaml

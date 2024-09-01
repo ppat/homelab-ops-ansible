@@ -1,0 +1,7 @@
+---
+- name: "provision-block-device | provision block device's partitions and filesystem"
+  ansible.builtin.include_role:
+    name: homelab_ops.block_device.provision
+  vars:
+    block_device: "{{ provision.block_device }}"
+    host_type: raspi
