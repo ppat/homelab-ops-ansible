@@ -8,7 +8,7 @@
 
 - name: "provision-block-device | set partition_mount_points based on provisioned partitions"
   ansible.builtin.set_fact:
-    partition_mount_points: "{{ partition_mount_points | default({}) | combine(item.key: derived_item) }}"
+    partition_mount_points: "{{ partition_mount_points | default({}) | combine({item.key: derived_item}) }}"
   vars:
     derived_item:
       fstab: "{{ (item.key == 'root') | ternary('/', item.value['mount_path'].removeprefix(filesystem_derived_params['root'].mount_path)) }}"
