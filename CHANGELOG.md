@@ -2,6 +2,24 @@
 
 
 
+## [1.8.1](https://github.com/ppat/homelab-ops-ansible/compare/v1.8.0...v1.8.1) (2024-09-02)
+
+### 🐛 Enhancements + Bug Fixes
+
+* **block_device:** extract new role homelab_ops.block_device.provision out of homelab_ops.raspberry_pi.provision ([#161](https://github.com/ppat/homelab-ops-ansible/issues/161)) ([fd2cda8](https://github.com/ppat/homelab-ops-ansible/commit/fd2cda895db44c6ff03bf517304f11456a2e7693))
+* **deps:** update dependency ansible-core to v2.17.0 ([#155](https://github.com/ppat/homelab-ops-ansible/issues/155)) ([534304b](https://github.com/ppat/homelab-ops-ansible/commit/534304b62fadd6cc53bbf8b599b2485732359c4d))
+* **deps:** update dependency ansible-core to v2.17.3 ([#156](https://github.com/ppat/homelab-ops-ansible/issues/156)) ([443fcb7](https://github.com/ppat/homelab-ops-ansible/commit/443fcb72858f884cd4fbfa5729a12756294780bb))
+
+### 📌 Dependencies
+
+* **deps:** lock file maintenance ([#159](https://github.com/ppat/homelab-ops-ansible/issues/159)) ([0ab64c8](https://github.com/ppat/homelab-ops-ansible/commit/0ab64c8edac0ab56b99843c6043273beaafa1a1d))
+* **deps:** update dependency @semantic-release/github to v10.1.1 ([#153](https://github.com/ppat/homelab-ops-ansible/issues/153)) ([866738d](https://github.com/ppat/homelab-ops-ansible/commit/866738d8012d249a84178118bdcbaf7ddbebb57d))
+* **deps:** update dependency @semantic-release/github to v10.1.3 ([#157](https://github.com/ppat/homelab-ops-ansible/issues/157)) ([0a12372](https://github.com/ppat/homelab-ops-ansible/commit/0a12372d3e050dc9d9eb0c54088aa366bae41fa4))
+* **deps:** update dependency ansible-core to v2.17.0 ([#154](https://github.com/ppat/homelab-ops-ansible/issues/154)) ([2eb8a3e](https://github.com/ppat/homelab-ops-ansible/commit/2eb8a3ed16ae12254ff85f79bec5cba23a08df11))
+* **deps:** update dependency ansible-core to v2.17.3 ([#160](https://github.com/ppat/homelab-ops-ansible/issues/160)) ([ac75e35](https://github.com/ppat/homelab-ops-ansible/commit/ac75e3563474ea6ad0bf29ec69f9104079e641a1))
+* **deps:** update dependency community.general to v9.3.0 ([#152](https://github.com/ppat/homelab-ops-ansible/issues/152)) ([bbf0481](https://github.com/ppat/homelab-ops-ansible/commit/bbf048113033a24e1c5228ef60ccb912c78f6683))
+* **deps:** update dependency node to v20.17.0 ([#132](https://github.com/ppat/homelab-ops-ansible/issues/132)) ([1794c0b](https://github.com/ppat/homelab-ops-ansible/commit/1794c0bc3713141781de31fad744231dfbf06058))
+
 ## [1.8.0](https://github.com/ppat/homelab-ops-ansible/compare/v1.7.3...v1.8.0) (2024-08-11)
 
 ### ✨ Features
