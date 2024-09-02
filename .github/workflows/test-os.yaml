@@ -7,7 +7,6 @@ on:
     paths:
     - '.github/workflows/test-os.yaml'
     - 'os/**'
-    - 'poetry.lock'
     - 'pyproject.toml'
   workflow_dispatch:
     inputs:
