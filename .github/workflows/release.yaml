@@ -6,6 +6,7 @@ on:
   pull_request:
     paths:
     - '.github/workflows/release.yaml'
+    - '.node-version'
     - '.releaserc.js'
     - 'package.json'
     - 'package-lock.json'
