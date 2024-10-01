@@ -1,7 +1,7 @@
 {
   "devDependencies": {
-    "@commitlint/cli": "19.4.0",
-    "@commitlint/config-conventional": "19.2.2",
+    "@commitlint/cli": "19.4.1",
+    "@commitlint/config-conventional": "19.4.1",
     "@commitlint/ensure": "19.0.3",
     "@commitlint/load": "19.4.0",
     "commitlint-plugin-function-rules": "4.0.0",
