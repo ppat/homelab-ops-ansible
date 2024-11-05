@@ -130,7 +130,7 @@ jobs:
         actionlint -shellcheck "shellcheck -c .shellcheckrc"
       env:
         # renovate: datasource=github-releases depName=rhysd/actionlint
-        ACTIONLINT_VERSION: "1.7.3"
+        ACTIONLINT_VERSION: "1.7.4"
 
     - name: commitlint
       if: (success() || failure()) && (github.event_name == 'pull_request')
