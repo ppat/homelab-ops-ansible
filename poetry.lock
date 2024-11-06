@@ -24,13 +24,13 @@ test = ["coverage", "pip-tools", "pytest (>=7.2.0)", "pytest-mock", "pytest-plus
 
 [[package]]
 name = "ansible-core"
-version = "2.17.4"
+version = "2.17.5"
 description = "Radically simple IT automation"
 optional = false
 python-versions = ">=3.10"
 files = [
-    {file = "ansible_core-2.17.4-py3-none-any.whl", hash = "sha256:a36c9ab8e84d5d51f9fffe389d6ac7e81c8d0df6af8c12429ddbb71e8d69b21e"},
-    {file = "ansible_core-2.17.4.tar.gz", hash = "sha256:44a1f30076796536ba2455cad18d36e62870f04e632e3ca2ebe970d7beacf24d"},
+    {file = "ansible_core-2.17.5-py3-none-any.whl", hash = "sha256:10f165b475cf2bc8d886e532cadb32c52ee6a533649793101d3166bca9bd3ea3"},
+    {file = "ansible_core-2.17.5.tar.gz", hash = "sha256:ae7f51fd13dc9d57c9bcd43ef23f9c255ca8f18f4b5c0011a4f9b724d92c5a8e"},
 ]
 
 [package.dependencies]
@@ -42,17 +42,17 @@ resolvelib = ">=0.5.3,<1.1.0"
 
 [[package]]
 name = "ansible-lint"
-version = "24.7.0"
+version = "24.9.2"
 description = "Checks playbooks for practices and behavior that could potentially be improved"
 optional = false
 python-versions = ">=3.10"
 files = [
-    {file = "ansible_lint-24.7.0-py3-none-any.whl", hash = "sha256:a2305f1d69a25be27810c64a32711d1d0463d2fda5b9308166362347aeda36e0"},
-    {file = "ansible_lint-24.7.0.tar.gz", hash = "sha256:ca2edc7e4e80cf19df4b28cbf4c118f761ce6cdd6a5ef9c8561e454ed7af5a24"},
+    {file = "ansible_lint-24.9.2-py3-none-any.whl", hash = "sha256:8c3ad2aaf857390af803959a96c650c35ea921fba6b32d92d11b2d248761bfea"},
+    {file = "ansible_lint-24.9.2.tar.gz", hash = "sha256:7cff6c5af10ef996b7c6010cbd48c91592764ae098f2b05408726899a1066a7f"},
 ]
 
 [package.dependencies]
-ansible-compat = ">=24.5.0dev0"
+ansible-compat = ">=24.9.1"
 ansible-core = ">=2.13.0"
 black = ">=24.3.0"
 filelock = ">=3.3.0"
@@ -814,13 +814,13 @@ files = [
 
 [[package]]
 name = "molecule"
-version = "24.8.0"
+version = "24.9.0"
 description = "Molecule aids in the development and testing of Ansible roles"
 optional = false
 python-versions = ">=3.10"
 files = [
-    {file = "molecule-24.8.0-py3-none-any.whl", hash = "sha256:8e748ec0cf18e7ef718af2caf18e3ef77dff54f5be1ecee9ffaa93095f301cf5"},
-    {file = "molecule-24.8.0.tar.gz", hash = "sha256:140738904e9f17815780568ac408c9f73bb9e2ac721e34685a359e6d3507e677"},
+    {file = "molecule-24.9.0-py3-none-any.whl", hash = "sha256:ecb15e4c6b66e208e0621e19b100d471a06cd114371f46449620e7eda3ec0a62"},
+    {file = "molecule-24.9.0.tar.gz", hash = "sha256:8548eda13c31a1ea41ba0786b29dde466cfb812617c25792151335b17a410f63"},
 ]
 
 [package.dependencies]
@@ -1581,4 +1581,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "3cd16bad953af7f865b2a0994c7b6df5f17bb93b449687f3b8d9e0be303bfd06"
+content-hash = "e4dd6f59a2cbe3996a9f0f672e9dad638e7f6ce58ef4dbd9f12ddee2da06d535"
