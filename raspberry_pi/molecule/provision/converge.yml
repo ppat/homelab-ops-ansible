@@ -62,8 +62,8 @@
               path: "{{ loopback_device }}"
           size_unit: MiB
         os_image:
-          url: https://cdimage.ubuntu.com/ubuntu-base/releases/jammy/release/ubuntu-base-22.04-base-amd64.tar.gz
-          distribution_release: jammy
+          url: https://cdimage.ubuntu.com/ubuntu-base/releases/noble/release/ubuntu-base-24.04.1-base-amd64.tar.gz
+          distribution_release: noble
         raspberry_pi:
           serial: '12345678'
           kernel:
