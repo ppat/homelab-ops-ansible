@@ -50,7 +50,7 @@ jobs:
       run: pipx install poetry==$POETRY_VERSION
       env:
         # renovate: datasource=pypi depName=poetry
-        POETRY_VERSION: "1.8.3"
+        POETRY_VERSION: "1.8.4"
 
     - name: Set up python
       uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b # v5
