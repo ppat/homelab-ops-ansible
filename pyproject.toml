@@ -12,5 +12,5 @@ ansible-lint = { version = "24.9.2", markers = "platform_system != 'Windows'" }
 docker = "7.1.0"
 molecule = "24.9.0"
 molecule-plugins = {version = "23.5.3", extras = ["docker"]}
-pre-commit = "3.8.0"
+pre-commit = "4.0.1"
 yamllint = "1.35.1"
