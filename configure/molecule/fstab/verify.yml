@@ -3,7 +3,7 @@
   hosts: all
   gather_facts: false
   vars:
-    block_device_file: /tmp/test_block_device.img  
+    block_device_file: /tmp/test_block_device.img
     generated_fstab: "/mnt/fs.root/etc/fstab"
   tasks:
   - name: Detect loopback device by file
@@ -21,7 +21,7 @@
     ansible.builtin.set_fact:
       loopback_device: "{{ loopback_device_detect_register.stdout }}"
 
-  - name: Set expected values"
+  - name: Set expected values
     ansible.builtin.set_fact:
     expected_mounts:
       "/boot":
