@@ -86,5 +86,5 @@
 
 - name: Fail if no matches
   ansible.builtin.fail:
-    msg: "{{ item }}"
+    msg: "No device matches the provided parameters"
   when: select_block_device_results|length == 0
