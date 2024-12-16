@@ -7,7 +7,7 @@ driver:
 
 platforms:
 - name: "node1-server"
-  image: ${MOLECULE_IMAGE:-geerlingguy/docker-ubuntu2204-ansible:latest}
+  image: ${MOLECULE_IMAGE:-"geerlingguy/docker-ubuntu2404-ansible:latest"}
   pre_build_image: true
   exposed_ports:
   - 6443/tcp
@@ -22,7 +22,7 @@ platforms:
   user: root
 
 - name: "node2-server"
-  image: ${MOLECULE_IMAGE:-geerlingguy/docker-ubuntu2204-ansible:latest}
+  image: ${MOLECULE_IMAGE:-"geerlingguy/docker-ubuntu2404-ansible:latest"}
   pre_build_image: true
   exposed_ports:
   - 6443/tcp
@@ -35,7 +35,7 @@ platforms:
   user: root
 
 - name: "node3-agent"
-  image: ${MOLECULE_IMAGE:-geerlingguy/docker-ubuntu2204-ansible:latest}
+  image: ${MOLECULE_IMAGE:-"geerlingguy/docker-ubuntu2404-ansible:latest"}
   pre_build_image: true
   exposed_ports:
   - 6443/tcp
