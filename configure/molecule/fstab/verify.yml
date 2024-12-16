@@ -3,16 +3,35 @@
   hosts: all
   gather_facts: false
   vars:
+    block_device_file: /tmp/test_block_device.img  
     generated_fstab: "/mnt/fs.root/etc/fstab"
+  tasks:
+  - name: Detect loopback device by file
+    ansible.builtin.shell: |
+      #!/bin/bash
+      set -eo pipefail
+      losetup --associated {{ block_device_file }} | cut -d':' -f1
+    args:
+      executable: /bin/bash
+    become: true
+    register: loopback_device_detect_register
+    changed_when: false
+
+  - name: Extract detected loopback device
+    ansible.builtin.set_fact:
+      loopback_device: "{{ loopback_device_detect_register.stdout }}"
+
+  - name: Set expected values"
+    ansible.builtin.set_fact:
     expected_mounts:
       "/boot":
-        src: /dev/loop3p1
+        src: "{{ loopback_device }}p1"
         type: vfat
       "/":
-        src: /dev/loop3p2
+        src: "{{ loopback_device }}p2"
         type: btrfs
       "/bind_mnt":
-        src: /dev/loop3p2
+        src: "{{ loopback_device }}p2"
         type: btrfs
       "/bind_mnt/target":
         src: /srv/source
@@ -20,7 +39,7 @@
       "/srv":
         src: /dev/loop3p3
         type: ext4
-  tasks:
+
   - name: Stat for generated fstab
     ansible.builtin.stat:
       path: "{{ generated_fstab }}"
