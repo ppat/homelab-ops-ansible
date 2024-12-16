@@ -23,22 +23,22 @@
 
   - name: Set expected values
     ansible.builtin.set_fact:
-    expected_mounts:
-      "/boot":
-        src: "{{ loopback_device }}p1"
-        type: vfat
-      "/":
-        src: "{{ loopback_device }}p2"
-        type: btrfs
-      "/bind_mnt":
-        src: "{{ loopback_device }}p2"
-        type: btrfs
-      "/bind_mnt/target":
-        src: /srv/source
-        type: none
-      "/srv":
-        src: /dev/loop3p3
-        type: ext4
+      expected_mounts:
+        "/boot":
+          src: "{{ loopback_device }}p1"
+          type: vfat
+        "/":
+          src: "{{ loopback_device }}p2"
+          type: btrfs
+        "/bind_mnt":
+          src: "{{ loopback_device }}p2"
+          type: btrfs
+        "/bind_mnt/target":
+          src: /srv/source
+          type: none
+        "/srv":
+          src: /dev/loop3p3
+          type: ext4
 
   - name: Stat for generated fstab
     ansible.builtin.stat:
