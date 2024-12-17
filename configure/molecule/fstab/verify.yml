@@ -37,7 +37,7 @@
           src: /srv/source
           type: none
         "/srv":
-          src: /dev/loop3p3
+          src: "{{ loopback_device }}p3"
           type: ext4
 
   - name: Stat for generated fstab
