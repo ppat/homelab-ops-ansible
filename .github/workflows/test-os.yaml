@@ -40,7 +40,7 @@ jobs:
       matrix:
         ubuntu_code_name: ["noble"]
         arch_plus_device: ["arm64+raspi", "amd64"]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 60
     steps:
     - name: Checkout
