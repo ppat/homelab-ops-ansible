@@ -14,220 +14,23 @@
   ],
   "extends": [
     "config:best-practices",
-    "group:linters"
+    "group:linters",
+    "mergeConfidence:all-badges",
+    "github>ppat/renovate-presets:default-commit-message",
+    "github>ppat/renovate-presets:labels-dependency-type",
+    "github>ppat/renovate-presets:min-release-age",
+    "github>ppat/renovate-presets:automerge.json",
+    "github>ppat/renovate-presets:ci-dependencies",
+    "github>ppat/renovate-presets:ci-dev-tools",
+    "github>ppat/renovate-presets:ci-github-actions"
   ],
   "internalChecksFilter": "strict",
   "kubernetes": {
     "fileMatch": [
-      "k3s/molecule/default/flux-prerequisites/.+\\.yaml$",
-      "k3s/molecule/default/flux-root/.+\\.yaml$",
-      "k3s/roles/bootstrap_flux/templates/.+\\.yaml$"
-    ]
-  },
-  "lockFileMaintenance": {
-    "automerge": true,
-    "automergeType": "pr",
-    "enabled": true,
-    "platformAutomerge": true,
-    "schedule": [
-      "every 30 day"
+      "k3s/molecule/default/test-resources/.+\\.yaml$"
     ]
   },
   "packageRules": [
-    {
-      "groupName": "github-action dependencies",
-      "groupSlug": "github-actions-deps",
-      "matchFileNames": [
-        ".github/workflows/**"
-      ],
-      "matchManagers": [
-        "github-actions"
-      ],
-      "minimumReleaseAge": "90 days",
-      "schedule": [
-        "before 10am on Tuesday",
-        "before 10am on Thursday"
-      ]
-    },
-    {
-      "automerge": true,
-      "automergeType": "pr",
-      "groupName": "github-release non-major dependencies",
-      "groupSlug": "github-release-non-major-deps",
-      "matchDatasources": [
-        "github-releases"
-      ],
-      "matchUpdateTypes": [
-        "minor",
-        "patch"
-      ],
-      "minimumReleaseAge": "1 days",
-      "platformAutomerge": true
-    },
-    {
-      "groupName": "github-release major dependencies",
-      "groupSlug": "github-release-deps",
-      "matchDatasources": [
-        "github-releases"
-      ],
-      "matchUpdateTypes": [
-        "major"
-      ],
-      "minimumReleaseAge": "30 days",
-      "schedule": [
-        "before 10am on Tuesday",
-        "before 10am on Thursday"
-      ]
-    },
-    {
-      "automerge": true,
-      "automergeType": "pr",
-      "groupName": "npm non-major dependencies",
-      "groupSlug": "npm-deps-non-major",
-      "matchDatasources": [
-        "npm"
-      ],
-      "matchUpdateTypes": [
-        "minor",
-        "patch"
-      ],
-      "minimumReleaseAge": "30 days",
-      "platformAutomerge": true,
-      "schedule": [
-        "before 10am on Tuesday",
-        "before 10am on Thursday"
-      ]
-    },
-    {
-      "groupName": "npm major dependencies",
-      "groupSlug": "npm-deps",
-      "matchDatasources": [
-        "npm"
-      ],
-      "matchUpdateTypes": [
-        "major"
-      ],
-      "minimumReleaseAge": "90 days",
-      "schedule": [
-        "before 10am on Tuesday",
-        "before 10am on Thursday"
-      ]
-    },
-    {
-      "automerge": true,
-      "automergeType": "pr",
-      "groupName": "python non-major dependencies",
-      "groupSlug": "pypi-deps-non-major",
-      "matchDatasources": [
-        "pypi"
-      ],
-      "matchDepTypes": [
-        "dependencies"
-      ],
-      "matchUpdateTypes": [
-        "minor",
-        "patch"
-      ],
-      "minimumReleaseAge": "1 days",
-      "platformAutomerge": true
-    },
-    {
-      "groupName": "python major dependencies",
-      "groupSlug": "pypi-deps",
-      "matchDatasources": [
-        "pypi"
-      ],
-      "matchDepTypes": [
-        "dependencies"
-      ],
-      "matchUpdateTypes": [
-        "major"
-      ],
-      "minimumReleaseAge": "30 days",
-      "schedule": [
-        "before 10am on Tuesday",
-        "before 10am on Thursday"
-      ]
-    },
-    {
-      "automerge": true,
-      "automergeType": "pr",
-      "groupName": "python non-major dev dependencies",
-      "groupSlug": "pypi-deps-non-major",
-      "matchDatasources": [
-        "pypi"
-      ],
-      "matchDepTypes": [
-        "dev",
-        "dev-dependencies"
-      ],
-      "matchUpdateTypes": [
-        "minor",
-        "patch"
-      ],
-      "minimumReleaseAge": "30 days",
-      "platformAutomerge": true
-    },
-    {
-      "groupName": "python major dev dependencies",
-      "groupSlug": "pypi-deps",
-      "matchDatasources": [
-        "pypi"
-      ],
-      "matchDepTypes": [
-        "dev",
-        "dev-dependencies"
-      ],
-      "matchUpdateTypes": [
-        "major"
-      ],
-      "minimumReleaseAge": "90 days",
-      "schedule": [
-        "before 10am on Tuesday",
-        "before 10am on Thursday"
-      ]
-    },
-    {
-      "automerge": true,
-      "automergeType": "pr",
-      "groupName": "pre-commit dependencies",
-      "groupSlug": "pre-commit-deps",
-      "matchManagers": [
-        "pre-commit"
-      ],
-      "minimumReleaseAge": "30 days",
-      "platformAutomerge": true
-    },
-    {
-      "automerge": true,
-      "automergeType": "pr",
-      "groupName": "galaxy-collection non-major dependencies",
-      "groupSlug": "galaxy-collection-non-major-deps",
-      "matchDatasources": [
-        "galaxy-collection"
-      ],
-      "matchUpdateTypes": [
-        "minor",
-        "patch"
-      ],
-      "minimumReleaseAge": "1 days",
-      "platformAutomerge": true
-    },
-    {
-      "groupName": "galaxy-collection major dependencies",
-      "groupSlug": "galaxy-collection-deps",
-      "matchDatasources": [
-        "galaxy-collection"
-      ],
-      "matchUpdateTypes": [
-        "major"
-      ],
-      "minimumReleaseAge": "30 days",
-      "schedule": [
-        "before 10am on Tuesday",
-        "before 10am on Thursday"
-      ]
-    },
     {
       "automerge": true,
       "description": "stability required dependencies: patch versions",
@@ -256,17 +59,26 @@
       "matchPackageNames": [
         "ansible-core",
         "fluxcd/flux2",
-        "k3s-io/k3s",
         "kubernetes-sigs/kustomize"
       ],
       "matchUpdateTypes": [
         "minor"
       ],
-      "minimumReleaseAge": "90 days",
-      "schedule": [
-        "before 10am on Tuesday",
-        "before 10am on Thursday"
-      ]
+      "minimumReleaseAge": "30 days"
+    },
+    {
+      "description": "stability required dependencies: k3s minor versions",
+      "matchDatasources": [
+        "github-releases",
+        "pypi"
+      ],
+      "matchPackageNames": [
+        "k3s-io/k3s"
+      ],
+      "matchUpdateTypes": [
+        "minor"
+      ],
+      "minimumReleaseAge": "90 days"
     },
     {
       "description": "stability required dependencies: major versions",
@@ -283,23 +95,12 @@
       "matchUpdateTypes": [
         "major"
       ],
-      "minimumReleaseAge": "180 days",
-      "schedule": [
-        "before 10am on Tuesday",
-        "before 10am on Thursday"
-      ]
+      "minimumReleaseAge": "180 days"
     }
   ],
-  "prConcurrentLimit": 20,
-  "prHourlyLimit": 10,
-  "pre-commit": {
-    "enabled": true
-  },
+  "prConcurrentLimit": 0,
+  "prHourlyLimit": 0,
   "rebaseWhen": "behind-base-branch",
-  "semanticCommits": "enabled",
   "semanticCommitScope": "deps",
-  "semanticCommitType": "chore",
-  "separateMajorMinor": true,
-  "separateMultipleMajor": false,
   "timezone": "US/Eastern"
 }
