@@ -22,7 +22,9 @@
     "github>ppat/renovate-presets:automerge.json",
     "github>ppat/renovate-presets:ci-dependencies",
     "github>ppat/renovate-presets:ci-dev-tools",
-    "github>ppat/renovate-presets:ci-github-actions"
+    "github>ppat/renovate-presets:ci-github-actions",
+    "github>ppat/homelab-ops-ansible//.github/renovate/semantic-commit-scope",
+    "github>ppat/homelab-ops-ansible//.github/renovate/exceptions-min-release-age"
   ],
   "internalChecksFilter": "strict",
   "kubernetes": {
@@ -30,77 +32,8 @@
       "k3s/molecule/default/test-resources/.+\\.yaml$"
     ]
   },
-  "packageRules": [
-    {
-      "automerge": true,
-      "description": "stability required dependencies: patch versions",
-      "matchDatasources": [
-        "github-releases",
-        "pypi"
-      ],
-      "matchPackageNames": [
-        "ansible-core",
-        "fluxcd/flux2",
-        "k3s-io/k3s",
-        "kubernetes-sigs/kustomize"
-      ],
-      "matchUpdateTypes": [
-        "patch"
-      ],
-      "minimumReleaseAge": "7 days",
-      "platformAutomerge": true
-    },
-    {
-      "description": "stability required dependencies: minor versions",
-      "matchDatasources": [
-        "github-releases",
-        "pypi"
-      ],
-      "matchPackageNames": [
-        "ansible-core",
-        "fluxcd/flux2",
-        "kubernetes-sigs/kustomize"
-      ],
-      "matchUpdateTypes": [
-        "minor"
-      ],
-      "minimumReleaseAge": "30 days"
-    },
-    {
-      "description": "stability required dependencies: k3s minor versions",
-      "matchDatasources": [
-        "github-releases",
-        "pypi"
-      ],
-      "matchPackageNames": [
-        "k3s-io/k3s"
-      ],
-      "matchUpdateTypes": [
-        "minor"
-      ],
-      "minimumReleaseAge": "90 days"
-    },
-    {
-      "description": "stability required dependencies: major versions",
-      "matchDatasources": [
-        "github-releases",
-        "pypi"
-      ],
-      "matchPackageNames": [
-        "ansible-core",
-        "fluxcd/flux2",
-        "k3s-io/k3s",
-        "kubernetes-sigs/kustomize"
-      ],
-      "matchUpdateTypes": [
-        "major"
-      ],
-      "minimumReleaseAge": "180 days"
-    }
-  ],
   "prConcurrentLimit": 0,
   "prHourlyLimit": 0,
   "rebaseWhen": "behind-base-branch",
-  "semanticCommitScope": "deps",
   "timezone": "US/Eastern"
 }
