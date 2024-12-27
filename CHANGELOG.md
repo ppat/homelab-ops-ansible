@@ -2,6 +2,12 @@
 
 
 
+## [1.9.2](https://github.com/ppat/homelab-ops-ansible/compare/v1.9.1...v1.9.2) (2024-12-27)
+
+### 🐛 Enhancements + Bug Fixes
+
+* **k3s:** update digest nginx (67682bd -> 42e917a) ([#240](https://github.com/ppat/homelab-ops-ansible/issues/240)) ([e20f126](https://github.com/ppat/homelab-ops-ansible/commit/e20f1268b421f4c570e2610614e7611affc47769))
+
 ## [1.9.1](https://github.com/ppat/homelab-ops-ansible/compare/v1.9.0...v1.9.1) (2024-12-18)
 
 ### 🐛 Enhancements + Bug Fixes
