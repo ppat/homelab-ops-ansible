@@ -1,0 +1,47 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "packageRules": [
+    {
+      "matchFileNames": [
+        "archive/**"
+      ],
+      "semanticCommitScope": "archive"
+    },
+    {
+      "matchFileNames": [
+        "block_device/**"
+      ],
+      "semanticCommitScope": "block_device"
+    },
+    {
+      "matchFileNames": [
+        "configure/**"
+      ],
+      "semanticCommitScope": "configure"
+    },
+    {
+      "matchFileNames": [
+        "k3s/**"
+      ],
+      "semanticCommitScope": "k3s"
+    },
+    {
+      "matchFileNames": [
+        "os/**"
+      ],
+      "semanticCommitScope": "os"
+    },
+    {
+      "matchFileNames": [
+        "packages/**"
+      ],
+      "semanticCommitScope": "packages"
+    },
+    {
+      "matchFileNames": [
+        "raspberry_pi/**"
+      ],
+      "semanticCommitScope": "raspberry_pi"
+    }
+  ]
+}

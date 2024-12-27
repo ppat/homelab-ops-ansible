@@ -43,7 +43,10 @@ module.exports = {
         'deps',
         'release',
         'linters',
-        'other'
+        'other',
+        'renovate',
+        'dev-tools',
+        'github-actions'
       ]
     ],
     'scope-empty': [2, 'never'],

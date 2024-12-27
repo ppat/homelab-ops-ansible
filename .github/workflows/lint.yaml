@@ -31,6 +31,7 @@ jobs:
           - .shellcheckrc
           renovate:
           - .github/renovate.json
+          - .github/renovate/**
           ansible:
           - '**.yaml'
           - '**.yml'
@@ -139,9 +140,19 @@ jobs:
     - name: validate-renovate-config
       if: (success() || failure()) && (steps.changed-files-yaml.outputs.renovate_any_changed == 'true' || github.event_name == 'workflow_dispatch')
       shell: bash
+      # yamllint disable-line rule:indentation
       run: |
+        export NODE_OPTIONS="$NODE_OPTIONS --no-deprecation"
         npm install --no-fund --no-audit renovate
-        npx --yes --package renovate -- renovate-config-validator
+        echo "Validating renovate main configuration..."
+        echo ".github/renovate.json:"
+        npx --yes --package renovate -- renovate-config-validator .github/renovate.json | pr -t -o 4
+        echo
+        echo "Validating renovate sub configuration..."
+        for rc in $(find .github/renovate -type f -name '*.json' | sort); do
+          echo "${rc}:"
+          npx --yes --package renovate -- renovate-config-validator ${rc} | pr -t -o 4
+        done
 
     - name: ansible-lint
       if: (success() || failure()) && (steps.changed-files-yaml.outputs.ansible_any_changed == 'true' || github.event_name == 'workflow_dispatch')
