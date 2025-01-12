@@ -1,0 +1,9 @@
+.releaserc.js               linguist-detectable=false
+commitlint.config.js        linguist-detectable=false
+archive/**/*.yaml           linguist-detectable=true linguist-language=YAML
+block_device/**/*.yaml      linguist-detectable=true linguist-language=YAML
+configure/**/*.yaml         linguist-detectable=true linguist-language=YAML
+k3s/**/*.yaml               linguist-detectable=true linguist-language=YAML
+os/**/*.yaml                linguist-detectable=true linguist-language=YAML
+packages/**/*.yaml          linguist-detectable=true linguist-language=YAML
+raspberry_pi/**/*.yaml      linguist-detectable=true linguist-language=YAML
