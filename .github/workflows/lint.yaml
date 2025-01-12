@@ -1,6 +1,6 @@
 ---
 # yamllint disable rule:line-length
-name: Lint all
+name: lint
 
 # yamllint disable-line rule:truthy
 on:
@@ -12,9 +12,20 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  lint:
+  detect-changes:
+    outputs:
+      actions_any_changed: ${{ steps.changed-files-yaml.outputs.actions_any_changed }}
+      actions_all_changed_files: ${{ steps.changed-files-yaml.outputs.actions_all_changed_files}}
+      ansible_any_changed: ${{ steps.changed-files-yaml.outputs.ansible_any_changed }}
+      ansible_all_changed_files: ${{ steps.changed-files-yaml.outputs.ansible_all_changed_files}}
+      renovate_any_changed: ${{ steps.changed-files-yaml.outputs.renovate_any_changed }}
+      renovate_all_changed_files: ${{ steps.changed-files-yaml.outputs.renovate_all_changed_files}}
+      shellscripts_any_changed: ${{ steps.changed-files-yaml.outputs.shellscripts_any_changed }}
+      shellscripts_all_changed_files: ${{ steps.changed-files-yaml.outputs.shellscripts_all_changed_files}}
+      yaml_any_changed: ${{ steps.changed-files-yaml.outputs.yaml_any_changed }}
+      yaml_all_changed_files: ${{ steps.changed-files-yaml.outputs.yaml_all_changed_files}}
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
+    timeout-minutes: 5
     steps:
     - name: Checkout
       uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
@@ -28,16 +39,76 @@ jobs:
         files_yaml: |
           actions:
           - .github/workflows/**
-          - .shellcheckrc
-          renovate:
-          - .github/renovate.json
-          - .github/renovate/**
           ansible:
           - '**.yaml'
           - '**.yml'
           - '**.j2'
           - '!.github/**'
           - '!.pre-commit-config.yaml'
+          renovate:
+          - .github/renovate.json
+          - .github/renovate/**
+          shellscripts:
+          - '**.sh'
+          yaml:
+          - '**.yaml'
+
+  commit-messages:
+    if: ${{ github.event_name == 'pull_request' }}
+    uses: ppat/github-workflows/.github/workflows/lint-commit-messages.yaml@main
+    with:
+      git_ref: ${{ github.head_ref }}
+      fetch_depth: ${{ github.event.pull_request.commits }}
+      from: ${{ github.event.pull_request.head.sha }}~${{ github.event.pull_request.commits }}
+      to: ${{ github.event.pull_request.head.sha }}
+
+  github-actions:
+    needs: [detect-changes]
+    if: ${{ github.event_name == 'workflow_dispatch' || needs.detect-changes.outputs.actions_any_changed == 'true' }}
+    uses: ppat/github-workflows/.github/workflows/lint-github-actions.yaml@main
+    with:
+      git_ref: ${{ github.head_ref || github.ref }}
+      files: ${{ github.event_name == 'workflow_dispatch' && 'ALL' || needs.detect-changes.outputs.actions_all_changed_files }}
+
+  pre-commit:
+    uses: ppat/github-workflows/.github/workflows/lint-pre-commit.yaml@main
+    with:
+      git_ref: ${{ github.head_ref || github.ref }}
+
+  renovate-config-check:
+    needs: [detect-changes]
+    if: ${{ github.event_name == 'workflow_dispatch' || needs.detect-changes.outputs.renovate_any_changed == 'true' }}
+    uses: ppat/github-workflows/.github/workflows/lint-renovate-config-check.yaml@main
+    with:
+      git_ref: ${{ github.head_ref || github.ref }}
+      files: ${{ github.event_name == 'workflow_dispatch' && 'ALL' || needs.detect-changes.outputs.renovate_all_changed_files }}
+
+  shellcheck:
+    needs: [detect-changes]
+    if: ${{ github.event_name == 'workflow_dispatch' || needs.detect-changes.outputs.shellscripts_any_changed == 'true' }}
+    uses: ppat/github-workflows/.github/workflows/lint-shellcheck.yaml@main
+    with:
+      git_ref: ${{ github.head_ref || github.ref }}
+      files: ${{ github.event_name == 'workflow_dispatch' && 'ALL' || needs.detect-changes.outputs.shellscripts_all_changed_files }}
+
+  yaml:
+    needs: [detect-changes]
+    if: ${{ github.event_name == 'workflow_dispatch' || needs.detect-changes.outputs.yaml_any_changed == 'true' }}
+    uses: ppat/github-workflows/.github/workflows/lint-yaml.yaml@main
+    with:
+      git_ref: ${{ github.head_ref || github.ref }}
+      files: ${{ github.event_name == 'workflow_dispatch' && 'ALL' || needs.detect-changes.outputs.yaml_all_changed_files }}
+
+  ansible-lint:
+    needs: [detect-changes]
+    if: ${{ github.event_name == 'workflow_dispatch' || needs.detect-changes.outputs.ansible_any_changed == 'true' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+    - name: Checkout
+      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      with:
+        fetch-depth: 0
 
     - name: Setup poetry
       run: pipx install poetry==$POETRY_VERSION
@@ -51,112 +122,12 @@ jobs:
         python-version: '3.12'
         cache: 'poetry'
 
-    - name: Set up node
-      uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4
-      with:
-        node-version-file: '.node-version'
-        cache: 'npm'
-        cache-dependency-path: 'package-lock.json'
-
-    - name: Cache pre-commit hooks
-      uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57 # v4
-      with:
-        path: ~/.cache/pre-commit/
-        key: pre-commit|${{ env.pythonLocation }}|${{ hashFiles('.pre-commit-config.yaml') }}
-
     - name: Install python requirements
       run: |
         poetry --version
         poetry install --no-interaction
         poetry env info
 
-    - name: Install node packages
-      run: npm ci --no-fund --no-audit
-
-    - name: Install pre-commit hooks
-      run: poetry run pre-commit install --install-hooks --hook-type pre-commit
-
-    - name: check-added-large-files
-      run: poetry run pre-commit run --all-files --color=always check-added-large-files
-
-    - name: check-executables-have-shebangs
-      if: success() || failure()
-      run: poetry run pre-commit run --all-files --color=always check-executables-have-shebangs
-
-    - name: check-json
-      if: success() || failure()
-      run: poetry run pre-commit run --all-files --color=always check-json
-
-    - name: check-shebang-scripts-are-executable
-      if: success() || failure()
-      run: poetry run pre-commit run --all-files --color=always check-shebang-scripts-are-executable
-
-    - name: detect-private-key
-      if: success() || failure()
-      run: poetry run pre-commit run --all-files --color=always detect-private-key
-
-    - name: end-of-file-fixer
-      if: success() || failure()
-      run: poetry run pre-commit run --all-files --color=always end-of-file-fixer
-
-    - name: forbid-new-submodules
-      if: success() || failure()
-      run: poetry run pre-commit run --all-files --color=always forbid-new-submodules
-
-    - name: mixed-line-ending
-      if: success() || failure()
-      run: poetry run pre-commit run --all-files --color=always mixed-line-ending
-
-    - name: trailing-whitespace
-      if: success() || failure()
-      run: poetry run pre-commit run --all-files --color=always trailing-whitespace
-
-    - name: shellcheck
-      if: success() || failure()
-      run: poetry run pre-commit run --all-files --color=always shellcheck
-
-    - name: yamllint
-      if: success() || failure()
-      run: poetry run yamllint -c .yamllint --strict --format github .
-
-    - name: actionlint
-      if: (success() || failure()) && (steps.changed-files-yaml.outputs.actions_any_changed == 'true' || github.event_name == 'workflow_dispatch')
-      shell: bash
-      run: |
-        [[ "$RUNNER_ARCH" == "ARM64" ]] && export PKG_ARCH=arm64 || export PKG_ARCH=amd64
-        wget --quiet -c https://github.com/rhysd/actionlint/releases/download/v${ACTIONLINT_VERSION}/actionlint_${ACTIONLINT_VERSION}_linux_${PKG_ARCH}.tar.gz -O /tmp/actionlint.tar.gz
-        tar -xzf /tmp/actionlint.tar.gz -C /tmp
-        sudo install -o root -g root -m 0755 /tmp/actionlint /usr/local/sbin/actionlint
-        set -x
-        actionlint -shellcheck "shellcheck -c .shellcheckrc"
-      env:
-        # renovate: datasource=github-releases depName=rhysd/actionlint
-        ACTIONLINT_VERSION: "1.7.4"
-
-    - name: commitlint
-      if: (success() || failure()) && (github.event_name == 'pull_request')
-      run: npx commitlint --color --from ${{ github.event.pull_request.head.sha }}~${{ github.event.pull_request.commits }} --to ${{ github.event.pull_request.head.sha }} --verbose
-
-    - name: validate-renovate-config
-      if: (success() || failure()) && (steps.changed-files-yaml.outputs.renovate_any_changed == 'true' || github.event_name == 'workflow_dispatch')
-      shell: bash
-      # yamllint disable-line rule:indentation
-      run: |
-        export NODE_OPTIONS="$NODE_OPTIONS --no-deprecation"
-        npm install --no-fund --no-audit renovate
-        echo "Validating renovate main configuration..."
-        echo ".github/renovate.json:"
-        npx --yes --package renovate -- renovate-config-validator .github/renovate.json | pr -t -o 4
-        echo
-        echo "Validating renovate sub configuration..."
-        for rc in $(find .github/renovate -type f -name '*.json' | sort); do
-          echo "${rc}:"
-          npx --yes --package renovate -- renovate-config-validator ${rc} | pr -t -o 4
-        done
-
     - name: ansible-lint
-      if: (success() || failure()) && (steps.changed-files-yaml.outputs.ansible_any_changed == 'true' || github.event_name == 'workflow_dispatch')
-      env:
-        changes_output: ${{ toJson(steps.changed-files-yaml.outputs) }}
       run: |
         poetry run ansible-lint -c .ansible-lint -i .ansible-lint-ignore --skip-list=yaml --force-color .
