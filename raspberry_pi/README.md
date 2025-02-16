@@ -2,7 +2,7 @@
 
 ![raspberry_pi](https://github.com/ppat/homelab-ops-ansible/actions/workflows/test-raspberry_pi.yaml/badge.svg)
 
-This collection provides roles for provisioning Raspberry Pi devices.
+A collection for managing Raspberry Pi devices and their configurations. This collection handles device provisioning and kernel configuration.
 
 ## Roles
 

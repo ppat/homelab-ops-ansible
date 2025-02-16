@@ -1,12 +1,13 @@
 homelab_ops.block_device.select
 ===============================
 
-Selects a block device by filtering on matching fields. You can specify required matches under `include` and required non-matches under `exclude`. If multiple fields are specified, they are logically AND'd together.
+A role that identifies and selects block devices based on specified criteria. This role starts the storage provisioning workflow by finding appropriate devices for partitioning and filesystem creation.
 
-You can filter on any fields listed under the "Available output columns" section in `lsblk --help`, with a few exceptions:
+This role can be used independently but its more commonly used as part of `block_device.provision` workflow. This starts that workflow by:
 
-- All device fields are supported
-- Only a subset of partition/filesystem fields are supported (see [defaults/main.yaml](defaults/main.yaml) for the list of supported fields)
+1. Scanning available devices
+2. Filtering based on criteria
+3. Validating that there was at least 1 matching block device
 
 Requirements
 ------------

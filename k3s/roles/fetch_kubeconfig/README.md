@@ -1,9 +1,12 @@
 homelab_ops.k3s.fetch_kubeconfig
 ====================================
 
-Fetches a kubeconfig file from a remote node's location to a local location. This role:
-- Only fetches if the file does not already exist at the local location
-- Updates the references to the apiserver URL in the fetched file to refer to the remote node's hostname
+A role that manages kubeconfig retrieval from k3s clusters. This role completes the cluster access workflow by securely transferring and configuring cluster credentials.
+
+This role completes the k3s access workflow by:
+
+1. Fetches a kubeconfig file from a remote node's location to a local location (only if it does not already exist at the local location)
+2. Updates the references to the apiserver URL in the fetched file to refer to the remote node's hostname
 
 Requirements
 ------------

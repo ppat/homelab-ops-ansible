@@ -1,7 +1,9 @@
 homelab_ops.configure.cloud_init
 ================================
 
-Creates userdata and other cloud-init configuration files within the specified datasource location. The created userdata configuration does the following:
+A role that manages system initialization through cloud-init configuration. This role handles instance setup, user provisioning, and boot-time operations.
+
+This role manages system initialization by:
 
 - Creates a user who can SSH in using the specified authorized key
 - Sets the hostname and cloud-init instance ID to specified values

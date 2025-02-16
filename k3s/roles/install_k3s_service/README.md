@@ -1,15 +1,19 @@
 homelab_ops.k3s.install_k3s_service
 ===================================
 
-This role installs k3s on a host. It will:
+A role that installs and configures k3s nodes, managing cluster formation and node joining. This role handles initial node setup and cluster expansion.
 
-- Install k3s as a server or agent node with the requested configuration (node settings, private registry, kubelet, etc.)
-- If a server URL is provided, it will connect this k3s node to the Kubernetes cluster at that URL
+This role initiates the k3s deployment workflow by:
 
-This role is not intended for:
+1. Installing k3s with specified configuration
+2. Joining nodes to existing clusters when applicable
+3. Applying security hardening when enabled
+4. Expose metrics endpoints when enabled (for scraping by prometheus)
 
-- Updating or upgrading a host with an existing k3s installation (as that's best done by something like [system-upgrade-controller](https://docs.k3s.io/upgrades/automated))
-- Installing and/or configuring system software (especially configurations that require a restart) as those are best installed in the image that is used to build the host
+Not intended for:
+
+- Updating or upgrading existing k3s installations (use [system-upgrade-controller](https://docs.k3s.io/upgrades/automated))
+- Installing/configuring system software (handle during OS image baking or configuring host to boot)
 
 Requirements
 ------------
@@ -130,7 +134,7 @@ Pod Security Admission enforces security standards for pods in your cluster. To 
           warn-version: "latest"
         exemptions:
           namespaces:
-          - "kube-system"    # System components need privileged access
+          - "kube-system"      # System components need privileged access
           - "longhorn-system"  # Storage system needs special permissions
     ```
 
@@ -177,8 +181,8 @@ Example Playbook
 ----------------
 
 ```yaml
-# Installing a server node
-- hosts: k3s_servers
+# Cluster formation on first server node
+- hosts: "{{ [k3s_servers[0]] }}"
   roles:
     - role: homelab_ops.k3s.install_k3s_service
       vars:
@@ -196,14 +200,33 @@ Example Playbook
           expose_metrics: false
           local_kubeconfig: "~/.kube/config"
 
-# Installing an agent node
+# Remaining server nodes join the cluster
+- hosts: "{{ k3s_servers[1:] }}"
+  roles:
+    - role: homelab_ops.k3s.install_k3s_service
+      vars:
+        k3s:
+          version: "1.30.2+k3s1"
+          discovery_url: "https://{{ k3s_servers[0] }}:6443"
+          node:
+            type: server
+            config: "/path/to/server-config.yaml"
+          tokens:
+            server: "your-server-token"
+            agent: "your-agent-token"
+          hardening:
+            enabled: true
+          expose_metrics: false
+          local_kubeconfig: "~/.kube/config"
+
+# Installing an agent nodes
 - hosts: k3s_agents
   roles:
     - role: homelab_ops.k3s.install_k3s_service
       vars:
         k3s:
           version: "1.30.2+k3s1"
-          discovery_url: "https://k3s-server:6443"
+          discovery_url: "https://{{ k3s_servers[0] }}:6443"
           node:
             type: agent
             config: "/path/to/agent-config.yaml"

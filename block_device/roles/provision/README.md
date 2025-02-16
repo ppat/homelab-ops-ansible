@@ -1,12 +1,7 @@
 homelab_ops.block_device.provision
 ==================================
 
-Provisions a block device's partitions and filesystems:
-- Selects a matching block device based on given criteria using [homelab_ops.block_device.select](https://github.com/ppat/homelab-ops-ansible/tree/main/block_device/roles/select)
-- If and only if that block device has no partitions, then:
-  - Creates partitions using [homelab_ops.block_device.partition](https://github.com/ppat/homelab-ops-ansible/tree/main/block_device/roles/partition)
-  - Creates filesystems using [homelab_ops.block_device.filesystem](https://github.com/ppat/homelab-ops-ansible/tree/main/block_device/roles/filesystem)
-  - Configures any requested bind mounts
+A role that orchestrates complete block device setup by coordinating device selection, partitioning, and filesystem creation. This role brings together all block_device components to provision storage.
 
 Requirements
 ------------
@@ -14,9 +9,9 @@ Requirements
 - Ansible 2.15 or newer
 - This role must be run as root
 - The following system packages must be installed:
-  - dosfstools (if created vfat filesystems)
-  - btrfs-progs (if created btrfs filesystems)
-  - e2fsprogs (if created ext4 filesystems)
+  - dosfstools (if creating vfat filesystems)
+  - btrfs-progs (if creating btrfs filesystems)
+  - e2fsprogs (if creating ext4 filesystems)
   - parted
 
 Role Variables
@@ -57,6 +52,7 @@ Dependencies
 ------------
 
 This role depends on the following roles:
+
 - homelab_ops.block_device.select
 - homelab_ops.block_device.partition
 - homelab_ops.block_device.filesystem

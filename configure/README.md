@@ -2,7 +2,7 @@
 
 ![configure](https://github.com/ppat/homelab-ops-ansible/actions/workflows/test-configure.yaml/badge.svg)
 
-This collection provides roles for configuring various OS settings and services as part of homelab operations.
+A collection for managing system configuration and boot processes. This collection handles initial system setup, service management, and state persistence.
 
 ## Roles
 

@@ -1,7 +1,21 @@
 homelab_ops.block_device.ramdisk
 ================================
 
-Creates a RAM disk.
+A role that creates and manages RAM-based filesystems for temporary storage. This role provides high-performance storage for build processes, caching, and testing.
+
+This role enables temporary storage by:
+
+1. Allocating system memory
+2. Creating mount points
+3. Managing storage state
+4. Handling cleanup
+
+Common use cases:
+
+- Package compilation workspace
+- Temporary test environments
+- High-speed cache storage
+- Build process acceleration
 
 Requirements
 ------------

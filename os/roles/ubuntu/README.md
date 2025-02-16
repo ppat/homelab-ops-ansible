@@ -1,16 +1,20 @@
 homelab_ops.os.ubuntu
 =====================
 
-This role configures an Ubuntu OS by ensuring that:
+A role that configures Ubuntu systems for image-based deployments. This role prepares Ubuntu installations with package management, kernel configuration, and system optimization.
+
+This role prepares Ubuntu systems by:
+
 - All necessary packages are installed
 - Unnecessary packages and services are not present
 - All packages are upgraded to the latest version
 - Required kernel modules are included in initrd/initramfs
 - Required kernel parameters (sysctl) are configured
 
-As this role is generally expected to be used to build an OS image, it does not perform the following:
+Not intended for:
+
 - Boot and/or cloud-init configuration (as that is specific to an installation)
-- Applying the kernel parameters (sysctl) in the currently running kernel (as a restart is expected after loading an OS image to a disk)
+- Applying kernel parameters (sysctl) in the currently running kernel (as a restart is expected after loading an OS image to a disk)
 
 Requirements
 ------------
@@ -38,6 +42,7 @@ Dependencies
 ------------
 
 This role depends on the following roles:
+
 - homelab_ops.packages.apt_install
 - homelab_ops.packages.apt_uninstall
 

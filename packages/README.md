@@ -2,7 +2,7 @@
 
 ![packages](https://github.com/ppat/homelab-ops-ansible/actions/workflows/test-packages.yaml/badge.svg)
 
-This collection provides roles for managing packages as part of homelab operations. It includes roles for installing and uninstalling APT packages, as well as installing packages from a URL.
+A collection for managing software packages in immutable infrastructure environments. This collection handles package installation and removal for system provisioning and image building.
 
 ## Roles
 

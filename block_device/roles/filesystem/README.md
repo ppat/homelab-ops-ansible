@@ -1,7 +1,14 @@
 homelab_ops.block_device.filesystem
 ===================================
 
-Creates filesystem(s) within an empty (e.g., newly created) partition. This role is intended for use on newly created partitions and will skip existing filesystems. It cannot and should not be used to modify existing filesystems.
+A role that creates and configures filesystems on partitioned block devices. This role completes the storage provisioning workflow by preparing partitions for data storage.
+
+This role can be used independently but its more commonly used as part of `block_device.provision` workflow. This role completes that workflow by:
+
+1. Creating filesystems on partitions
+2. Configuring mount points
+3. Setting up advanced features
+4. Preparing for system use
 
 Requirements
 ------------

@@ -2,7 +2,7 @@
 
 ![archive](https://github.com/ppat/homelab-ops-ansible/actions/workflows/test-archive.yaml/badge.svg)
 
-This collection provides roles for managing archives as part of homelab operations, specifically for unpacking and syncing OS images onto filesystems.
+A collection for managing OS image deployment through archive operations. This collection handles initial provisioning and updates of filesystem content from archive images.
 
 ## Roles
 

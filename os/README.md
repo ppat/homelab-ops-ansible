@@ -2,7 +2,7 @@
 
 ![os](https://github.com/ppat/homelab-ops-ansible/actions/workflows/test-os.yaml/badge.svg)
 
-This collection provides roles for configuring operating systems, primarily used during the process of building an OS image.
+A collection for building and configuring operating system images. This collection prepares base images for immutable infrastructure deployments.
 
 ## Roles
 

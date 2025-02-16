@@ -1,7 +1,12 @@
 homelab_ops.configure.fstab
 ===========================
 
-Generates an `/etc/fstab` file from the filesystems currently mounted under the specified root directory.
+A role that manages filesystem mount configuration through fstab generation. This role enables system boot by configuring persistent mount points.
+
+This role manages filesystem mounting by:
+
+1. Identifying mounted filesystems
+2. Generating fstab and writing it to `etc/fstab` under requested location
 
 Requirements
 ------------

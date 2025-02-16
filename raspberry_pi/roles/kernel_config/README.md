@@ -1,7 +1,7 @@
 homelab_ops.raspberry_pi.kernel_config
 ======================================
 
-Creates the kernel `config.txt` file for a Raspberry Pi device.
+A role that manages device configuration for the kernel of Raspberry Pi devices. This role handles config.txt settings for hardware features.
 
 Requirements
 ------------

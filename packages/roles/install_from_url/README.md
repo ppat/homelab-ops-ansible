@@ -1,9 +1,16 @@
 homelab_ops.packages.install_from_url
 =====================================
 
-Installs a package from a URL. The package may be in an archive or binary format.
+A role that installs packages from URLs in archive or binary formats. This role handles package downloads and installation for image building and system provisioning.
 
-This role is intended for use in building immutable infrastructure (mostly images or recently provisioned infrastructure), so it will not upgrade the given package if it already exists.
+This role manages URL-based installation by:
+
+1. Validating package sources
+2. Downloading content
+3. Installing packages
+4. Setting up permissions
+
+Not intended for upgrading existing packages.
 
 Requirements
 ------------

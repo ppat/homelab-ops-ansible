@@ -47,35 +47,17 @@ These documents will help you align your contributions with our project's goals 
 
 - Use `.yaml` extension for all collection and role files
 - Use `.yml` extension only for molecule tests (molecule requirement)
-- Follow collection structure as defined in `galaxy.yml`
 
-### Key Style Rules
+### Style Rules
 
-- Indentation: 2 spaces
-- Line length: max 200 characters
-- YAML file must start with `---`
-- Use consistent spacing:
-  - Max 1 space inside braces/brackets
-  - Require space after comment marker
-  - Max 2 consecutive empty lines
-
-For complete style rules, refer to:
+Refer to:
 
 - `.ansible-lint` - Ansible linting configuration
 - `.yamllint` - YAML syntax and style rules
 
 ### VSCode Integration
 
-We provide pre-configured VSCode settings that enforce our style guidelines and integrate with our tools:
-
-Required Extensions (will be prompted to install):
-
-- `redhat.ansible` - Ansible language support and linting
-- `redhat.vscode-yaml` - YAML language support with schema validation
-- `timonwong.shellcheck` - Shell script linting
-- `ms-python.python` - Python language support (needed for ansible-lint)
-- `streetsidesoftware.code-spell-checker` - Spell checking in code and docs
-- `editorconfig.editorconfig` - EditorConfig support for consistent styling
+We provide pre-configured VSCode settings to ease meeting our style guidelines as well as useful extensions for ansible development.
 
 To use these settings:
 
