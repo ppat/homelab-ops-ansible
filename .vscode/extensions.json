@@ -1,0 +1,10 @@
+{
+  "recommendations": [
+    "redhat.ansible",
+    "redhat.vscode-yaml",
+    "timonwong.shellcheck",
+    "ms-python.python",
+    "streetsidesoftware.code-spell-checker",
+    "editorconfig.editorconfig"
+  ]
+}

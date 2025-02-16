@@ -75,6 +75,31 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GH_RELEASE_TOKEN }}
       run: npx semantic-release
 
+    - name: Transform README links for ansible-galaxy
+      # yamllint disable-line rule:indentation
+      run: |
+        # Find all README.md files in collection directories
+        find . -type f -name "README.md" -not -path "./archive/*" | while read -r file; do
+          echo "Transforming links in $file..."
+          # Get the relative path from the file to the repo root
+          rel_path=$(dirname "$file" | sed 's/^\.\///')
+
+          # Create a backup of the original file
+          cp "$file" "${file}.bak"
+
+          # Replace relative paths with absolute GitHub raw content URL
+          # Handle paths starting with ./ or ../
+          sed -i -E 's@(\[.*\])\((\.\.?/)+@\1(https://raw.githubusercontent.com/ppat/homelab-ops-ansible/refs/heads/main/@g' "$file"
+
+          # Handle paths that don't start with ./ but are relative to current directory
+          sed -i -E "s@(\[.*\])\(([^/][^:)]+)@\1(https://raw.githubusercontent.com/ppat/homelab-ops-ansible/refs/heads/main/$rel_path/\2@g" "$file"
+
+          # Clean up any double slashes in URLs (except for https://)
+          sed -i -E 's@([^:])//+@\1/@g' "$file"
+
+          echo "Transformed $file"
+        done
+
     - name: Build collections
       run: |
         # no dependencies on homelab_ops collections
