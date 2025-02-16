@@ -1,23 +1,55 @@
 homelab_ops.k3s.install_flux_service
 ====================================
 
-This installs flux on the given kubernetes cluster. It will,
-- install required CLIs (`flux`, `kustomize`) on the host
-- install the specified flux version on the kubernetes cluster (if the cluster does not already have flux running on it)
+This role installs Flux on the given Kubernetes cluster. It will:
+- Install required CLIs (`flux`, `kustomize`) on the host
+- Install the specified Flux version on the Kubernetes cluster (if the cluster does not already have Flux running on it)
 
-This is not intended for updating or upgrading flux. That should be done through changes to the git (or OCI) source that flux is connected to.
+This role is not intended for updating or upgrading Flux. That should be done through changes to the Git (or OCI) source that Flux is connected to.
 
 Requirements
 ------------
 
-- Must be run as root.
+- Ansible 2.15 or newer
+- This role must be run as root
+
+Role Variables
+--------------
+
+| Variable | Default | Description |
+| --- | --- | --- |
+| `flux.version` | undefined | The version of Flux to install |
+| `flux.local_kubeconfig` | undefined | Path to the kubeconfig file for accessing the cluster |
+| `kustomize.version` | undefined | The version of Kustomize to install |
+
+Dependencies
+------------
+
+None
 
 Example Playbook
 ----------------
 
-See [Molecule test](../../molecule/default/converge.yml).
+```yaml
+- hosts: k3s_servers
+  roles:
+    - role: homelab_ops.k3s.install_flux_service
+      vars:
+        flux:
+          version: "2.4.0"
+          local_kubeconfig: "~/.kube/config"
+        kustomize:
+          version: "5.4.1"
+```
+
+See the [Molecule test playbook](../../molecule/default/converge.yml) and the [GitHub Actions workflow](../../../.github/workflows/test-k3s.yaml) for end-to-end examples.
 
 License
 -------
 
 AGPL-3.0-only
+
+Author Information
+------------------
+
+This role was created by the homelab-ops team.

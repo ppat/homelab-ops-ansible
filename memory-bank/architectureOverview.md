@@ -45,7 +45,7 @@ graph LR
     fstab
   end
 
-  subgraph k3s 
+  subgraph k3s
     fetch_kubeconfig --> install_k3s_service
     install_flux_service
   end
@@ -109,6 +109,7 @@ The Ansible collections and roles are designed to meet the project's goals as ou
 The repository uses GitHub Actions for CI/CD. Key workflows:
 
 - **Molecule Tests**: Triggered on pull requests, runs Molecule tests for affected roles
+
   ```mermaid
   graph LR
     PR[Pull Request] --> Lint[Ansible Lint]
@@ -117,6 +118,7 @@ The repository uses GitHub Actions for CI/CD. Key workflows:
   ```
 
 - **Release**: Triggered on pushes to main branch, publishes updated collections to Ansible Galaxy
+
   ```mermaid
   graph LR
     Push[Push to main] --> Release[Publish to Galaxy]
@@ -128,8 +130,8 @@ Refer to the `.github/workflows` directory for details on CI/CD workflow configu
 
 The collections and roles have minimal external dependencies to ensure ease of use and compatibility:
 
-- Ansible 2.9 or newer
-- Python 3.6 or newer
+- Ansible 2.15 or newer
+- Python 3.10 or newer
 - Specific OS versions and packages as noted in individual role README files
 
 Python dependencies for development and testing are managed via `poetry` and defined in `pyproject.toml`.

@@ -1,29 +1,47 @@
 # Decision Log
 
-## 2/15/2025 - Initialize Memory Bank
-- **Decision:** Initialize a new Memory Bank for the project to support architectural guidance and documentation.
-- **Rationale:** Establishing a Memory Bank early will enable capturing key context, decisions, and progress as the project evolves.
+## Key Architectural Decisions
 
-## 2/16/2025 - Create Architecture Overview
-- **Decision:** Create an architectureOverview.md file to visually and textually summarize the key components, organization, dependencies, and alignment with project goals.
-- **Rationale:** Providing a clear architectural overview will facilitate shared understanding, enable more targeted analysis, and serve as a useful reference point for the team.
+### Documentation Organization Strategy
+- **Decision:** Link Project Brief and Architecture Overview in CONTRIBUTING.md but not in README.md
+- **Rationale:** This approach:
+  - Keeps README.md focused on new users and getting started
+  - Provides contributors with essential context in CONTRIBUTING.md
+  - Ensures technical depth is available where most relevant
+  - Maintains clear separation between user and contributor documentation
 
-## 2/16/2025 - Refine Architecture Overview Based on Feedback
-- **Decision:** Update the architectureOverview.md file to address the user's feedback and more accurately capture the purposes, relationships, and use cases of the Ansible collections.
-- **Rationale:** Incorporating the user's insights will result in a more precise and meaningful architectural overview that reflects the true nature and goals of the project.
+### K3s Security Configuration
+- **Decision:** Use baseline Pod Security Admission configuration with specific namespace exemptions
+- **Rationale:** Provides practical security that:
+  - Balances security with usability
+  - Accommodates essential system components
+  - Reflects real-world deployment needs
+  - Maintains compatibility with common cluster components
 
-## 2/16/2025 - Finalize Architecture Overview
-- **Decision:** Finalize the architectureOverview.md file and use it as the basis for planning the next steps in the project.
-- **Rationale:** With the user's approval, the finalized architecture overview provides a comprehensive and accurate representation of the project's architecture.
+### K3s Metrics Strategy
+- **Decision:** Configure metrics exposure specifically for Prometheus integration via kube-prometheus-stack
+- **Rationale:** This approach:
+  - Provides clear purpose for metrics exposure
+  - Enables standard monitoring integration
+  - Aligns with common operational practices
+  - Considers security implications
 
-## 2/16/2025 - Begin Detailed Implementation Review
-- **Decision:** Start the detailed implementation review by examining the repository structure, codebase organization, and each collection and role in depth.
-- **Rationale:** A thorough analysis of the codebase will help identify opportunities for optimization, refactoring, and adherence to best practices.
+## Implementation Decisions Pending Action
+These decisions are based on findings detailed in [Implementation Review Findings](implementationReviewFindings.md):
 
-## 2/16/2025 - Complete Detailed Implementation Review
-- **Decision:** Document the findings, recommendations, and potential improvements for all collections and roles in the implementationReviewFindings.md file.
-- **Rationale:** Thoroughly reviewing each collection and its roles helps identify areas for optimization, refactoring, and adherence to best practices. Documenting the findings ensures alignment with the project's architecture, goals, and principles.
+### Role Consolidation
+Reference: [Specific Findings and Recommendations](implementationReviewFindings.md#specific-findings-and-recommendations)
+- **Decision:** Merge similar functionality in roles:
+  - `apt_install` and `apt_uninstall` roles ([packages Collection](implementationReviewFindings.md#packages-collection))
+  - `partition` and `filesystem` roles ([block_device Collection](implementationReviewFindings.md#block_device-collection))
+  - `kernel_cmdline` and `kernel_config` roles ([raspberry_pi Collection](implementationReviewFindings.md#raspberry_pi-collection))
+- **Rationale:** Improves maintainability and reduces code duplication
 
-## 2/16/2025 - Save Implementation Review Findings for Later Action
-- **Decision:** Save the implementation review findings in the Memory Bank for future reference and action, as the next task or conversation will focus on a different aspect of the project.
-- **Rationale:** Prioritizing the implementation review findings for later action allows the project to focus on other high-priority tasks while ensuring the findings are captured and available for future implementation.
+### Testing Enhancement
+Reference: [Testing Coverage and Effectiveness](implementationReviewFindings.md#testing-coverage-and-effectiveness)
+- **Decision:** Expand Molecule testing coverage for:
+  - `unpack` role: Additional scenarios and edge cases
+  - `provision` role: More hardware configurations
+  - `fstab` role: Various configuration scenarios
+- **Rationale:** Ensures reliability across different use cases
+
