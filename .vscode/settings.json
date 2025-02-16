@@ -28,5 +28,9 @@
   "[shellscript]": {
     "editor.detectIndentation": false,
     "editor.indentSize": 2
-  }
+  },
+  "debug.javascript.defaultRuntimeExecutable": {
+    "pwa-node": "/home/coder/.local/share/mise/shims/node"
+  },
+  "shellcheck.executablePath": "/home/coder/.local/share/mise/shims/shellcheck"
 }
