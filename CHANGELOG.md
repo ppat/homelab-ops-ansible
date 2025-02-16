@@ -2,6 +2,27 @@
 
 
 
+## [1.10.0](https://github.com/ppat/homelab-ops-ansible/compare/v1.9.2...v1.10.0) (2025-02-16)
+
+### ✨ Features
+
+* **configure:** update community.general (10.1.0 -> 10.2.0) ([#250](https://github.com/ppat/homelab-ops-ansible/issues/250)) ([c6aa3c2](https://github.com/ppat/homelab-ops-ansible/commit/c6aa3c2422e589582414a1662b5f50a068670c65))
+* **configure:** update community.general (10.2.0 -> 10.3.0) ([#262](https://github.com/ppat/homelab-ops-ansible/issues/262)) ([d27fc04](https://github.com/ppat/homelab-ops-ansible/commit/d27fc04f7849b16c998d54866fae78668fff57e5))
+* create Documentation for Collections and Roles ([#279](https://github.com/ppat/homelab-ops-ansible/issues/279)) ([7f28a11](https://github.com/ppat/homelab-ops-ansible/commit/7f28a11035447abcc6e606c49c822480afaa85ff))
+
+### 🐛 Enhancements + Bug Fixes
+
+* **configure:** update ansible-core (2.18.1 -> 2.18.2) ([#270](https://github.com/ppat/homelab-ops-ansible/issues/270)) ([2bcbcaa](https://github.com/ppat/homelab-ops-ansible/commit/2bcbcaa77c46e29e02de4107a4db5af27eacaf71))
+* **configure:** update community.general (10.3.0 -> 10.3.1) ([#273](https://github.com/ppat/homelab-ops-ansible/issues/273)) ([dc79625](https://github.com/ppat/homelab-ops-ansible/commit/dc7962508ca6810b94057ca7dbf985e0c213009f))
+* **k3s:** update digest nginx (0a399eb -> bc2f6a7) ([#271](https://github.com/ppat/homelab-ops-ansible/issues/271)) ([8c39181](https://github.com/ppat/homelab-ops-ansible/commit/8c391811949153c50008a1d64c851247bfc4dc55))
+* **k3s:** update digest nginx (42e917a -> 0a399eb) ([#257](https://github.com/ppat/homelab-ops-ansible/issues/257)) ([d85c641](https://github.com/ppat/homelab-ops-ansible/commit/d85c6413cabd092bf2dc05dcf83f05eefc8c2e04))
+* **k3s:** update digest nginx (bc2f6a7 -> 9173428) ([#272](https://github.com/ppat/homelab-ops-ansible/issues/272)) ([a51190f](https://github.com/ppat/homelab-ops-ansible/commit/a51190f195faf34f1b7413e9bb77ebc26be2d989))
+
+### 🛠 Improvements
+
+* build memory bank ([41b217a](https://github.com/ppat/homelab-ops-ansible/commit/41b217a28704bfbec6da1ace464dbe47af1ec052))
+* streamline memory bank ([055baee](https://github.com/ppat/homelab-ops-ansible/commit/055baeebcef4f2be670e909af7d77cb0e143eeed))
+
 ## [1.9.2](https://github.com/ppat/homelab-ops-ansible/compare/v1.9.1...v1.9.2) (2024-12-27)
 
 ### 🐛 Enhancements + Bug Fixes
