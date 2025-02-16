@@ -78,8 +78,8 @@ jobs:
     - name: Transform README links for ansible-galaxy
       # yamllint disable-line rule:indentation
       run: |
-        # Find all README.md files in collection directories
-        find . -type f -name "README.md" -not -path "./archive/*" | while read -r file; do
+        # Find all README.md files in collection directories, excluding node_modules
+        find . -type f -name "README.md" -not -path "./node_modules/*" | while read -r file; do
           echo "Transforming links in $file..."
           # Get the relative path from the file to the repo root
           rel_path=$(dirname "$file" | sed 's/^\.\///')
