@@ -1,11 +1,14 @@
 homelab_ops.packages.apt_install
 ================================
 
-Installs one or more APT packages if not already installed. Additionally, this role can configure any required APT repositories that need to be added prior to installation.
+A role that installs APT packages and configures repositories for immutable infrastructure. This role optimizes package installation for image building or first-boot scenarios.
 
-This role is intended for use in building immutable infrastructure (i.e., building images or installing on newly provisioned infrastructure). Therefore, it will not upgrade packages if they already exist. In these intended use cases, this role will run faster than directly using the [ansible.builtin.apt](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/apt_module.html) module, minimizing image build or first-boot times.
+This role manages APT packages by:
 
-For upgrading packages, please use the [ansible.builtin.apt](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/apt_module.html) module directly.
+1. Configuring required apt repositories, if required
+2. Installing specified packages
+
+Not intended for upgrading existing packages. For upgrades, use the [ansible.builtin.apt](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/apt_module.html) module directly. It will not upgrade packages if they already exist. In these intended use cases, this role will run faster than directly using the [ansible.builtin.apt](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/apt_module.html) module, minimizing image build or first-boot times.
 
 Requirements
 ------------

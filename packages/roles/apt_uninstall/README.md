@@ -1,11 +1,14 @@
 homelab_ops.packages.apt_uninstall
 ==================================
 
-Provides the capability to uninstall APT packages. Unlike the [ansible.builtin.apt](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/apt_module.html) module, which simply removes APT packages, this role provides the ability to:
+A role that removes APT packages and manages related services and configurations. This role extends basic package removal with service management and reinstallation control.
 
-- Stop any running systemd services (or timers) before removing packages
-- Clean up any directories that are no longer required
-- Prevent re-installation, if necessary
+This role manages package removal by:
+
+1. Stopping related services prior to removing the package
+2. Removing packages
+3. Cleaning up directories that are no longer required
+4. Preventing reinstallation, if desired
 
 Requirements
 ------------

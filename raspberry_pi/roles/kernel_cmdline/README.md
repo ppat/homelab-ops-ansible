@@ -1,7 +1,12 @@
 homelab_ops.raspberry_pi.kernel_cmdline
 =======================================
 
-Configures the kernel command line (`cmdline.txt`) of a Raspberry Pi device.
+A role that manages kernel boot parameters for Raspberry Pi devices. This role handles cmdline.txt configuration for system boot and root filesystem access.
+
+This role manages boot configuration by:
+
+1. Setting kernel parameters
+2. Configuring root filesystem for the kernel
 
 Requirements
 ------------

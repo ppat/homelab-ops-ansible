@@ -2,7 +2,14 @@
 
 ![k3s](https://github.com/ppat/homelab-ops-ansible/actions/workflows/test-k3s.yaml/badge.svg)
 
-This collection provides roles for performing the initial setup of a k3s cluster, including installing k3s on server and agent nodes, fetching the kubeconfig, and installing Flux CD.
+A collection for deploying and managing k3s clusters with GitOps capabilities through Flux CD. This collection provides roles for initial cluster setup, node management, and GitOps controller installation.
+
+This collection completes the infrastructure provisioning workflow by:
+
+1. Installing k3s on server and agent nodes
+2. Configuring high availability when multiple servers are present
+3. Setting up Flux CD for GitOps-based management
+4. Facilitating cluster access through kubeconfig retrieval
 
 ## Roles
 

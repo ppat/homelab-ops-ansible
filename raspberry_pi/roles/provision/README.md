@@ -1,7 +1,9 @@
 homelab_ops.raspberry_pi.provision
 ==================================
 
-Provisions a Raspberry Pi device by:
+A role that orchestrates complete Raspberry Pi device setup. This role coordinates multiple collections to handle storage, boot configuration, and system initialization.
+
+This role orchestrates device setup by:
 
 - Selecting a block device based on given criteria
 - Creating partitions and filesystems if the block device is empty
@@ -23,7 +25,7 @@ Role Variables
 | Variable | Default | Description |
 | --- | --- | --- |
 | `provision.block_device.additional_bind_mounts` | `[]` | A list of additional bind mounts to configure |
-| `provision.block_device.partitions` | `{}` | A dictionary of partitions to create, with keys being the partition name and values being a dictionary of partition options |
+| `provision.block_device.partitions` | `{}` | A dictionary of partitions to create |
 | `provision.block_device.root_mount_point` | undefined | The path where the root filesystem will be mounted |
 | `provision.block_device.selector` | `{}` | Criteria for selecting the block device to provision |
 | `provision.block_device.size_unit` | undefined | The unit to use for partition sizes (e.g., `MiB`, `GiB`) |

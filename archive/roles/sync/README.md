@@ -1,9 +1,13 @@
 homelab_ops.archive.sync
 ========================
 
-Syncs the content of an archive (such as an OS image) onto a filesystem path. If the filesystem path contains a previous version of that archive, only the changed files from the archive are synced onto the filesystem.
+A role that updates filesystem content from archives using efficient change detection. This role enables incremental OS image updates while preserving filesystem features.
 
-The archive is not directly unpacked to the target filesystem. Instead, it is unpacked to a ramdisk, and then only the differing files (based on checksums) are rsync'd onto the target filesystem. This enables you to release updates from an archive while also making use of the target filesystem's various features (by only writing the changed, relevant content). For example, this can help you avoid unnecessary copy-on-write activity for btrfs filesystems.
+This role updates OS images by:
+
+1. Staging content in ramdisk during unpacking
+2. Detecting changed files compared to target filesystem path
+3. Syncing only the changed or newer files to the target
 
 Requirements
 ------------

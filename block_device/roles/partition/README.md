@@ -1,7 +1,16 @@
 homelab_ops.block_device.partition
 ==================================
 
-Creates partitions within an empty block device. This role is intended for use on empty block devices and will skip devices with existing partitions. It cannot and should not be used to modify existing partition configurations or create new partitions within a partially used block device.
+A role that creates and configures partitions on empty block devices. This role continues the storage provisioning workflow by preparing devices for filesystem creation.
+
+This role can be used independently but its more commonly used as part of `block_device.provision` workflow. This role continues that workflow by:
+
+1. Creating partition tables
+2. Configuring partitions
+3. Setting partition flags
+4. Preparing for filesystem creation
+
+Not intended for modifying existing partition configurations or creating new partitions within partially used block devices.
 
 Requirements
 ------------

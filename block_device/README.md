@@ -2,7 +2,13 @@
 
 ![block_device](https://github.com/ppat/homelab-ops-ansible/actions/workflows/test-block_device.yaml/badge.svg)
 
-This collection provides roles for managing block devices as part of homelab operations. It includes roles for selecting block devices, creating partitions and filesystems, and creating RAM disks.
+A collection for managing block devices, partitions, and filesystems. This collection provides the storage layer for OS image deployment and system provisioning.
+
+This collection enables the storage provisioning workflow by:
+
+1. Selecting target block device by its characteristics
+2. Creating partitions and filesystems on that selected block device
+3. Managing mount points
 
 ## Roles
 

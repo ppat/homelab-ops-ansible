@@ -1,11 +1,15 @@
 homelab_ops.k3s.install_flux_service
 ====================================
 
-This role installs Flux on the given Kubernetes cluster. It will:
-- Install required CLIs (`flux`, `kustomize`) on the host
-- Install the specified Flux version on the Kubernetes cluster (if the cluster does not already have Flux running on it)
+A role that installs Flux CD on k3s clusters, enabling GitOps workflows. This role completes the cluster setup by adding declarative configuration management.
 
-This role is not intended for updating or upgrading Flux. That should be done through changes to the Git (or OCI) source that Flux is connected to.
+This role completes the k3s deployment workflow by:
+
+1. Installing required CLIs (flux, kustomize)
+2. Deploying Flux controllers and CRDs
+3. Preparing the cluster for GitOps-based management
+
+Not intended for updating or upgrading Flux. That should be done through changes to the Git (or OCI) source that Flux is connected to.
 
 Requirements
 ------------

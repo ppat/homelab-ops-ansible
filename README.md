@@ -2,7 +2,7 @@
 
 ![lint](https://github.com/ppat/homelab-ops-ansible/actions/workflows/lint.yaml/badge.svg)
 
-A suite of Ansible collections designed for efficient infrastructure automation. These collections focus on immutable infrastructure patterns and are optimized for homelab environments while being robust enough for production use.
+A suite of Ansible collections designed for efficient infrastructure automation. These collections focus on immutable infrastructure patterns and are geared towards a homelab environments while being robust enough for production use.
 
 ## Core Principles
 
@@ -16,11 +16,11 @@ A suite of Ansible collections designed for efficient infrastructure automation.
 | Collection | Capabilities | Status |
 |------------|-------------|---------|
 | [🔧 block_device](block_device/) | - Automated block device selection<br>- Partition management<br>- Filesystem creation<br>- RAM disk setup | ![block_device](https://github.com/ppat/homelab-ops-ansible/actions/workflows/test-block_device.yaml/badge.svg) |
-| [⚙️ configure](configure/) | - Ansible environment setup<br>- Cloud-init configuration<br>- System configuration (fstab, etc.)<br>- Service configuration | ![configure](https://github.com/ppat/homelab-ops-ansible/actions/workflows/test-configure.yaml/badge.svg) |
-| [☸️ k3s](k3s/) | - Automated k3s cluster deployment<br>- Multi-node cluster setup<br>- Flux CD integration<br>- Kubeconfig management | ![k3s](https://github.com/ppat/homelab-ops-ansible/actions/workflows/test-k3s.yaml/badge.svg) |
-| [💻 os](os/) | - OS configuration and optimization<br>- System settings management | ![os](https://github.com/ppat/homelab-ops-ansible/actions/workflows/test-os.yaml/badge.svg) |
-| [📦 packages](packages/) | - Package installation/removal<br>- URL-based package deployment<br>- Architecture-specific handling | ![packages](https://github.com/ppat/homelab-ops-ansible/actions/workflows/test-packages.yaml/badge.svg) |
-| [🥧 raspberry_pi](raspberry_pi/) | - Kernel configuration<br>- Boot parameter management<br>- Pi-specific optimizations | ![raspberry_pi](https://github.com/ppat/homelab-ops-ansible/actions/workflows/test-raspberry_pi.yaml/badge.svg) |
+| [⚙️ configure](configure/) | - Cloud-init configuration<br>- Fstab configuration | ![configure](https://github.com/ppat/homelab-ops-ansible/actions/workflows/test-configure.yaml/badge.svg) |
+| [☸️ k3s](k3s/) | - Automated k3s cluster node deployment<br>- Multi-node cluster setup<br>- Flux CD installation<br>- Kubeconfig extraction | ![k3s](https://github.com/ppat/homelab-ops-ansible/actions/workflows/test-k3s.yaml/badge.svg) |
+| [💻 os](os/) | - Prepare an OS with user specified set of packages<br>- Upgrade all packages to latest<br/>- Optional kernel upgrade<br/>- Tune kernel settings (`sysctl`)<br/>- Configure kernel module loading<br/>- Update initramfs | ![os](https://github.com/ppat/homelab-ops-ansible/actions/workflows/test-os.yaml/badge.svg) |
+| [📦 packages](packages/) | - Package installation/removal (with `aptitude` or from URL)<br>- Prevent reinstallation for removed packages, if desired<br/>- Fast no-op shortcuit if requirements already met | ![packages](https://github.com/ppat/homelab-ops-ansible/actions/workflows/test-packages.yaml/badge.svg) |
+| [🥧 raspberry_pi](raspberry_pi/) | - Kernel configuration (`config.txt`)<br>- Kernel commandline parameter management (`cmdline.txt`)<br>- Pi-specific optimizations | ![raspberry_pi](https://github.com/ppat/homelab-ops-ansible/actions/workflows/test-raspberry_pi.yaml/badge.svg) |
 
 ## Key Features
 
@@ -52,6 +52,7 @@ Visit each collection's documentation for detailed usage instructions and exampl
 ## Contributing
 
 We welcome contributions! See our [Contributing Guide](CONTRIBUTING.md) for:
+
 - Development setup
 - Code style guidelines
 - Testing requirements

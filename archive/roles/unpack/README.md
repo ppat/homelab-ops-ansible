@@ -1,9 +1,12 @@
 homelab_ops.archive.unpack
 ==========================
 
-Unpacks an archive (such as an OS image) onto an empty filesystem path. If the filesystem path is not empty, this role will skip unpacking.
+A role that deploys initial filesystem content from archives. This role handles first-time OS image provisioning with data protection measures.
 
-This role is useful for initial provisioning of a filesystem from an archive. It ensures that the archive is only unpacked onto an empty filesystem, preventing accidental overwriting of existing data.
+This role deploys OS image archive on to a filesystem by:
+
+1. First verifying that target filesystem is empty
+2. Extracting archive content directly on to the target filesystem
 
 Requirements
 ------------
