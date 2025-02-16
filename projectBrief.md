@@ -1,6 +1,6 @@
 # Project Brief
 
-Welcome to our suite of Ansible collections designed to simplify the creation of playbooks for infrastructure operations. While these collections are optimized for homelab environments, they’re flexible enough to address any use case where robust infrastructure automation is needed.
+Welcome to our suite of Ansible collections designed to simplify the creation of playbooks for infrastructure operations. While these collections are optimized for homelab environments, they're flexible enough to address any use case where robust infrastructure automation is needed.
 
 ## Code Organization
 
@@ -27,8 +27,8 @@ Our design approach is focused on delivering a reliable, high-performance, and s
   - Although there may be rare deviations, replacement is the norm.
 
 - **Performance and Efficiency**:
-  - Tasks execute only when necessary; if a task isn’t required, it won’t run.
-  - When possible, we favor faster, even if slightly non-idiomatic (or "hacky"), solutions—as long as they don’t compromise security.
+  - Tasks execute only when necessary; if a task isn't required, it won't run.
+  - When possible, we favor faster, even if slightly non-idiomatic (or "hacky"), solutions—as long as they don't compromise security.
   - We acknowledge that some built-in Ansible modules are flagged as unsafe by official documentation. However, within the context of our specific use cases, we make informed decisions on their safety.
 
 - **Declarative, No-Op Behavior**:
