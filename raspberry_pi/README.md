@@ -10,7 +10,7 @@ A collection for managing Raspberry Pi devices and their configurations. This co
 | --- | --- |
 | [homelab_ops.raspberry_pi.kernel_cmdline](roles/kernel_cmdline/) | Configures the kernel command line (`cmdline.txt`) of a Raspberry Pi device. |
 | [homelab_ops.raspberry_pi.kernel_config](roles/kernel_config/) | Creates the kernel `config.txt` file for a Raspberry Pi device. |
-| [homelab_ops.raspberry_pi.provision](roles/provision/) | Provisions a Raspberry Pi device by selecting a block device based on given criteria, creating partitions and filesystems if the block device is empty, configuring bind mounts, unpacking an OS image onto the root filesystem, configuring cloud-init userdata and Ansible playbooks to be invoked by cloud-init on first boot, and configuring the device for booting (`cmdline.txt`, `config.txt`, and `fstab`). |
+| [homelab_ops.raspberry_pi.provision](roles/provision/) [DEPRECATED] | [DEPRECATED] Provisions a Raspberry Pi device by selecting a block device based on given criteria, creating partitions and filesystems if the block device is empty, configuring bind mounts, unpacking an OS image onto the root filesystem, configuring cloud-init userdata and Ansible playbooks to be invoked by cloud-init on first boot, and configuring the device for booting. This role is deprecated and will be removed in version 2.0.0. Use the underlying collections directly for better granular control. |
 
 ## Usage
 
