@@ -1,5 +1,8 @@
-homelab_ops.configure.ansible
-=============================
+homelab_ops.configure.ansible [DEPRECATED]
+=====================================
+
+**DEPRECATION NOTICE:** This role is deprecated and will be removed in version 2.0.0.
+Please use homelab_ops.configure.cloud_init's runcmd commands to set up ansible as needed. For most use cases, it's recommended to run ansible from a controller node targeting inventory hosts, eliminating the need to install ansible on remote hosts. This simplifies inventory host setup and reduces attack surface.
 
 Installs a specified version of ansible-core and a list of Python package dependencies within the same virtual environment using pipx. Also installs a given set of Ansible collections.
 

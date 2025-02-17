@@ -8,9 +8,9 @@ A collection for managing system configuration and boot processes. This collecti
 
 | Role | Description |
 | --- | --- |
-| [homelab_ops.configure.ansible](roles/ansible/) | Installs a specified version of ansible-core and a list of Python package dependencies within the same virtual environment using pipx. Also installs a given set of Ansible collections. |
 | [homelab_ops.configure.cloud_init](roles/cloud_init/) | Creates userdata and other cloud-init configuration files within the specified datasource location. The created userdata configuration creates a user who can SSH in using the specified authorized key, sets the hostname and cloud-init instance ID to specified values, and configures cloud-init to run specified `runcmd` commands during the runcmd stage. Any files needed for the `runcmd` commands can be specified under `cloudinit.write_files` to be placed within the datasource. |
 | [homelab_ops.configure.fstab](roles/fstab/) | Generates an `/etc/fstab` file from the filesystems currently mounted under the specified root directory. |
+| [homelab_ops.configure.ansible](roles/ansible/) [DEPRECATED] | [DEPRECATED] Installs a specified version of ansible-core and a list of Python package dependencies within the same virtual environment using pipx. Also installs a given set of Ansible collections. This role is deprecated and will be removed in version 2.0.0. Use homelab_ops.configure.cloud_init's runcmd commands to set up ansible as needed. |
 
 ## Usage
 
