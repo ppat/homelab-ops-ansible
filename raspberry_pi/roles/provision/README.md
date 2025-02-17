@@ -1,5 +1,8 @@
-homelab_ops.raspberry_pi.provision
+homelab_ops.raspberry_pi.provision [DEPRECATED]
 ==================================
+
+**DEPRECATION NOTICE:** This role is deprecated and will be removed in version 2.0.0.
+This wrapper role is being replaced by direct usage of its underlying collections and roles, which provides better granular control. The collections this role depends on will remain available. A playbook that provides similar functionality to this role is under consideration.
 
 A role that orchestrates complete Raspberry Pi device setup. This role coordinates multiple collections to handle storage, boot configuration, and system initialization.
 
