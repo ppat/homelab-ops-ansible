@@ -43,6 +43,7 @@ module.exports = {
         'deps',
         'release',
         'linters',
+        'memory-bank',
         'other',
         'renovate',
         'dev-tools',
