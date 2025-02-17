@@ -2,6 +2,17 @@
 
 
 
+## [1.10.1](https://github.com/ppat/homelab-ops-ansible/compare/v1.10.0...v1.10.1) (2025-02-17)
+
+### 🐛 Enhancements + Bug Fixes
+
+* **configure:** deprecate configure.ansible role ([#281](https://github.com/ppat/homelab-ops-ansible/issues/281)) ([ae8c5b2](https://github.com/ppat/homelab-ops-ansible/commit/ae8c5b2abec42c999331e911c44c79475434f89b))
+* **raspberry_pi:** deprecate raspberry_pi.provision role ([#282](https://github.com/ppat/homelab-ops-ansible/issues/282)) ([a1d886c](https://github.com/ppat/homelab-ops-ansible/commit/a1d886c9cab6d2d6d55faee98439ec679208a752))
+
+### 🛠 Improvements
+
+* **other:** update description within docs of collections and their roles ([#280](https://github.com/ppat/homelab-ops-ansible/issues/280)) ([f45ea78](https://github.com/ppat/homelab-ops-ansible/commit/f45ea787dc71d2cb46d78f8914213c0a2890f9e1))
+
 ## [1.10.0](https://github.com/ppat/homelab-ops-ansible/compare/v1.9.2...v1.10.0) (2025-02-16)
 
 ### ✨ Features
