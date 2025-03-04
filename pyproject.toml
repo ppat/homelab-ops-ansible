@@ -3,7 +3,7 @@ package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.12"
-ansible-core = "2.18.2"
+ansible-core = "2.18.3"
 jmespath = "1.0.1"
 kubernetes = "31.0.0"
 
