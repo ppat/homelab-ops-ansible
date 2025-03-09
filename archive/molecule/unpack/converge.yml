@@ -4,7 +4,7 @@
   gather_facts: false
   vars:
     unpack_location: /tmp/unpack_location
-    archive_source: https://cdimage.ubuntu.com/ubuntu-base/releases/noble/release/ubuntu-base-24.04.1-base-amd64.tar.gz
+    archive_source: https://dl-cdn.alpinelinux.org/v3.21/releases/x86_64/alpine-minirootfs-3.21.3-x86_64.tar.gz
   tasks:
   - name: "Fetch and unpack archive"
     ansible.builtin.include_role:

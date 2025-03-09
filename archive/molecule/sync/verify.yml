@@ -9,9 +9,9 @@
     ansible.builtin.stat:
       path: "{{ item }}"
     loop:
-    - "{{ unpack_location }}/bin/bash"
-    - "{{ unpack_location }}/etc/sysctl.conf"
-    - "{{ unpack_location }}/usr/share"
+    - "{{ unpack_location }}/bin/sh"
+    - "{{ unpack_location }}/usr/bin/test"
+    - "{{ unpack_location }}/usr/bin/yes"
     register: unpack_stat_register
 
   - name: Assert that files from archive exists in destination
