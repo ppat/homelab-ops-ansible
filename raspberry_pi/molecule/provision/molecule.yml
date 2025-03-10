@@ -22,5 +22,7 @@ provisioner:
     group_vars:
       all:
         MOLECULE_SCENARIO_DIR: /tmp/test_scenario
+        config:
+          ubuntu_url: $ubuntu_tarball_url
 verifier:
   name: ansible

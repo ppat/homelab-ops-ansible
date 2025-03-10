@@ -15,6 +15,11 @@ platforms:
   - /sys:/sys
 provisioner:
   name: ansible
+  inventory:
+    group_vars:
+      all:
+        config:
+          ubuntu_url: $ubuntu_tarball_url
   playbooks:
     prepare: prepare.yml
 verifier:
