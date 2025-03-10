@@ -62,7 +62,7 @@
               path: "{{ loopback_device }}"
           size_unit: MiB
         os_image:
-          url: https://cdimage.ubuntu.com/ubuntu-base/releases/noble/release/ubuntu-base-24.04.1-base-amd64.tar.gz
+          url: "{{ config.ubuntu_url }}"
           distribution_release: noble
         raspberry_pi:
           serial: '12345678'

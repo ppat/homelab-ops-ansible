@@ -27,6 +27,7 @@ on:
 
 env:
   non_workflow_dispatch_log_verbosity: 0
+  molecule_vars_file: /tmp/molecule_vars.yaml
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -81,9 +82,26 @@ jobs:
       env:
         LOG_VERBOSITY: ${{ github.event.inputs.log_verbosity || env.non_workflow_dispatch_log_verbosity }}
 
+    - name: Create molecule vars file
+      # yamllint disable-line rule:indentation
+      run: |
+        UBUNTU_TARBALL_URL=$(.github/scripts/detect-latest-ubuntu-tarball.sh)
+
+        cat > $MOLECULE_VARS_FILE << EOF
+        ubuntu_tarball_url: $UBUNTU_TARBALL_URL
+        EOF
+
+        echo "Created vars file: $MOLECULE_VARS_FILE"
+      shell: bash
+      env:
+        MOLECULE_VARS_FILE: ${{ env.molecule_vars_file }}
+
     - name: Molecule Test
-      run: poetry run molecule $MOLECULE_PARAMS test --all --no-parallel
+      run: |
+        poetry run molecule $MOLECULE_PARAMS --env-file $MOLECULE_VARS_FILE test --all --no-parallel
       working-directory: ./archive
+      shell: bash
       env:
         ANSIBLE_FORCE_COLOR: 1
         PY_COLORS: 1
+        MOLECULE_VARS_FILE: ${{ env.molecule_vars_file }}

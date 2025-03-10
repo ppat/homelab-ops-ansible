@@ -4,12 +4,11 @@
   gather_facts: false
   vars:
     unpack_location: /tmp/unpack_location
-    archive_source: https://dl-cdn.alpinelinux.org/v3.21/releases/x86_64/alpine-minirootfs-3.21.3-x86_64.tar.gz
   tasks:
   - name: "Fetch and unpack archive"
     ansible.builtin.include_role:
       name: homelab_ops.archive.unpack
     vars:
       archive:
-        url: "{{ archive_source }}"
+        url: "{{ config.ubuntu_url }}"
         destination_path: "{{ unpack_location }}"
