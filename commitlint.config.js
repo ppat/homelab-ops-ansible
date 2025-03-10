@@ -1,6 +1,6 @@
-const validateBodyMaxLengthIgnoringDeps = async (parsedCommit) => {
-  const { maxLineLength } = await import('@commitlint/ensure');
+const { maxLineLength } = require('@commitlint/ensure');
 
+const validateBodyMaxLengthIgnoringDeps = (parsedCommit) => {
   const { type, scope, body } = parsedCommit
   const isDepsCommit = type === 'chore' && scope === 'deps'
 
@@ -33,6 +33,7 @@ module.exports = {
     // specify the allowed scopes
     'scope-enum': [2, 'always',
       [
+        '',
         'archive',
         'block_device',
         'configure',
@@ -44,13 +45,11 @@ module.exports = {
         'release',
         'linters',
         'memory-bank',
-        'other',
         'renovate',
         'dev-tools',
         'github-actions'
       ]
     ],
-    'scope-empty': [2, 'never'],
 
     // don't validate case of body
     'body-case': [0, 'always']
