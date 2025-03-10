@@ -33,6 +33,7 @@ module.exports = {
     // specify the allowed scopes
     'scope-enum': [2, 'always',
       [
+        '',
         'archive',
         'block_device',
         'configure',
@@ -44,7 +45,6 @@ module.exports = {
         'release',
         'linters',
         'memory-bank',
-        'other',
         'renovate',
         'dev-tools',
         'github-actions'
