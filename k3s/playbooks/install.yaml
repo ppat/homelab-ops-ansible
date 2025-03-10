@@ -75,7 +75,7 @@
       - "jmespath=={{ jmespath_pypi_package_version }}"
     vars:
       # renovate: datasource=pypi depName=kubernetes
-      kubernetes_pypi_package_version: "31.0.0"
+      kubernetes_pypi_package_version: "32.0.0"
       # renovate: datasource=pypi depName=jmespath
       jmespath_pypi_package_version: "1.0.1"
     run_once: true
