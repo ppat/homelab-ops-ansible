@@ -8,9 +8,9 @@ jmespath = "1.0.1"
 kubernetes = "32.0.0"
 
 [tool.poetry.group.dev.dependencies]
-ansible-lint = { version = "24.12.2", markers = "platform_system != 'Windows'" }
+ansible-lint = { version = "25.1.2", markers = "platform_system != 'Windows'" }
 docker = "7.1.0"
-molecule = "24.12.0"
+molecule = "25.2.0"
 molecule-plugins = {version = "23.6.0", extras = ["docker"]}
 pre-commit = "4.1.0"
 yamllint = "1.35.1"

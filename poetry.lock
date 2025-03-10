@@ -46,31 +46,32 @@ resolvelib = ">=0.5.3,<1.1.0"
 
 [[package]]
 name = "ansible-lint"
-version = "24.12.2"
+version = "25.1.2"
 description = "Checks playbooks for practices and behavior that could potentially be improved"
 optional = false
 python-versions = ">=3.10"
 groups = ["dev"]
 markers = "(sys_platform == \"linux2\" or sys_platform == \"linux\" or sys_platform != \"linux2\" and sys_platform != \"linux\") and platform_system != \"Windows\""
 files = [
-    {file = "ansible_lint-24.12.2-py3-none-any.whl", hash = "sha256:ce7a783ce4f053a965e31f308cdb57554259052efea04b8491c9704f11095e54"},
-    {file = "ansible_lint-24.12.2.tar.gz", hash = "sha256:f636309c4e7f724fc1a544df529c4c2354f54cf35ede11d750366afb1158a464"},
+    {file = "ansible_lint-25.1.2-py3-none-any.whl", hash = "sha256:a7c84f67a9c4f37312f70c65a34ae2d7ffc6f756458b965141830ae721be62d8"},
+    {file = "ansible_lint-25.1.2.tar.gz", hash = "sha256:4d9de2726829ca700a9b4cc6d52506f5cc8e086ce52760131eb0aabfe7e61ce5"},
 ]
 
 [package.dependencies]
-ansible-compat = ">=24.10.0"
-ansible-core = ">=2.13.0"
+ansible-compat = ">=25.1.2"
+ansible-core = ">=2.16.0"
 black = ">=24.3.0"
-filelock = ">=3.3.0"
+filelock = ">=3.8.2"
 importlib-metadata = "*"
 jsonschema = ">=4.10.0"
-packaging = ">=21.3"
+packaging = ">=22.0"
 pathspec = ">=0.10.3"
-pyyaml = ">=5.4.1"
-"ruamel.yaml" = ">=0.18.5"
+pyyaml = ">=6.0.2"
+referencing = ">=0.36.2"
+"ruamel.yaml" = ">=0.18.5,<0.18.7 || >0.18.7,<0.18.8 || >0.18.8"
 subprocess-tee = ">=0.4.1"
 wcmatch = {version = ">=8.5.0", markers = "python_version >= \"3.12\""}
-yamllint = ">=1.30.0"
+yamllint = ">=1.34.0"
 
 [package.extras]
 docs = ["mkdocs-ansible (>=24.12.0)", "uv (>=0.5.5)"]
@@ -882,19 +883,19 @@ files = [
 
 [[package]]
 name = "molecule"
-version = "24.12.0"
+version = "25.2.0"
 description = "Molecule aids in the development and testing of Ansible roles"
 optional = false
 python-versions = ">=3.10"
 groups = ["dev"]
 markers = "sys_platform == \"linux2\" or sys_platform == \"linux\" or sys_platform != \"linux2\" and sys_platform != \"linux\""
 files = [
-    {file = "molecule-24.12.0-py3-none-any.whl", hash = "sha256:c650d92295860ce17d79048b1dabb787f674718870668d99b52ecdc0e88af541"},
-    {file = "molecule-24.12.0.tar.gz", hash = "sha256:7243ff58e0b8159aa2cf465ba9605d657f1d614617264307bef5b32518467afe"},
+    {file = "molecule-25.2.0-py3-none-any.whl", hash = "sha256:772394855c6511362e5e5312017936975a490b24a6b8fe528ad736842ba3fc0f"},
+    {file = "molecule-25.2.0.tar.gz", hash = "sha256:2f74a31ed03a562c0cb453fe80c2f95a92f663c6104429817c56cb101d903047"},
 ]
 
 [package.dependencies]
-ansible-compat = ">=24.6.1"
+ansible-compat = ">=25.1.0"
 ansible-core = ">=2.15.0"
 click = ">=8.0,<9"
 click-help-colors = "*"
@@ -909,7 +910,7 @@ wcmatch = ">=8.1.2"
 
 [package.extras]
 docs = ["linkchecker (>=10.4.0)", "mkdocs-ansible (>=24.3.0)", "pipdeptree (>=2.4.0)"]
-test = ["ansi2html (>=1.8.0)", "ansible-lint (>=6.12.1)", "black", "check-jsonschema", "coverage[toml]", "docker (>=7.1.0)", "filelock (>=3.9.0)", "mypy", "pexpect (>=4.8.0,<5)", "pip-tools", "pre-commit", "pydoclint", "pylint", "pytest", "pytest-mock (>=3.10.0)", "pytest-plus (>=0.4.0)", "pytest-xdist", "requests (!=2.32.0)", "ruff", "toml-sort", "tox", "types-jsonschema", "types-pexpect", "types-pyyaml"]
+test = ["ansi2html (>=1.8.0)", "ansible-lint (>=6.12.1)", "black", "coverage[toml]", "docker (>=7.1.0)", "filelock (>=3.9.0)", "mypy", "pexpect (>=4.9.0,<5)", "pip-tools", "pre-commit", "pydoclint", "pylint", "pytest", "pytest-instafail", "pytest-mock (>=3.10.0)", "pytest-plus (>=0.7.0)", "pytest-xdist", "requests (!=2.32.0)", "ruff", "toml-sort", "tox", "types-jsonschema", "types-pexpect", "types-pyyaml"]
 testinfra = ["pytest-testinfra (>=8.1.0)"]
 
 [[package]]
@@ -1714,4 +1715,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.12"
-content-hash = "0e03c9db63f52e250f5476035334b4e68e6d4114d2e958d2f30a103b0c7073f6"
+content-hash = "5af102c7399edf26d45274e1bd8923b7558489ccea7123ae537551597d17f596"
