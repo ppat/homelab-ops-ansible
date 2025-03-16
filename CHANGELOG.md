@@ -2,6 +2,22 @@
 
 
 
+## [1.11.0](https://github.com/ppat/homelab-ops-ansible/compare/v1.10.1...v1.11.0) (2025-03-16)
+
+### ✨ Features
+
+* **configure:** update community.general (10.3.1 -> 10.4.0) ([#286](https://github.com/ppat/homelab-ops-ansible/issues/286)) ([4430a37](https://github.com/ppat/homelab-ops-ansible/commit/4430a3721a4aba5c17af73155945b61ad8a73bc6))
+* **k3s:** update fluxcd/flux2 (v2.4.0 -> v2.5.1) ([#309](https://github.com/ppat/homelab-ops-ansible/issues/309)) ([a272805](https://github.com/ppat/homelab-ops-ansible/commit/a272805f3802b283c74575cd36a98b61a0fcf368))
+* **k3s:** update kubernetes (31.0.0 -> 32.0.0) ([#285](https://github.com/ppat/homelab-ops-ansible/issues/285)) ([5909f83](https://github.com/ppat/homelab-ops-ansible/commit/5909f83cc17a4ec18a81cdbec00e6a8f8d6c5b89))
+
+### 🐛 Enhancements + Bug Fixes
+
+* **archive:** fix archive collection's molecule test by using a consistently available test archive file ([#297](https://github.com/ppat/homelab-ops-ansible/issues/297)) ([d3fcca0](https://github.com/ppat/homelab-ops-ansible/commit/d3fcca01e2b310fce5cf78e17d2e0d09d5963ccc))
+* **github-actions:** fix CVE-2025-30066 and pre-emptive security measures ([#308](https://github.com/ppat/homelab-ops-ansible/issues/308)) ([12cb635](https://github.com/ppat/homelab-ops-ansible/commit/12cb63540842eeeb988783ff4a2a28c2b3e412e8))
+* **k3s:** update digest nginx (9173428 -> 9d6b58f) ([#287](https://github.com/ppat/homelab-ops-ansible/issues/287)) ([b7f1542](https://github.com/ppat/homelab-ops-ansible/commit/b7f15423d9cb8ec1ba19f6b4cfd5a4eee11cb762))
+* **k3s:** update kubernetes (32.0.0 -> 32.0.1) ([#301](https://github.com/ppat/homelab-ops-ansible/issues/301)) ([d648d80](https://github.com/ppat/homelab-ops-ansible/commit/d648d80a4d72257104d89c2440ce2b0d62b91df9))
+* update lock files ([#299](https://github.com/ppat/homelab-ops-ansible/issues/299)) ([53751d0](https://github.com/ppat/homelab-ops-ansible/commit/53751d0f2b99532e252b1e8db7b1f0458f81db64))
+
 ## [1.10.1](https://github.com/ppat/homelab-ops-ansible/compare/v1.10.0...v1.10.1) (2025-02-17)
 
 ### 🐛 Enhancements + Bug Fixes
