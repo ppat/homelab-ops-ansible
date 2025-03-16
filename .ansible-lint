@@ -4,6 +4,7 @@ profile: safety
 
 exclude_paths:
 - .github/
+- .ansible/
 
 use_default_rules: true
 

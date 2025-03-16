@@ -48,6 +48,7 @@ jobs:
           - '**.j2'
           - '!.github/**'
           - '!.pre-commit-config.yaml'
+          - '.ansible-lint'
           renovate:
           - .github/renovate.json
           - .github/renovate/**
