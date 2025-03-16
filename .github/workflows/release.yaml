@@ -1,5 +1,5 @@
 ---
-name: Release
+name: release
 
 # yamllint disable-line rule:truthy
 on:
@@ -18,11 +18,13 @@ on:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
 
+permissions: {}
+
 jobs:
   release:
     runs-on: ubuntu-24.04
     timeout-minutes: 5
-    name: "release"
+    environment: release
     steps:
     - name: Check out
       uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
