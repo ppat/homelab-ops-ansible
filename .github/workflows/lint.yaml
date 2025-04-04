@@ -37,7 +37,7 @@ jobs:
 
     - name: Determine what files types have changed
       id: changed-files-yaml
-      uses: tj-actions/changed-files@2f7c5bfce28377bc069a65ba478de0a74aa0ca32 # v46
+      uses: tj-actions/changed-files@6cb76d07bee4c9772c6882c06c37837bf82a04d3 # v46
       with:
         files_yaml: |
           actions:
@@ -121,9 +121,9 @@ jobs:
         POETRY_VERSION: "2.1.2"
 
     - name: Set up python
-      uses: actions/setup-python@42375524e23c412d93fb67b49958b491fce71c38 # v5
+      uses: actions/setup-python@8d9ed9ac5c53483de85588cdf95a591a75ab9f55 # v5
       with:
-        python-version: '3.12'
+        python-version: '3.13'
         cache: 'poetry'
 
     - name: Install python requirements
