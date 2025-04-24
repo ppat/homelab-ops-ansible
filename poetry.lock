@@ -46,35 +46,36 @@ resolvelib = ">=0.5.3,<1.1.0"
 
 [[package]]
 name = "ansible-lint"
-version = "24.12.2"
+version = "25.2.1"
 description = "Checks playbooks for practices and behavior that could potentially be improved"
 optional = false
 python-versions = ">=3.10"
 groups = ["dev"]
 markers = "(sys_platform == \"linux2\" or sys_platform == \"linux\" or sys_platform != \"linux2\" and sys_platform != \"linux\") and platform_system != \"Windows\""
 files = [
-    {file = "ansible_lint-24.12.2-py3-none-any.whl", hash = "sha256:ce7a783ce4f053a965e31f308cdb57554259052efea04b8491c9704f11095e54"},
-    {file = "ansible_lint-24.12.2.tar.gz", hash = "sha256:f636309c4e7f724fc1a544df529c4c2354f54cf35ede11d750366afb1158a464"},
+    {file = "ansible_lint-25.2.1-py3-none-any.whl", hash = "sha256:d3993cb7b5705d381edc26bf74c2c06edd10f8479bcd8ada0647364ef6ae88c8"},
+    {file = "ansible_lint-25.2.1.tar.gz", hash = "sha256:ec4b1fcfa8bef13f547feefa22ea6864defd902b3a267ef8f4c5341976f45ff1"},
 ]
 
 [package.dependencies]
-ansible-compat = ">=24.10.0"
-ansible-core = ">=2.13.0"
+ansible-compat = ">=25.1.5"
+ansible-core = ">=2.16.11"
 black = ">=24.3.0"
-filelock = ">=3.3.0"
+filelock = ">=3.8.2"
 importlib-metadata = "*"
 jsonschema = ">=4.10.0"
-packaging = ">=21.3"
+packaging = ">=22.0"
 pathspec = ">=0.10.3"
-pyyaml = ">=5.4.1"
-"ruamel.yaml" = ">=0.18.5"
+pyyaml = ">=6.0.2"
+referencing = ">=0.36.2"
+"ruamel.yaml" = ">=0.18.5,<0.18.7 || >0.18.7,<0.18.8 || >0.18.8"
 subprocess-tee = ">=0.4.1"
 wcmatch = {version = ">=8.5.0", markers = "python_version >= \"3.12\""}
-yamllint = ">=1.30.0"
+yamllint = ">=1.34.0"
 
 [package.extras]
-docs = ["mkdocs-ansible (>=24.12.0)", "uv (>=0.5.5)"]
-test = ["black", "coverage-enable-subprocess", "coverage[toml] (>=6.4.4)", "jmespath", "license-expression (>=30.3.0)", "mypy", "netaddr", "pip", "psutil", "pylint", "pytest (>=7.2.2)", "pytest-instafail (>=0.5.0)", "pytest-mock", "pytest-plus (>=0.6)", "pytest-xdist[psutil,setproctitle] (>=2.1.0)", "ruamel-yaml-clib", "ruamel.yaml (>=0.17.31)", "tox (>=4.0.0)", "types-jsonschema", "types-pyyaml"]
+docs = ["mkdocs-ansible (>=24.12.0)"]
+test = ["black", "coverage-enable-subprocess", "coverage[toml] (>=6.4.4)", "ipdb", "ipython", "jmespath", "license-expression (>=30.3.0)", "mypy", "netaddr", "pip", "psutil", "pylint", "pytest (>=7.2.2)", "pytest-instafail (>=0.5.0)", "pytest-mock", "pytest-plus (>=0.6)", "pytest-sugar", "pytest-xdist[psutil,setproctitle] (>=2.1.0)", "ruamel-yaml-clib", "ruamel.yaml (>=0.17.31)", "tox (>=4.0.0)", "tox (>=4.24.2)", "tox-extra (>=2.1)", "tox-uv (>=1.25)", "types-jsonschema", "types-pyyaml"]
 
 [[package]]
 name = "attrs"
@@ -884,19 +885,19 @@ files = [
 
 [[package]]
 name = "molecule"
-version = "24.12.0"
+version = "25.4.0"
 description = "Molecule aids in the development and testing of Ansible roles"
 optional = false
 python-versions = ">=3.10"
 groups = ["dev"]
 markers = "sys_platform == \"linux2\" or sys_platform == \"linux\" or sys_platform != \"linux2\" and sys_platform != \"linux\""
 files = [
-    {file = "molecule-24.12.0-py3-none-any.whl", hash = "sha256:c650d92295860ce17d79048b1dabb787f674718870668d99b52ecdc0e88af541"},
-    {file = "molecule-24.12.0.tar.gz", hash = "sha256:7243ff58e0b8159aa2cf465ba9605d657f1d614617264307bef5b32518467afe"},
+    {file = "molecule-25.4.0-py3-none-any.whl", hash = "sha256:09506acc2af7fa66acab8bb032508dbb282869f372ed034620883f26801e08e3"},
+    {file = "molecule-25.4.0.tar.gz", hash = "sha256:c531e2a1051f827f3878dcd7d40d6d6868da066d461ef28b5e8fedea5e93f0f9"},
 ]
 
 [package.dependencies]
-ansible-compat = ">=24.6.1"
+ansible-compat = ">=25.1.4"
 ansible-core = ">=2.15.0"
 click = ">=8.0,<9"
 click-help-colors = "*"
@@ -910,26 +911,26 @@ rich = ">=9.5.1"
 wcmatch = ">=8.1.2"
 
 [package.extras]
-docs = ["linkchecker (>=10.4.0)", "mkdocs-ansible (>=24.3.0)", "pipdeptree (>=2.4.0)"]
-test = ["ansi2html (>=1.8.0)", "ansible-lint (>=6.12.1)", "black", "check-jsonschema", "coverage[toml]", "docker (>=7.1.0)", "filelock (>=3.9.0)", "mypy", "pexpect (>=4.8.0,<5)", "pip-tools", "pre-commit", "pydoclint", "pylint", "pytest", "pytest-mock (>=3.10.0)", "pytest-plus (>=0.4.0)", "pytest-xdist", "requests (!=2.32.0)", "ruff", "toml-sort", "tox", "types-jsonschema", "types-pexpect", "types-pyyaml"]
+docs = ["linkchecker (>=10.4.0)", "mkdocs-ansible (>=24.3.0)"]
+test = ["ansi2html (>=1.8.0)", "ansible-lint (>=6.12.1)", "black", "coverage[toml]", "docker (>=7.1.0)", "filelock (>=3.9.0)", "mypy", "pexpect (>=4.9.0,<5)", "pre-commit", "pydoclint", "pylint", "pytest", "pytest-instafail", "pytest-mock (>=3.10.0)", "pytest-plus (>=0.7.0)", "pytest-xdist", "requests (!=2.32.0)", "ruff", "toml-sort", "tox", "types-jsonschema", "types-pexpect", "types-pyyaml"]
 testinfra = ["pytest-testinfra (>=8.1.0)"]
 
 [[package]]
 name = "molecule-plugins"
-version = "23.6.0"
+version = "23.7.0"
 description = "Molecule Plugins"
 optional = false
-python-versions = ">=3.9"
+python-versions = ">=3.10"
 groups = ["dev"]
 markers = "sys_platform == \"linux2\" or sys_platform == \"linux\" or sys_platform != \"linux2\" and sys_platform != \"linux\""
 files = [
-    {file = "molecule_plugins-23.6.0-py3-none-any.whl", hash = "sha256:be3d15329ede00d79a0a60482e8c78cfbb2d18500ad98319c0c076cb833db340"},
-    {file = "molecule_plugins-23.6.0.tar.gz", hash = "sha256:432586a21226ef72fca5eaafb56ec7c0dc6d5e471f4e1e5272be5425357bcd2c"},
+    {file = "molecule_plugins-23.7.0-py3-none-any.whl", hash = "sha256:5e577231c7d95d7f7dc7146f3527d4692ee30a8c0ea0e8353b15ceba75f7d28e"},
+    {file = "molecule_plugins-23.7.0.tar.gz", hash = "sha256:c28b08e25c91fcc679e65d9d18d2b4bb33712aaed2fefdea72b6253c6bd19635"},
 ]
 
 [package.dependencies]
 docker = {version = ">=4.3.1", optional = true, markers = "extra == \"docker\""}
-molecule = ">=6.0.0a1"
+molecule = ">=25.1.0"
 requests = {version = "*", optional = true, markers = "extra == \"docker\""}
 selinux = {version = "*", optional = true, markers = "(sys_platform == \"linux2\" or sys_platform == \"linux\") and extra == \"docker\""}
 
@@ -938,7 +939,7 @@ docker = ["docker (>=4.3.1)", "requests", "selinux ; sys_platform == \"linux\"",
 gce = ["google-auth (>=2.28.2)", "requests (>=2.31.0)"]
 openstack = ["openstacksdk (>=1.1.0)"]
 selinux = ["selinux ; sys_platform == \"linux\"", "selinux ; sys_platform == \"linux2\""]
-test = ["molecule[test] (>=6.0.0a1)", "pytest-helpers-namespace (>=2019.1.8)"]
+test = ["molecule[test] (>=25.1.0)", "pytest-helpers-namespace (>=2019.1.8)"]
 vagrant = ["python-vagrant"]
 
 [[package]]
@@ -1048,15 +1049,15 @@ testing = ["pytest", "pytest-benchmark"]
 
 [[package]]
 name = "pre-commit"
-version = "4.1.0"
+version = "4.2.0"
 description = "A framework for managing and maintaining multi-language pre-commit hooks."
 optional = false
 python-versions = ">=3.9"
 groups = ["dev"]
 markers = "sys_platform == \"linux2\" or sys_platform == \"linux\" or sys_platform != \"linux2\" and sys_platform != \"linux\""
 files = [
-    {file = "pre_commit-4.1.0-py2.py3-none-any.whl", hash = "sha256:d29e7cb346295bcc1cc75fc3e92e343495e3ea0196c9ec6ba53f49f10ab6ae7b"},
-    {file = "pre_commit-4.1.0.tar.gz", hash = "sha256:ae3f018575a588e30dfddfab9a05448bfbd6b73d78709617b5a2b853549716d4"},
+    {file = "pre_commit-4.2.0-py2.py3-none-any.whl", hash = "sha256:a009ca7205f1eb497d10b845e52c838a98b6cdd2102a6c8e4540e94ee75c58bd"},
+    {file = "pre_commit-4.2.0.tar.gz", hash = "sha256:601283b9757afd87d40c4c4a9b2b5de9637a8ea02eaff7adc2d0fb4e04841146"},
 ]
 
 [package.dependencies]
@@ -1685,15 +1686,15 @@ test = ["websockets"]
 
 [[package]]
 name = "yamllint"
-version = "1.35.1"
+version = "1.37.0"
 description = "A linter for YAML files."
 optional = false
-python-versions = ">=3.8"
+python-versions = ">=3.9"
 groups = ["dev"]
 markers = "sys_platform == \"linux2\" or sys_platform == \"linux\" or sys_platform != \"linux2\" and sys_platform != \"linux\""
 files = [
-    {file = "yamllint-1.35.1-py3-none-any.whl", hash = "sha256:2e16e504bb129ff515b37823b472750b36b6de07963bd74b307341ef5ad8bdc3"},
-    {file = "yamllint-1.35.1.tar.gz", hash = "sha256:7a003809f88324fd2c877734f2d575ee7881dd9043360657cc8049c809eba6cd"},
+    {file = "yamllint-1.37.0-py3-none-any.whl", hash = "sha256:c03ab4e79ab4af964c8eb16ac9746880fc76a3bb0ffb14925b9a55220ae7dda0"},
+    {file = "yamllint-1.37.0.tar.gz", hash = "sha256:ead81921d4d87216b2528b7a055664708f9fb8267beb0c427cb706ac6ab93580"},
 ]
 
 [package.dependencies]
@@ -1727,4 +1728,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.12"
-content-hash = "b0f46d85175027ccf8b105feffed50a6e6880c8d732d69ceaa53ee71eca627ad"
+content-hash = "7270b19ec2f42c9da93b1d0a1c352e991733e7b3235b1e2388dd3dd3a2f43fdc"
