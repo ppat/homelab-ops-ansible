@@ -1,7 +1,7 @@
 ---
 namespace: homelab_ops
 name: raspberry_pi
-version: 1.11.0
+version: 1.12.0
 readme: README.md
 authors:
 - homelab-ops@homelab-ops.com
@@ -12,9 +12,9 @@ license:
 tags: [homelab, raspberry_pi, kernel]
 dependencies:
   ansible.posix: ">1.5.0"
-  homelab_ops.archive: ">=1.11.0"
-  homelab_ops.block_device: ">=1.11.0"
-  homelab_ops.configure: ">=1.11.0"
+  homelab_ops.archive: ">=1.12.0"
+  homelab_ops.block_device: ">=1.12.0"
+  homelab_ops.configure: ">=1.12.0"
 
 repository: https://github.com/ppat/homelab-ops-ansible
 documentation: https://github.com/ppat/homelab-ops-ansible/blob/main/raspberry_pi/README.md

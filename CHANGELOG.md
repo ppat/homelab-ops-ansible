@@ -2,6 +2,20 @@
 
 
 
+## [1.12.0](https://github.com/ppat/homelab-ops-ansible/compare/v1.11.0...v1.12.0) (2025-04-24)
+
+### ✨ Features
+
+* **configure:** update community.general (10.4.0 -> 10.5.0) ([#313](https://github.com/ppat/homelab-ops-ansible/issues/313)) ([497f69a](https://github.com/ppat/homelab-ops-ansible/commit/497f69addd13d7f4e20f3ac1f8b470fcf6eeb54f))
+* **configure:** update community.general (10.5.0 -> 10.6.0) ([#331](https://github.com/ppat/homelab-ops-ansible/issues/331)) ([efeddd8](https://github.com/ppat/homelab-ops-ansible/commit/efeddd821245a279e4f540c7ca2f0cbed103fef0))
+
+### 🐛 Enhancements + Bug Fixes
+
+* **configure:** update ansible-core (2.18.2 -> 2.18.4) ([#323](https://github.com/ppat/homelab-ops-ansible/issues/323)) ([c55b440](https://github.com/ppat/homelab-ops-ansible/commit/c55b440446d19e73c45cd8df3e035d7d31df3dcf))
+* **k3s:** update digest nginx (09369da -> 5ed8fcc) ([#330](https://github.com/ppat/homelab-ops-ansible/issues/330)) ([50bb8a0](https://github.com/ppat/homelab-ops-ansible/commit/50bb8a05df531a3d7b9c956acdea947955f82f25))
+* **k3s:** update digest nginx (124b44b -> 09369da) ([#325](https://github.com/ppat/homelab-ops-ansible/issues/325)) ([f440117](https://github.com/ppat/homelab-ops-ansible/commit/f44011772146e73e0dd02e9deafef0ff97d6f023))
+* **k3s:** update digest nginx (9d6b58f -> 124b44b) ([#312](https://github.com/ppat/homelab-ops-ansible/issues/312)) ([efb627c](https://github.com/ppat/homelab-ops-ansible/commit/efb627c0744b756895b38f77dc5dfe90bbd55b85))
+
 ## [1.11.0](https://github.com/ppat/homelab-ops-ansible/compare/v1.10.1...v1.11.0) (2025-03-16)
 
 ### ✨ Features
