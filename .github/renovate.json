@@ -20,7 +20,8 @@
     "github>ppat/renovate-presets:dev-tools",
     "github>ppat/renovate-presets:github-actions",
     "github>ppat/homelab-ops-ansible//.github/renovate/semantic-commit-scope",
-    "github>ppat/homelab-ops-ansible//.github/renovate/exceptions-min-release-age"
+    "github>ppat/homelab-ops-ansible//.github/renovate/exceptions-min-release-age",
+    "github>ppat/homelab-ops-ansible//.github/renovate/exceptions-confidence"
   ],
   "internalChecksFilter": "strict",
   "kubernetes": {
