@@ -49,6 +49,7 @@ jobs:
           - '!.github/**'
           - '!.pre-commit-config.yaml'
           - '.ansible-lint'
+          - 'pyproject.toml'
           renovate:
           - .github/renovate.json
           - .github/renovate/**
