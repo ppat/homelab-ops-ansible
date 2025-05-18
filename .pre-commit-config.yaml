@@ -20,12 +20,12 @@ repos:
   - id: fix-ligatures
   - id: fix-spaces
 - repo: https://github.com/adrienverge/yamllint.git
-  rev: v1.37.0
+  rev: v1.37.1
   hooks:
   - id: yamllint
     args: [--strict]
 - repo: https://github.com/ansible/ansible-lint
-  rev: v25.2.1
+  rev: v25.4.0
   hooks:
   - id: ansible-lint
     args: ["--skip-list=yaml,jinja"]
