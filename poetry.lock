@@ -46,15 +46,15 @@ resolvelib = ">=0.5.3,<1.1.0"
 
 [[package]]
 name = "ansible-lint"
-version = "25.2.1"
+version = "25.4.0"
 description = "Checks playbooks for practices and behavior that could potentially be improved"
 optional = false
 python-versions = ">=3.10"
 groups = ["dev"]
 markers = "(sys_platform == \"linux2\" or sys_platform == \"linux\" or sys_platform != \"linux2\" and sys_platform != \"linux\") and platform_system != \"Windows\""
 files = [
-    {file = "ansible_lint-25.2.1-py3-none-any.whl", hash = "sha256:d3993cb7b5705d381edc26bf74c2c06edd10f8479bcd8ada0647364ef6ae88c8"},
-    {file = "ansible_lint-25.2.1.tar.gz", hash = "sha256:ec4b1fcfa8bef13f547feefa22ea6864defd902b3a267ef8f4c5341976f45ff1"},
+    {file = "ansible_lint-25.4.0-py3-none-any.whl", hash = "sha256:16644f11dbfc4b52a12a16e2069eab83d089f154c55dd837484e92de7f031244"},
+    {file = "ansible_lint-25.4.0.tar.gz", hash = "sha256:f2f2b31ad199925b2343f660552fb9468970f16c2c5d57da9feae70ec4eeca7d"},
 ]
 
 [package.dependencies]
@@ -1688,15 +1688,15 @@ test = ["websockets"]
 
 [[package]]
 name = "yamllint"
-version = "1.37.0"
+version = "1.37.1"
 description = "A linter for YAML files."
 optional = false
 python-versions = ">=3.9"
 groups = ["dev"]
 markers = "sys_platform == \"linux2\" or sys_platform == \"linux\" or sys_platform != \"linux2\" and sys_platform != \"linux\""
 files = [
-    {file = "yamllint-1.37.0-py3-none-any.whl", hash = "sha256:c03ab4e79ab4af964c8eb16ac9746880fc76a3bb0ffb14925b9a55220ae7dda0"},
-    {file = "yamllint-1.37.0.tar.gz", hash = "sha256:ead81921d4d87216b2528b7a055664708f9fb8267beb0c427cb706ac6ab93580"},
+    {file = "yamllint-1.37.1-py3-none-any.whl", hash = "sha256:364f0d79e81409f591e323725e6a9f4504c8699ddf2d7263d8d2b539cd66a583"},
+    {file = "yamllint-1.37.1.tar.gz", hash = "sha256:81f7c0c5559becc8049470d86046b36e96113637bcbe4753ecef06977c00245d"},
 ]
 
 [package.dependencies]
@@ -1730,4 +1730,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.12"
-content-hash = "0427fed49bcfcd71be17fe5a58aec100eb76e2a3e6a341ddb9fdf80c9ee2cf15"
+content-hash = "27e1e809937d4509576cc887a14126b49a0e9e75b051e8e4a8ee36627792b5ec"
