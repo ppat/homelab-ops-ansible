@@ -60,6 +60,12 @@
         "major"
       ],
       "minimumReleaseAge": "180 days"
+    },
+    {
+      "matchPackageNames": [
+        "k3s-io/k3s"
+      ],
+      "versioning": "semver-coerced"
     }
   ]
 }
