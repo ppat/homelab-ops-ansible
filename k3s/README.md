@@ -31,9 +31,9 @@ The install playbook accepts the following parameters:
 
 | Parameter | Required | Description |
 | --- | --- | --- |
-| `k3s_version` | yes | The version of k3s to install (e.g., "1.30.2+k3s1") |
-| `flux_version` | yes | The version of Flux to install (e.g., "2.4.0") |
-| `kustomize_version` | yes | The version of Kustomize to install (e.g., "5.4.1") |
+| `k3s_version` | yes | The version of k3s to install (e.g., "v1.30.2+k3s1") |
+| `flux_version` | yes | The version of Flux to install (e.g., "v2.4.0") |
+| `kustomize_version` | yes | The version of Kustomize to install (e.g., "v5.4.1") |
 | `node_type` | yes | The type of node to install ("server" or "agent") |
 | `api_server_url` | no | The API server URL for joining existing cluster (required for agent nodes, leave blank for first server node) |
 | `server_token` | no | The token for joining server nodes to the cluster (required for server nodes) |
@@ -73,13 +73,13 @@ The `k3s_config_file` parameter allows you to specify a YAML file containing k3s
 
     ```bash
     # 1. First, install the initial server node (this must be done first as other nodes will join to it)
-    ansible-playbook -u ubuntu --ask-become-pass homelab_ops.k3s.playbooks.install -l server1 -e "k3s_version=1.30.2+k3s1 flux_version=2.4.0 kustomize_version=5.4.1 node_type=server server_token=your-server-token agent_token=your-agent-token local_kubeconfig=~/.kube/config"
+    ansible-playbook -u ubuntu --ask-become-pass homelab_ops.k3s.playbooks.install -l server1 -e "k3s_version=v1.30.2+k3s1 flux_version=v2.4.0 kustomize_version=v5.4.1 node_type=server server_token=your-server-token agent_token=your-agent-token local_kubeconfig=~/.kube/config"
 
     # 2. Then, install any additional server nodes (these need different parameters than agent nodes)
-    ansible-playbook -u ubuntu --ask-become-pass homelab_ops.k3s.playbooks.install -l "server2,server3" -e "k3s_version=1.30.2+k3s1 flux_version=2.4.0 kustomize_version=5.4.1 node_type=server api_server_url=https://server1:6443 server_token=your-server-token agent_token=your-agent-token local_kubeconfig=~/.kube/config"
+    ansible-playbook -u ubuntu --ask-become-pass homelab_ops.k3s.playbooks.install -l "server2,server3" -e "k3s_version=v1.30.2+k3s1 flux_version=v2.4.0 kustomize_version=v5.4.1 node_type=server api_server_url=https://server1:6443 server_token=your-server-token agent_token=your-agent-token local_kubeconfig=~/.kube/config"
 
     # 3. Finally, install all agent nodes
-    ansible-playbook -u ubuntu --ask-become-pass homelab_ops.k3s.playbooks.install -l k3s_agents -e "k3s_version=1.30.2+k3s1 flux_version=2.4.0 kustomize_version=5.4.1 node_type=agent api_server_url=https://server1:6443 agent_token=your-agent-token local_kubeconfig=~/.kube/config"
+    ansible-playbook -u ubuntu --ask-become-pass homelab_ops.k3s.playbooks.install -l k3s_agents -e "k3s_version=v1.30.2+k3s1 flux_version=v2.4.0 kustomize_version=v5.4.1 node_type=agent api_server_url=https://server1:6443 agent_token=your-agent-token local_kubeconfig=~/.kube/config"
     ```
 
 See the [Molecule test playbooks](molecule/) and the [GitHub Actions workflow](../../.github/workflows/test-k3s.yaml) for end-to-end examples.
