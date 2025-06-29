@@ -6,7 +6,7 @@
 - name: "init-flux | install flux into kubernetes cluster"
   ansible.builtin.command: >
     flux install
-    --version v{{ flux.version }}
+    --version {{ flux_version_tag }}
     --kubeconfig {{ standard_locations.kubeconfig }}
     --toleration-keys=node-role.kubernetes.io/control-plane
   register: install_flux_service_init_flux
