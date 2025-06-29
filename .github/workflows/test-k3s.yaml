@@ -135,11 +135,11 @@ jobs:
         HARDENING: ${{ matrix.cis_hardening == 'hardening=on' }}
         METRICS_EXPOSED: ${{ matrix.expose_metrics == 'metrics=on' }}
         # renovate: datasource=github-releases depName=k3s-io/k3s
-        K3S_VERSION: "v1.30.2+k3s1"
+        K3S_VERSION: "1.30.2+k3s1"
         # renovate: datasource=github-releases depName=fluxcd/flux2
-        FLUX_VERSION: "v2.5.1"
+        FLUX_VERSION: "2.5.1"
         # renovate: datasource=github-releases depName=kubernetes-sigs/kustomize extractVersion=^kustomize/(?<version>.*)$
-        KUSTOMIZE_VERSION: "v5.6.0"
+        KUSTOMIZE_VERSION: "5.6.0"
 
     - name: Molecule Test
       run: |
