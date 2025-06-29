@@ -5,7 +5,7 @@ name: "test collection: archive"
 on:
   pull_request:
     paths:
-    # - '.github/workflows/test-archive.yaml'
+    - '.github/workflows/test-archive.yaml'
     - 'archive/**.yaml'
     - 'archive/**.yml'
     - 'poetry.lock'

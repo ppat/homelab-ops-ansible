@@ -5,7 +5,7 @@ name: "test collection: block_device"
 on:
   pull_request:
     paths:
-    # - '.github/workflows/test-block_device.yaml'
+    - '.github/workflows/test-block_device.yaml'
     - 'block_device/**.yaml'
     - 'block_device/**.yml'
     - 'poetry.lock'

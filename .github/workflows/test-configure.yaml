@@ -5,7 +5,7 @@ name: "test collection: configure"
 on:
   pull_request:
     paths:
-    # - '.github/workflows/test-configure.yaml'
+    - '.github/workflows/test-configure.yaml'
     - 'configure/**.yaml'
     - 'configure/**.yml'
     - 'poetry.lock'

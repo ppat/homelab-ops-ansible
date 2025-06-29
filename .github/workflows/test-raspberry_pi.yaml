@@ -5,7 +5,7 @@ name: "test collection: raspberry_pi"
 on:
   pull_request:
     paths:
-    # - '.github/workflows/test-raspberry_pi.yaml'
+    - '.github/workflows/test-raspberry_pi.yaml'
     - 'poetry.lock'
     - 'pyproject.toml'
     - 'raspberry_pi/**.yaml'
