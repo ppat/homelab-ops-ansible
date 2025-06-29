@@ -5,8 +5,9 @@ name: "test collection: os"
 on:
   pull_request:
     paths:
-    - '.github/workflows/test-os.yaml'
-    - 'os/**'
+    # - '.github/workflows/test-os.yaml'
+    - 'os/**.yaml'
+    - 'os/**.yml'
     - 'pyproject.toml'
   workflow_dispatch:
     inputs:

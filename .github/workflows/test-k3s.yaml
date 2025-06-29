@@ -5,8 +5,9 @@ name: "test collection: k3s"
 on:
   pull_request:
     paths:
-    - '.github/workflows/test-k3s.yaml'
-    - 'k3s/**'
+    # - '.github/workflows/test-k3s.yaml'
+    - 'k3s/**.yaml'
+    - 'k3s/**.yml'
     - 'poetry.lock'
     - 'pyproject.toml'
   workflow_dispatch:
