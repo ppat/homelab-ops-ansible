@@ -9,17 +9,17 @@
     prompt: Desired k3s version
     private: false
     # renovate: datasource=github-releases depName=k3s-io/k3s
-    default: "1.30.2+k3s1"
+    default: "v1.30.2+k3s1"
   - name: flux_version
     prompt: Desired flux version
     private: false
     # renovate: datasource=github-releases depName=fluxcd/flux2
-    default: "2.5.1"
+    default: "v2.5.1"
   - name: kustomize_version
     prompt: Desired kustomize version
     private: false
-    # renovate: datasource=github-releases depName=kubernetes-sigs/kustomize
-    default: "5.4.1"
+    # renovate: datasource=github-releases depName=kubernetes-sigs/kustomize extractVersion=^kustomize/(?<version>.*)$
+    default: "v5.4.1"
   - name: node_type
     prompt: K3S node type (server/agent)
     private: false
