@@ -53,12 +53,9 @@ provisioner:
     group_vars:
       all:
         config:
-          # renovate: datasource=github-releases depName=k3s-io/k3s
-          k3s_version: "v1.30.2+k3s1"
-          # renovate: datasource=github-releases depName=fluxcd/flux2
-          flux_version: "v2.5.1"
-          # renovate: datasource=github-releases depName=kubernetes-sigs/kustomize extractVersion=^kustomize/(?<version>.*)$
-          kustomize_version: "v5.4.1"
+          k3s_version: $k3s_version
+          flux_version: $flux_version
+          kustomize_version: $kustomize_version
           node_config_directory: ${MOLECULE_SCENARIO_DIRECTORY}/k3s-config
           server_token: $k3s_server_token
           agent_token: $k3s_agent_token

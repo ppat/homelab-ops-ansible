@@ -123,6 +123,9 @@ jobs:
         k3s_agent_token: $AGENT_TOKEN
         hardening_enabled: "$HARDENING"
         metrics_exposed: "$METRICS_EXPOSED"
+        k3s_version: $K3S_VERSION
+        flux_version: $FLUX_VERSION
+        kustomize_version: $KUSTOMIZE_VERSION
         EOF
 
         echo "Created vars file: $MOLECULE_VARS_FILE"
@@ -131,6 +134,12 @@ jobs:
         MOLECULE_VARS_FILE: ${{ env.molecule_vars_file }}
         HARDENING: ${{ matrix.cis_hardening == 'hardening=on' }}
         METRICS_EXPOSED: ${{ matrix.expose_metrics == 'metrics=on' }}
+        # renovate: datasource=github-releases depName=k3s-io/k3s
+        K3S_VERSION: "v1.30.2+k3s1"
+        # renovate: datasource=github-releases depName=fluxcd/flux2
+        FLUX_VERSION: "v2.5.1"
+        # renovate: datasource=github-releases depName=kubernetes-sigs/kustomize extractVersion=^kustomize/(?<version>.*)$
+        KUSTOMIZE_VERSION: "v5.4.1"
 
     - name: Molecule Test
       run: |
