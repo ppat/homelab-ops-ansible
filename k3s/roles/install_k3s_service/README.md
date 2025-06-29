@@ -182,7 +182,7 @@ None
     - role: homelab_ops.k3s.install_k3s_service
       vars:
         k3s:
-          version: "v1.30.2+k3s1"
+          version: "1.30.2+k3s1"
           discovery_url: ""  # Empty for first server node
           node:
             type: server
@@ -201,7 +201,7 @@ None
     - role: homelab_ops.k3s.install_k3s_service
       vars:
         k3s:
-          version: "v1.30.2+k3s1"
+          version: "1.30.2+k3s1"
           discovery_url: "https://{{ k3s_servers[0] }}:6443"
           node:
             type: server
@@ -220,7 +220,7 @@ None
     - role: homelab_ops.k3s.install_k3s_service
       vars:
         k3s:
-          version: "v1.30.2+k3s1"
+          version: "1.30.2+k3s1"
           discovery_url: "https://{{ k3s_servers[0] }}:6443"
           node:
             type: agent
