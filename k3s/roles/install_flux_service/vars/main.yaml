@@ -1,6 +1,8 @@
 ---
 node_architecture: "{{ 'arm64' if ansible_architecture == 'aarch64' else 'amd64' }}"
+flux_version_tag: "{{ flux.version if flux.version.startswith('v') else 'v' + flux.version }}"
+kustomize_version_tag: "{{ kustomize.version if kustomize.version.startswith('v') else 'v' + kustomize.version }}"
 # yamllint disable-line rule:line-length
-flux_url: "https://github.com/fluxcd/flux2/releases/download/v{{ flux.version }}/flux_{{ flux.version }}_{{ ansible_system | lower }}_{{ node_architecture }}.tar.gz"
+flux_url: "https://github.com/fluxcd/flux2/releases/download/{{ flux_version_tag }}/flux_{{ flux_version_tag[1:] }}_{{ ansible_system | lower }}_{{ node_architecture }}.tar.gz"
 # yamllint disable-line rule:line-length
-kustomize_url: "https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv{{ kustomize.version }}/kustomize_v{{ kustomize.version }}_{{ ansible_system | lower }}_{{ node_architecture }}.tar.gz"
+kustomize_url: "https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2F{{ kustomize_version_tag }}/kustomize_{{ kustomize_version_tag }}_{{ ansible_system | lower }}_{{ node_architecture }}.tar.gz"
