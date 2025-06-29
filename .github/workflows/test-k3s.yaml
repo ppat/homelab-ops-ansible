@@ -83,12 +83,6 @@ jobs:
         sudo apt-get install /tmp/sysbox.deb
         rm /tmp/sysbox.deb
 
-        sudo systemctl restart containerd
-        sudo systemctl restart docker
-        sudo systemctl restart sysbox
-        sudo systemctl restart containerd
-        sudo systemctl restart docker
-
         sudo systemctl status sysbox
       env:
         # renovate: datasource=github-releases depName=nestybox/sysbox
@@ -138,7 +132,7 @@ jobs:
         # renovate: datasource=github-releases depName=k3s-io/k3s extractVersion=^v?(?<version>.*)$
         K3S_VERSION: "1.32.3+k3s1"
         # renovate: datasource=github-releases depName=fluxcd/flux2 extractVersion=^v?(?<version>.*)$
-        FLUX_VERSION: "2.5.1"
+        FLUX_VERSION: "2.6.3"
         # renovate: datasource=github-releases depName=kubernetes-sigs/kustomize extractVersion=^kustomize/^v(?<version>.*)$
         KUSTOMIZE_VERSION: "5.6.0"
 
