@@ -91,7 +91,10 @@ jobs:
     - name: Molecule Test
       # TODO: temporarily disable running of ansible molecule scenario till its pipx dependency issue on github runners is fixed
       # run: poetry run molecule $MOLECULE_PARAMS test --all --no-parallel
-      run: poetry run molecule $MOLECULE_PARAMS test --scenario-name cloud_init,fstab --no-parallel
+      # yamllint disable-line rule:indentation
+      run: |
+        poetry run molecule $MOLECULE_PARAMS test --scenario-name cloud_init --no-parallel
+        poetry run molecule $MOLECULE_PARAMS test --scenario-name fstab --no-parallel
       working-directory: ./configure
       env:
         ANSIBLE_FORCE_COLOR: 1
