@@ -41,6 +41,7 @@ permissions:
 jobs:
   test:
     strategy:
+      fail-fast: false
       matrix:
         ubuntu_code_name: ["noble"]
         arch_plus_device: ["arm64+raspi", "amd64"]
