@@ -37,6 +37,7 @@ This document summarizes the key findings, recommendations, and potential improv
 ## Specific Findings and Recommendations
 
 ### `archive` Collection
+
 - Findings:
   - The `sync` and `unpack` roles have some code duplication that can be refactored
   - The Molecule tests for the `unpack` role do not cover all possible scenarios
@@ -45,6 +46,7 @@ This document summarizes the key findings, recommendations, and potential improv
   - Expand the Molecule tests for the `unpack` role to cover additional scenarios and edge cases
 
 ### `block_device` Collection
+
 - Findings:
   - The `partition` and `filesystem` roles have similar functionality that can be consolidated
   - The Molecule tests for the `provision` role are not comprehensive enough
@@ -53,6 +55,7 @@ This document summarizes the key findings, recommendations, and potential improv
   - Enhance the Molecule tests for the `provision` role to cover more test cases and scenarios
 
 ### `configure` Collection
+
 - Findings:
   - The `ansible` and `cloud_init` roles have some overlapping functionality
   - The Molecule tests for the `fstab` role do not cover all possible configurations
@@ -61,6 +64,7 @@ This document summarizes the key findings, recommendations, and potential improv
   - Expand the Molecule tests for the `fstab` role to cover additional configuration scenarios
 
 ### `k3s` Collection
+
 - Findings:
   - The `install_k3s_service` role has some complex logic that can be simplified
   - The Molecule tests for the `fetch_kubeconfig` role are not comprehensive enough
@@ -69,6 +73,7 @@ This document summarizes the key findings, recommendations, and potential improv
   - Enhance the Molecule tests for the `fetch_kubeconfig` role to cover more test cases and scenarios
 
 ### `os` Collection
+
 - Findings:
   - The `ubuntu` role has some hardcoded values that can be parameterized for flexibility
   - The Molecule tests for the `ubuntu` role do not cover all possible package configurations
@@ -77,6 +82,7 @@ This document summarizes the key findings, recommendations, and potential improv
   - Expand the Molecule tests for the `ubuntu` role to cover additional package configurations
 
 ### `packages` Collection
+
 - Findings:
   - The `apt_install` and `apt_uninstall` roles have similar functionality that can be consolidated
   - The Molecule tests for the `install_from_url` role are not comprehensive enough
@@ -85,6 +91,7 @@ This document summarizes the key findings, recommendations, and potential improv
   - Enhance the Molecule tests for the `install_from_url` role to cover more test cases and scenarios
 
 ### `raspberry_pi` Collection
+
 - Findings:
   - The `kernel_cmdline` and `kernel_config` roles have some duplicated code
   - The Molecule tests for the `provision` role do not cover all possible hardware configurations

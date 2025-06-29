@@ -1,5 +1,4 @@
-homelab_ops.packages.apt_uninstall
-==================================
+# homelab_ops.packages.apt_uninstall
 
 A role that removes APT packages and manages related services and configurations. This role extends basic package removal with service management and reinstallation control.
 
@@ -10,15 +9,13 @@ This role manages package removal by:
 3. Cleaning up directories that are no longer required
 4. Preventing reinstallation, if desired
 
-Requirements
-------------
+## Requirements
 
 - Ansible 2.10 or newer
 - This role must be run as root
 - The target system must be running a Debian-based Linux distribution (e.g., Debian, Ubuntu)
 
-Role Variables
---------------
+## Role Variables
 
 | Variable | Default | Description |
 | --- | --- | --- |
@@ -32,13 +29,11 @@ Each package in the `packages` list should be a dictionary with the following ke
 | `systemd_services` | no | A list of systemd services to stop before uninstalling the package |
 | `reinstall` | no | Set to `prevent` to prevent the package from being reinstalled (default: `allow`) |
 
-Dependencies
-------------
+## Dependencies
 
 None
 
-Example Playbook
-----------------
+## Example Playbook
 
 ```yaml
 - hosts: servers
@@ -55,12 +50,10 @@ Example Playbook
 
 See the [Molecule test playbook](../../molecule/apt_uninstall/converge.yml) and the [GitHub Actions workflow](../../../.github/workflows/test-packages.yaml) for end-to-end examples.
 
-License
--------
+## License
 
 AGPL-3.0-only
 
-Author Information
-------------------
+## Author Information
 
 This role was created by the homelab-ops team.

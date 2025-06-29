@@ -24,6 +24,11 @@ repos:
   hooks:
   - id: yamllint
     args: [--strict]
+- repo: https://github.com/DavidAnson/markdownlint-cli2
+  rev: v0.18.1
+  hooks:
+  - id: markdownlint-cli2
+    args: ["--fix", "--config", ".markdownlint-cli2.yaml"]
 - repo: https://github.com/ansible/ansible-lint
   rev: v25.6.1
   hooks:

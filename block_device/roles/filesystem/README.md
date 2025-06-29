@@ -1,5 +1,4 @@
-homelab_ops.block_device.filesystem
-===================================
+# homelab_ops.block_device.filesystem
 
 A role that creates and configures filesystems on partitioned block devices. This role completes the storage provisioning workflow by preparing partitions for data storage.
 
@@ -10,16 +9,14 @@ This role can be used independently but its more commonly used as part of `block
 3. Setting up advanced features
 4. Preparing for system use
 
-Requirements
-------------
+## Requirements
 
 - Ansible 2.15 or newer
 - This role must be run as root
 - System packages corresponding to the requested filesystem type(s) must be installed (e.g., `e2fsprogs` for ext4, `btrfs-progs` for btrfs, `dosfstools` for vfat, etc.)
 - The target partition(s) must exist, which can be achieved using the [homelab_ops.block_device.partition](../partition/) role
 
-Role Variables
---------------
+## Role Variables
 
 | Variable | Default | Description |
 | --- | --- | --- |
@@ -44,13 +41,11 @@ For btrfs filesystems, the `filesystem_options` dictionary can contain a `subvol
 | `path` | yes | The relative path of the subvolume within the filesystem |
 | `copy_on_write` | no | Whether copy-on-write should be enabled for the subvolume (default: `true`) |
 
-Dependencies
-------------
+## Dependencies
 
 None
 
-Example Playbook
-----------------
+## Example Playbook
 
 ```yaml
 - hosts: servers
@@ -83,12 +78,10 @@ Example Playbook
 
 See the [Molecule test playbook](../../molecule/filesystem/converge.yml) for a complete example.
 
-License
--------
+## License
 
 AGPL-3.0-only
 
-Author Information
-------------------
+## Author Information
 
 This role was created by the homelab-ops team.

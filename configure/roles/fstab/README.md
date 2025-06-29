@@ -1,5 +1,4 @@
-homelab_ops.configure.fstab
-===========================
+# homelab_ops.configure.fstab
 
 A role that manages filesystem mount configuration through fstab generation. This role enables system boot by configuring persistent mount points.
 
@@ -8,27 +7,23 @@ This role manages filesystem mounting by:
 1. Identifying mounted filesystems
 2. Generating fstab and writing it to `etc/fstab` under requested location
 
-Requirements
-------------
+## Requirements
 
 - Ansible 2.15 or newer
 - This role must be run as root
 - The target filesystems must be mounted under the specified root directory
 
-Role Variables
---------------
+## Role Variables
 
 | Variable | Default | Description |
 | --- | --- | --- |
 | `system_root_mount_path` | undefined | The path to the root directory containing the mounted filesystems |
 
-Dependencies
-------------
+## Dependencies
 
 None
 
-Example Playbook
-----------------
+## Example Playbook
 
 ```yaml
 - hosts: servers
@@ -42,12 +37,10 @@ In this example, the role will generate an `/etc/fstab` file based on the filesy
 
 See the [Molecule test playbook](../../molecule/fstab/converge.yml) and the [GitHub Actions workflow](../../../.github/workflows/test-configure.yaml) for end-to-end examples.
 
-License
--------
+## License
 
 AGPL-3.0-only
 
-Author Information
-------------------
+## Author Information
 
 This role was created by the homelab-ops team.

@@ -1,5 +1,4 @@
-homelab_ops.k3s.install_flux_service
-====================================
+# homelab_ops.k3s.install_flux_service
 
 A role that installs Flux CD on k3s clusters, enabling GitOps workflows. This role completes the cluster setup by adding declarative configuration management.
 
@@ -11,14 +10,12 @@ This role completes the k3s deployment workflow by:
 
 Not intended for updating or upgrading Flux. That should be done through changes to the Git (or OCI) source that Flux is connected to.
 
-Requirements
-------------
+## Requirements
 
 - Ansible 2.15 or newer
 - This role must be run as root
 
-Role Variables
---------------
+## Role Variables
 
 | Variable | Default | Description |
 | --- | --- | --- |
@@ -26,13 +23,11 @@ Role Variables
 | `flux.local_kubeconfig` | undefined | Path to the kubeconfig file for accessing the cluster |
 | `kustomize.version` | undefined | The version of Kustomize to install |
 
-Dependencies
-------------
+## Dependencies
 
 None
 
-Example Playbook
-----------------
+## Example Playbook
 
 ```yaml
 - hosts: k3s_servers
@@ -48,12 +43,10 @@ Example Playbook
 
 See the [Molecule test playbook](../../molecule/default/converge.yml) and the [GitHub Actions workflow](../../../.github/workflows/test-k3s.yaml) for end-to-end examples.
 
-License
--------
+## License
 
 AGPL-3.0-only
 
-Author Information
-------------------
+## Author Information
 
 This role was created by the homelab-ops team.

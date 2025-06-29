@@ -1,5 +1,4 @@
-homelab_ops.block_device.select
-===============================
+# homelab_ops.block_device.select
 
 A role that identifies and selects block devices based on specified criteria. This role starts the storage provisioning workflow by finding appropriate devices for partitioning and filesystem creation.
 
@@ -9,14 +8,12 @@ This role can be used independently but its more commonly used as part of `block
 2. Filtering based on criteria
 3. Validating that there was at least 1 matching block device
 
-Requirements
-------------
+## Requirements
 
 - Ansible 2.15 or newer
 - This role must be run as root
 
-Role Variables
---------------
+## Role Variables
 
 | Variable | Default | Description |
 | --- | --- | --- |
@@ -34,13 +31,11 @@ The `device` variable is a dictionary that can contain the following keys:
 
 The `include` and `exclude` dictionaries can contain any of the fields listed under the "Available output columns" section in `lsblk --help`, with the exceptions noted above.
 
-Dependencies
-------------
+## Dependencies
 
 None
 
-Example Playbook
-----------------
+## Example Playbook
 
 ```yaml
 - hosts: servers
@@ -58,12 +53,10 @@ Example Playbook
 
 See the [Molecule test playbook](../../molecule/select/converge.yml) for more examples.
 
-License
--------
+## License
 
 AGPL-3.0-only
 
-Author Information
-------------------
+## Author Information
 
 This role was created by the homelab-ops team.

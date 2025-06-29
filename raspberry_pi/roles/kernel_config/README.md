@@ -1,17 +1,14 @@
-homelab_ops.raspberry_pi.kernel_config
-======================================
+# homelab_ops.raspberry_pi.kernel_config
 
 A role that manages device configuration for the kernel of Raspberry Pi devices. This role handles config.txt settings for hardware features.
 
-Requirements
-------------
+## Requirements
 
 - Ansible 2.15 or newer
 - This role must be run as root
 - The target device must be a Raspberry Pi running a supported operating system (e.g., Raspberry Pi OS, Ubuntu)
 
-Role Variables
---------------
+## Role Variables
 
 | Variable | Default | Description |
 | --- | --- | --- |
@@ -20,13 +17,11 @@ Role Variables
 | `kernel.config.arm_boost_supported` | `false` | Whether the ARM boost feature is supported by the kernel |
 | `kernel.filename` | undefined | The filename of the kernel image (e.g., `vmlinux`) |
 
-Dependencies
-------------
+## Dependencies
 
 None
 
-Example Playbook
-----------------
+## Example Playbook
 
 ```yaml
 - hosts: raspberry_pis
@@ -47,12 +42,10 @@ Example Playbook
 
 See the [Molecule test playbook](../../molecule/kernel_config/converge.yml) for a complete example.
 
-License
--------
+## License
 
 AGPL-3.0-only
 
-Author Information
-------------------
+## Author Information
 
 This role was created by the homelab-ops team.
