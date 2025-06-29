@@ -1,5 +1,4 @@
-homelab_ops.configure.cloud_init
-================================
+# homelab_ops.configure.cloud_init
 
 A role that manages system initialization through cloud-init configuration. This role handles instance setup, user provisioning, and boot-time operations.
 
@@ -10,14 +9,12 @@ This role manages system initialization by:
 - Configures cloud-init to run specified `runcmd` commands during the runcmd stage
   - Any files needed for the `runcmd` commands can be specified under `cloudinit.write_files` to be placed within the datasource
 
-Requirements
-------------
+## Requirements
 
 - Ansible 2.15 or newer
 - This role must be run as root
 
-Role Variables
---------------
+## Role Variables
 
 | Variable | Default | Description |
 | --- | --- | --- |
@@ -44,13 +41,11 @@ Each file in the `cloudinit.write_files` list should be a dictionary with the fo
 | `permissions` | yes | The permissions of the file in octal format (e.g., `'0600'`) |
 | `content` | yes | The content of the file |
 
-Dependencies
-------------
+## Dependencies
 
 None
 
-Example Playbook
-----------------
+## Example Playbook
 
 ```yaml
 - hosts: servers
@@ -83,12 +78,10 @@ Example Playbook
 
 See the [Molecule test playbook](../../molecule/cloud_init/converge.yml) for a complete example.
 
-License
--------
+## License
 
 AGPL-3.0-only
 
-Author Information
-------------------
+## Author Information
 
 This role was created by the homelab-ops team.

@@ -1,10 +1,8 @@
-homelab_ops.block_device.provision
-==================================
+# homelab_ops.block_device.provision
 
 A role that orchestrates complete block device setup by coordinating device selection, partitioning, and filesystem creation. This role brings together all block_device components to provision storage.
 
-Requirements
-------------
+## Requirements
 
 - Ansible 2.15 or newer
 - This role must be run as root
@@ -14,8 +12,7 @@ Requirements
   - e2fsprogs (if creating ext4 filesystems)
   - parted
 
-Role Variables
---------------
+## Role Variables
 
 | Variable | Default | Description |
 | --- | --- | --- |
@@ -48,8 +45,7 @@ For btrfs filesystems, the `filesystem_options` dictionary can contain a `subvol
 | `path` | yes | Path of the subvolume within the filesystem |
 | `copy_on_write` | no | Whether copy-on-write should be enabled (default: `true`) |
 
-Dependencies
-------------
+## Dependencies
 
 This role depends on the following roles:
 
@@ -57,8 +53,7 @@ This role depends on the following roles:
 - homelab_ops.block_device.partition
 - homelab_ops.block_device.filesystem
 
-Example Playbook
-----------------
+## Example Playbook
 
 ```yaml
 - hosts: servers
@@ -103,12 +98,10 @@ Example Playbook
 
 See the [Molecule test playbook](../../molecule/provision/converge.yml) and the [GitHub Actions workflow](../../../.github/workflows/test-block_device.yaml) for end-to-end examples.
 
-License
--------
+## License
 
 AGPL-3.0-only
 
-Author Information
-------------------
+## Author Information
 
 This role was created by the homelab-ops team.

@@ -1,5 +1,4 @@
-homelab_ops.packages.install_from_url
-=====================================
+# homelab_ops.packages.install_from_url
 
 A role that installs packages from URLs in archive or binary formats. This role handles package downloads and installation for image building and system provisioning.
 
@@ -12,15 +11,13 @@ This role manages URL-based installation by:
 
 Not intended for upgrading existing packages.
 
-Requirements
-------------
+## Requirements
 
 - Ansible 2.10 or newer
 - This role must be run as root
 - The target system must have the necessary tools installed to handle the package format (e.g., `tar` for archives, `chmod` for binaries)
 
-Role Variables
---------------
+## Role Variables
 
 | Variable | Default | Description |
 | --- | --- | --- |
@@ -31,13 +28,11 @@ Role Variables
 | `package.unarchive_extra_opts` | `[]` | Additional options to pass to the `unarchive` module (only for archive packages) |
 | `package.archive_package_name` | undefined | The name of the package within the archive (only for archive packages) |
 
-Dependencies
-------------
+## Dependencies
 
 None
 
-Example Playbook
-----------------
+## Example Playbook
 
 ```yaml
 - hosts: servers
@@ -60,12 +55,10 @@ See the following Molecule test playbooks and GitHub Actions workflows for end-t
 - [Install package from binary at URL](../../molecule/install_from_url.package_as_binary/converge.yml)
   - [GitHub Actions workflow](../../../.github/workflows/test-packages.yaml)
 
-License
--------
+## License
 
 AGPL-3.0-only
 
-Author Information
-------------------
+## Author Information
 
 This role was created by the homelab-ops team.

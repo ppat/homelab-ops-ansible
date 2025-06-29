@@ -1,5 +1,4 @@
-homelab_ops.os.ubuntu
-=====================
+# homelab_ops.os.ubuntu
 
 A role that configures Ubuntu systems for image-based deployments. This role prepares Ubuntu installations with package management, kernel configuration, and system optimization.
 
@@ -16,8 +15,7 @@ Not intended for:
 - Boot and/or cloud-init configuration (as that is specific to an installation)
 - Applying kernel parameters (sysctl) in the currently running kernel (as a restart is expected after loading an OS image to a disk)
 
-Requirements
-------------
+## Requirements
 
 - Ansible 2.15 or newer
 - This role must be run as root
@@ -26,8 +24,7 @@ Requirements
   - qemu-user-static
   - parted
 
-Role Variables
---------------
+## Role Variables
 
 | Variable | Default | Description |
 | --- | --- | --- |
@@ -38,16 +35,14 @@ Role Variables
 | `kernel.rebuild_initramfs` | `true` | Whether to rebuild the initramfs after changes |
 | `kernel.ensure_vmlinux` | `true` | Whether to ensure both compressed (vmlinuz) and uncompressed (vmlinux) kernels are present |
 
-Dependencies
-------------
+## Dependencies
 
 This role depends on the following roles:
 
 - homelab_ops.packages.apt_install
 - homelab_ops.packages.apt_uninstall
 
-Example Playbook
-----------------
+## Example Playbook
 
 ```yaml
 - hosts: servers
@@ -76,12 +71,10 @@ Example Playbook
 
 See the [Molecule test playbook](../../molecule/ubuntu/converge.yml) and the [GitHub Actions workflow](../../../.github/workflows/test-os.yaml) for end-to-end examples.
 
-License
--------
+## License
 
 AGPL-3.0-only
 
-Author Information
-------------------
+## Author Information
 
 This role was created by the homelab-ops team.

@@ -6,6 +6,8 @@ name: lint
 on:
   pull_request:
   workflow_dispatch:
+  schedule:
+  - cron: '0 5 * * 1'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -21,6 +23,8 @@ jobs:
       actions_all_changed_files: ${{ steps.changed-files-yaml.outputs.actions_all_changed_files}}
       ansible_any_changed: ${{ steps.changed-files-yaml.outputs.ansible_any_changed }}
       ansible_all_changed_files: ${{ steps.changed-files-yaml.outputs.ansible_all_changed_files}}
+      markdown_any_changed: ${{ steps.changed-files-yaml.outputs.markdown_any_changed }}
+      markdown_all_changed_files: ${{ steps.changed-files-yaml.outputs.markdown_all_changed_files}}
       renovate_any_changed: ${{ steps.changed-files-yaml.outputs.renovate_any_changed }}
       renovate_all_changed_files: ${{ steps.changed-files-yaml.outputs.renovate_all_changed_files}}
       shellscripts_any_changed: ${{ steps.changed-files-yaml.outputs.shellscripts_any_changed }}
@@ -50,6 +54,9 @@ jobs:
           - '!.pre-commit-config.yaml'
           - '.ansible-lint'
           - 'pyproject.toml'
+          markdown:
+          - '**.md'
+          - '!**/CHANGELOG.md'
           renovate:
           - .github/renovate.json
           - .github/renovate/**
@@ -63,9 +70,9 @@ jobs:
     uses: ppat/github-workflows/.github/workflows/lint-commit-messages.yaml@main
     with:
       git_ref: ${{ github.head_ref }}
-      fetch_depth: ${{ github.event.pull_request.commits }}
-      from: ${{ github.event.pull_request.head.sha }}~${{ github.event.pull_request.commits }}
-      to: ${{ github.event.pull_request.head.sha }}
+      fetch_depth: ${{ github.event.pull_request.commits || 0 }}
+      from: ${{ github.event.pull_request.head.sha || 'HEAD' }}~${{ github.event.pull_request.commits || '1' }}
+      to: ${{ github.event.pull_request.head.sha || 'HEAD' }}
 
   github-actions:
     needs: [detect-changes]
@@ -74,6 +81,14 @@ jobs:
     with:
       git_ref: ${{ github.head_ref || github.ref }}
       files: ${{ github.event_name == 'workflow_dispatch' && 'ALL' || needs.detect-changes.outputs.actions_all_changed_files }}
+
+  markdown:
+    needs: [detect-changes]
+    if: ${{ github.event_name == 'workflow_dispatch' || needs.detect-changes.outputs.markdown_any_changed == 'true' }}
+    uses: ppat/github-workflows/.github/workflows/lint-markdown.yaml@main
+    with:
+      git_ref: ${{ github.head_ref || github.ref }}
+      files: ${{ github.event_name == 'workflow_dispatch' && 'ALL' || needs.detect-changes.outputs.markdown_all_changed_files }}
 
   pre-commit:
     uses: ppat/github-workflows/.github/workflows/lint-pre-commit.yaml@main

@@ -5,8 +5,9 @@ name: "test collection: packages"
 on:
   pull_request:
     paths:
-    - '.github/workflows/test-packages.yaml'
-    - 'packages/**'
+    # - '.github/workflows/test-packages.yaml'
+    - 'packages/**.yaml'
+    - 'packages/**.yml'
     - 'poetry.lock'
     - 'pyproject.toml'
   workflow_dispatch:

@@ -1,5 +1,4 @@
-homelab_ops.k3s.install_k3s_service
-===================================
+# homelab_ops.k3s.install_k3s_service
 
 A role that installs and configures k3s nodes, managing cluster formation and node joining. This role handles initial node setup and cluster expansion.
 
@@ -15,14 +14,12 @@ Not intended for:
 - Updating or upgrading existing k3s installations (use [system-upgrade-controller](https://docs.k3s.io/upgrades/automated))
 - Installing/configuring system software (handle during OS image baking or configuring host to boot)
 
-Requirements
-------------
+## Requirements
 
 - Ansible 2.15 or newer
 - This role must be run as root
 
-Role Variables
---------------
+## Role Variables
 
 | Variable | Default | Description |
 | --- | --- | --- |
@@ -172,13 +169,11 @@ For agent nodes:
 - --kube-proxy-arg metrics-bind-address=0.0.0.0
 ```
 
-Dependencies
-------------
+## Dependencies
 
 None
 
-Example Playbook
-----------------
+## Example Playbook
 
 ```yaml
 # Cluster formation on first server node
@@ -239,12 +234,10 @@ Example Playbook
 
 See the [Molecule test playbook](../../molecule/default/converge.yml) and the [GitHub Actions workflow](../../../.github/workflows/test-k3s.yaml) for end-to-end examples.
 
-License
--------
+## License
 
 AGPL-3.0-only
 
-Author Information
-------------------
+## Author Information
 
 This role was created by the homelab-ops team.

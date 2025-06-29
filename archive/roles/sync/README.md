@@ -1,5 +1,4 @@
-homelab_ops.archive.sync
-========================
+# homelab_ops.archive.sync
 
 A role that updates filesystem content from archives using efficient change detection. This role enables incremental OS image updates while preserving filesystem features.
 
@@ -9,8 +8,7 @@ This role updates OS images by:
 2. Detecting changed files compared to target filesystem path
 3. Syncing only the changed or newer files to the target
 
-Requirements
-------------
+## Requirements
 
 - Ansible 2.15 or newer
 - This role must be run as root
@@ -18,8 +16,7 @@ Requirements
   - rsync
   - wget
 
-Role Variables
---------------
+## Role Variables
 
 | Variable | Default | Description |
 | --- | --- | --- |
@@ -27,13 +24,11 @@ Role Variables
 | `archive.destination_path` | undefined | Filesystem path to sync the archive contents to |
 | `archive.extracted_size` | undefined | Estimated size of the extracted archive, used for sizing the ramdisk |
 
-Dependencies
-------------
+## Dependencies
 
 None
 
-Example Playbook
-----------------
+## Example Playbook
 
 ```yaml
 - hosts: servers
@@ -48,12 +43,10 @@ Example Playbook
 
 See the [Molecule test playbook](../../molecule/sync/converge.yml) and the [GitHub Actions workflow](../../../.github/workflows/test-archive.yaml) for end-to-end examples.
 
-License
--------
+## License
 
 AGPL-3.0-only
 
-Author Information
-------------------
+## Author Information
 
 This role was created by the homelab-ops team.

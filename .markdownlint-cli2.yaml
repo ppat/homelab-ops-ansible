@@ -1,0 +1,50 @@
+---
+config:
+  # Default state for all rules
+  default: true
+
+  # MD003/heading-style - Heading style
+  MD003:
+    style: atx
+
+  # MD013/line-length - Line length
+  MD013: false
+
+  # MD024/no-duplicate-heading - Multiple headings with the same content
+  MD024:
+    # Allow different nesting levels
+    allow_different_nesting: true
+
+  # MD029/ol-prefix - Ordered list item prefix
+  MD029: false
+
+  # MD033/no-inline-html - Inline HTML
+  MD033:
+    # Allow specific HTML elements
+    allowed_elements:
+    - a
+    - br
+    - details
+    - em
+    - hr
+    - img
+    - p
+    - summary
+    - sup
+
+  # MD040/fenced-code-language - Fenced code blocks should have a language specified
+  MD040: false
+
+  # MD041/first-line-heading - First line in a file should be a heading
+  MD041: false
+
+  # MD046/code-block-style - Code block style
+  MD046:
+    style: fenced
+
+  # MD048/code-fence-style - Code fence style
+  MD048:
+    style: backtick
+
+ignores:
+- "CHANGELOG.md"

@@ -1,5 +1,4 @@
-homelab_ops.raspberry_pi.provision [DEPRECATED]
-==================================
+# homelab_ops.raspberry_pi.provision [DEPRECATED]
 
 **DEPRECATION NOTICE:** This role is deprecated and will be removed in version 2.0.0.
 This wrapper role is being replaced by direct usage of its underlying collections and roles, which provides better granular control. The collections this role depends on will remain available. A playbook that provides similar functionality to this role is under consideration.
@@ -15,15 +14,13 @@ This role orchestrates device setup by:
 - Configuring cloud-init userdata and Ansible playbooks to be invoked by cloud-init on first boot
 - Configuring the device for booting (`cmdline.txt`, `config.txt`, and `fstab`)
 
-Requirements
-------------
+## Requirements
 
 - Ansible 2.15 or newer
 - This role must be run as root
 - The target device must be a Raspberry Pi running a supported operating system (e.g., Raspberry Pi OS, Ubuntu)
 
-Role Variables
---------------
+## Role Variables
 
 | Variable | Default | Description |
 | --- | --- | --- |
@@ -38,8 +35,7 @@ Role Variables
 | `provision.raspberry_pi.kernel` | `{}` | Kernel configuration options |
 | `provision.cloudinit` | `{}` | cloud-init configuration options |
 
-Dependencies
-------------
+## Dependencies
 
 This role depends on the following roles:
 
@@ -52,8 +48,7 @@ This role depends on the following roles:
 - `homelab_ops.raspberry_pi.kernel_cmdline`
 - `homelab_ops.raspberry_pi.kernel_config`
 
-Example Playbook
-----------------
+## Example Playbook
 
 ```yaml
 - hosts: raspberry_pis
@@ -99,12 +94,10 @@ Example Playbook
 
 See the [Molecule test playbook](../../molecule/provision/converge.yml) for a complete example.
 
-License
--------
+## License
 
 AGPL-3.0-only
 
-Author Information
-------------------
+## Author Information
 
 This role was created by the homelab-ops team.

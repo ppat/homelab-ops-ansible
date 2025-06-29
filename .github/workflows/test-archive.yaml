@@ -5,8 +5,9 @@ name: "test collection: archive"
 on:
   pull_request:
     paths:
-    - '.github/workflows/test-archive.yaml'
-    - 'archive/**'
+    # - '.github/workflows/test-archive.yaml'
+    - 'archive/**.yaml'
+    - 'archive/**.yml'
     - 'poetry.lock'
     - 'pyproject.toml'
   workflow_dispatch:
