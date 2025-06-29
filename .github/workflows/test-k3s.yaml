@@ -83,12 +83,6 @@ jobs:
         sudo apt-get install /tmp/sysbox.deb
         rm /tmp/sysbox.deb
 
-        sudo systemctl restart containerd
-        sudo systemctl restart docker
-        sudo systemctl restart sysbox
-        sudo systemctl restart containerd
-        sudo systemctl restart docker
-
         sudo systemctl status sysbox
       env:
         # renovate: datasource=github-releases depName=nestybox/sysbox
