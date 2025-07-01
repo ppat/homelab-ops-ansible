@@ -5,7 +5,7 @@
     "@commitlint/ensure": "19.8.1",
     "@commitlint/load": "19.8.1",
     "commitlint-plugin-function-rules": "4.0.2",
-    "semantic-release": "24.2.5",
+    "semantic-release": "24.2.6",
     "@semantic-release/changelog": "6.0.3",
     "@semantic-release/commit-analyzer": "13.0.1",
     "@semantic-release/github": "11.0.3",
