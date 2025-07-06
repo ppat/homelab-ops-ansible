@@ -2,6 +2,18 @@
 
 
 
+## [1.14.0](https://github.com/ppat/homelab-ops-ansible/compare/v1.13.0...v1.14.0) (2025-07-06)
+
+### ✨ Features
+
+* **k3s:** update k3s-io/k3s (1.30.2+k3s1 -> 1.32.3+k3s1) ([#397](https://github.com/ppat/homelab-ops-ansible/issues/397)) ([6c544d1](https://github.com/ppat/homelab-ops-ansible/commit/6c544d1ef3d120e829bccd3932b4959780132c7d))
+* **k3s:** update k3s-io/k3s (1.32.5+k3s1 -> 1.33.2+k3s1) ([#404](https://github.com/ppat/homelab-ops-ansible/issues/404)) ([525e1af](https://github.com/ppat/homelab-ops-ansible/commit/525e1afb93ccee092ce07fbdcaa2a460109fd498))
+* update node (v22.16.0 -> v22.17.0) ([#401](https://github.com/ppat/homelab-ops-ansible/issues/401)) ([3a69d25](https://github.com/ppat/homelab-ops-ansible/commit/3a69d250c953410b7c1cfe9b99efabaf2bcf0a63))
+
+### 🐛 Enhancements + Bug Fixes
+
+* **k3s:** update k3s-io/k3s (1.32.3+k3s1 -> 1.32.5+k3s1) ([#398](https://github.com/ppat/homelab-ops-ansible/issues/398)) ([06e9611](https://github.com/ppat/homelab-ops-ansible/commit/06e961168a54478ae655dcb65ceba96f90d378a1))
+
 ## [1.13.0](https://github.com/ppat/homelab-ops-ansible/compare/v1.12.0...v1.13.0) (2025-06-29)
 
 ### ✨ Features
