@@ -130,7 +130,7 @@ jobs:
         HARDENING: ${{ matrix.cis_hardening == 'hardening=on' }}
         METRICS_EXPOSED: ${{ matrix.expose_metrics == 'metrics=on' }}
         # renovate: datasource=github-releases depName=k3s-io/k3s extractVersion=^v?(?<version>.*)$
-        K3S_VERSION: "1.33.1+k3s1"
+        K3S_VERSION: "1.33.2+k3s1"
         # renovate: datasource=github-releases depName=fluxcd/flux2 extractVersion=^v?(?<version>.*)$
         FLUX_VERSION: "2.6.3"
         # renovate: datasource=github-releases depName=kubernetes-sigs/kustomize extractVersion=^kustomize/^v(?<version>.*)$
