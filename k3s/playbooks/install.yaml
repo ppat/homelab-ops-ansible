@@ -14,7 +14,7 @@
     prompt: Desired flux version
     private: false
     # renovate: datasource=github-releases depName=fluxcd/flux2
-    default: "2.6.3"
+    default: "2.6.4"
   - name: kustomize_version
     prompt: Desired kustomize version
     private: false
