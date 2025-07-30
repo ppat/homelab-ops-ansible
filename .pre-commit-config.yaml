@@ -14,7 +14,7 @@ repos:
     args: [--fix=lf]
   - id: trailing-whitespace
 - repo: https://github.com/sirosen/texthooks
-  rev: 0.6.8
+  rev: 0.7.0
   hooks:
   - id: fix-smartquotes
   - id: fix-ligatures
