@@ -19,7 +19,7 @@
     prompt: Desired kustomize version
     private: false
     # renovate: datasource=github-releases depName=kubernetes-sigs/kustomize extractVersion=^kustomize/(?<version>.*)$
-    default: "5.7.0"
+    default: "5.7.1"
   - name: node_type
     prompt: K3S node type (server/agent)
     private: false
