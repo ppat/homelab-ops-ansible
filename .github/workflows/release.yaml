@@ -30,6 +30,7 @@ jobs:
 
   galaxy-publish:
     needs: [release]
+    if: ${{ github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
@@ -101,7 +102,6 @@ jobs:
         OUTPUT_DIR: dist/
 
     - name: Publish to ansible-galaxy collection
-      if: ${{ github.event_name == 'workflow_dispatch' }}
       # yamllint disable-line rule:indentation
       run: |
         set -eo pipefail
