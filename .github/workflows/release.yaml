@@ -29,7 +29,7 @@ jobs:
       app_private_key: ${{ secrets.HOMELAB_BOT_APP_PRIVATE_KEY }}
 
   galaxy-publish:
-    needs: [create-release]
+    needs: [release]
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
@@ -38,7 +38,7 @@ jobs:
       with:
         fetch-depth: 1
         persist-credentials: false
-        ref: ${{ needs.create-release.outputs.released_version != 'v0.0.0' && needs.create-release.outputs.released_version || needs.create-release.outputs.released_sha }}
+        ref: ${{ needs.release.outputs.released_version != 'v0.0.0' && needs.release.outputs.released_version || needs.release.outputs.released_sha }}
 
     - name: Setup poetry
       run: pipx install poetry==$POETRY_VERSION
