@@ -1,0 +1,6 @@
+[tools]
+bun  = "1.2.19"
+node = "22.17.1"
+
+[settings.npm]
+bun = true

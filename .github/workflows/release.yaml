@@ -6,31 +6,39 @@ on:
   pull_request:
     paths:
     - '.github/workflows/release.yaml'
-    - '.node-version'
     - '.releaserc.js'
     - 'package.json'
-    - 'package-lock.json'
+    - 'bun.lock'
     - 'poetry.lock'
     - 'pyproject.toml'
     - '**/galaxy.yml'
   workflow_dispatch:
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-
-permissions: {}
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   release:
+    uses: ppat/github-workflows/.github/workflows/release-semantic.yaml@a80b8b7c502f0db4fc8d81cef2a2d60d3d6cb017 # v2.0.0
+    with:
+      dry_run: ${{ (github.event_name == 'pull_request') }}
+      release_branch: ${{ github.head_ref || github.ref_name }}
+    secrets:
+      app_id: ${{ secrets.HOMELAB_BOT_APP_ID }}
+      app_private_key: ${{ secrets.HOMELAB_BOT_APP_PRIVATE_KEY }}
+
+  galaxy-publish:
+    needs: [create-release]
     runs-on: ubuntu-24.04
     timeout-minutes: 5
-    environment: release
     steps:
     - name: Check out
       uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       with:
-        token: "${{ secrets.GH_RELEASE_TOKEN }}"
-        fetch-depth: 0
+        fetch-depth: 1
+        persist-credentials: false
+        ref: ${{ needs.create-release.outputs.released_version != 'v0.0.0' && needs.create-release.outputs.released_version || needs.create-release.outputs.released_sha }}
 
     - name: Setup poetry
       run: pipx install poetry==$POETRY_VERSION
@@ -49,33 +57,6 @@ jobs:
         poetry --version
         poetry install --no-interaction
         poetry env info
-
-    - name: Set up node
-      uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
-      with:
-        node-version-file: '.node-version'
-        cache: 'npm'
-        cache-dependency-path: 'package-lock.json'
-
-    - name: Install node packages
-      run: npm ci --no-fund --no-audit
-
-    - name: Release - dry run
-      if: github.event_name == 'pull_request'
-      shell: bash
-      env:
-        GITHUB_TOKEN: ${{ secrets.GH_RELEASE_TOKEN }}
-      run: |
-        CURRENT_BRANCH=$GITHUB_HEAD_REF
-        GITHUB_REF=$CURRENT_BRANCH
-        set -x
-        npx semantic-release --dry-run --no-ci --branches $CURRENT_BRANCH
-
-    - name: Release
-      if: github.event_name == 'workflow_dispatch'
-      env:
-        GITHUB_TOKEN: ${{ secrets.GH_RELEASE_TOKEN }}
-      run: npx semantic-release
 
     - name: Transform README links for ansible-galaxy
       # yamllint disable-line rule:indentation
