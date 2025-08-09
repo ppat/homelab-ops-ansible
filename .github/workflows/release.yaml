@@ -7,8 +7,6 @@ on:
     paths:
     - '.github/workflows/release.yaml'
     - '.releaserc.js'
-    - 'package.json'
-    - 'bun.lock'
     - 'poetry.lock'
     - 'pyproject.toml'
     - '**/galaxy.yml'
