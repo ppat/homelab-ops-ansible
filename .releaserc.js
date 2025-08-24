@@ -19,6 +19,7 @@ module.exports = {
       presetConfig: {
         types: [
           { type: "build", hidden: true },
+          { type: "chore", scope: "", section: "🐛 Enhancements + Bug Fixes" },
           { type: "chore", scope: "deps", section: "📌 Dependencies" },
           { type: "chore", scope: "other", hidden: true },
           { type: "ci", hidden: true },
