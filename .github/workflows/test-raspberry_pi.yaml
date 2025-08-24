@@ -6,10 +6,10 @@ on:
   pull_request:
     paths:
     - '.github/workflows/test-raspberry_pi.yaml'
-    - 'poetry.lock'
-    - 'pyproject.toml'
     - 'raspberry_pi/**.yaml'
     - 'raspberry_pi/**.yml'
+    - 'pyproject.toml'
+    - 'uv.lock'
   workflow_dispatch:
     inputs:
       log_verbosity:
@@ -42,38 +42,35 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
-    - name: Checkout
-      uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4
+    - name: Setup repository and tools
+      uses: ppat/homelab-ops-actions/actions/setup-repository-tools@9ddd555bfe032fe96a292eb81d3a7dd81b675099 # v0.0.3
       with:
-        fetch-depth: 1
-        persist-credentials: false
-
-    - name: Setup poetry
-      run: pipx install poetry==$POETRY_VERSION
-      env:
-        # renovate: datasource=pypi depName=poetry
-        POETRY_VERSION: "2.1.4"
-
-    - name: Set up python
-      uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
-      with:
-        python-version: '3.13'
-        cache: 'poetry'
+        current_git_ref: ${{ github.head_ref || github.ref }}
+        current_repository: ${{ github.repository }}
+        extra_cache_path: ~/.cache/uv/
+        extra_cache_key: uv
+        # renovate: datasource=github-releases depName=jdx/mise
+        mise_version: "v2025.8.20"
+        token: ${{ secrets.GITHUB_TOKEN }}
+        tools_git_ref: main
+        tools_repository: ppat/github-workflows
 
     - name: Install python requirements
       run: |
-        poetry --version
-        poetry install --no-interaction
-        poetry env info
+        uv --version
+        uv sync --frozen
+        uv run python --version
+        uv run ansible --version
+        uv run molecule --version
 
     - name: Install ansible collections
       run: |
-        poetry run ansible-galaxy collection install ./raspberry_pi/
+        uv run ansible-galaxy collection install ./raspberry_pi/
 
         # install collection dependencies w/ --force to ensure that replaced from local repository
-        poetry run ansible-galaxy collection install --force ./block_device/
-        poetry run ansible-galaxy collection install --force ./configure/
-        poetry run ansible-galaxy collection install --force ./archive/
+        uv run ansible-galaxy collection install --force ./block_device/
+        uv run ansible-galaxy collection install --force ./configure/
+        uv run ansible-galaxy collection install --force ./archive/
 
     - name: Determine molecule verbosity
       # yamllint disable-line rule:indentation
@@ -110,7 +107,7 @@ jobs:
 
     - name: Molecule Test
       run: |
-        poetry run molecule $MOLECULE_PARAMS --env-file $MOLECULE_VARS_FILE test --all --no-parallel
+        uv run molecule $MOLECULE_PARAMS --env-file $MOLECULE_VARS_FILE test --all --no-parallel
       working-directory: ./raspberry_pi
       shell: bash
       env:
