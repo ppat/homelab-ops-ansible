@@ -2,6 +2,50 @@
 
 
 
+## [1.15.0](https://github.com/ppat/homelab-ops-ansible/compare/v1.14.0...v1.15.0) (2025-08-24)
+
+### ✨ Features
+
+* **configure:** update ansible.posix (2.0.0 -> 2.1.0) ([#414](https://github.com/ppat/homelab-ops-ansible/issues/414)) ([438608e](https://github.com/ppat/homelab-ops-ansible/commit/438608efd9805e9d8f8956d3e144daa543da5205))
+* **configure:** update community.general (11.0.0 -> 11.1.0) ([#410](https://github.com/ppat/homelab-ops-ansible/issues/410)) ([0c50838](https://github.com/ppat/homelab-ops-ansible/commit/0c50838d218a993394e67af2fd51d12da74ee766))
+* **configure:** update community.general (11.1.2 -> 11.2.0) ([#436](https://github.com/ppat/homelab-ops-ansible/issues/436)) ([e39e269](https://github.com/ppat/homelab-ops-ansible/commit/e39e2691ebda45356bef7789cf564638e5dfaaa0))
+* **k3s:** update kubernetes-sigs/kustomize (v5.6.0 -> v5.7.0) ([#407](https://github.com/ppat/homelab-ops-ansible/issues/407)) ([9a54af7](https://github.com/ppat/homelab-ops-ansible/commit/9a54af7a7ec7deae3bf85ade48c9e7c78b05ae4d))
+
+### 🐛 Enhancements + Bug Fixes
+
+* **configure:** update ansible-core (2.18.6 -> 2.18.7) ([#416](https://github.com/ppat/homelab-ops-ansible/issues/416)) ([8e1c053](https://github.com/ppat/homelab-ops-ansible/commit/8e1c053187d7ac929c8fb04d9f5e2aa28994444e))
+* **configure:** update ansible-core (2.18.7 -> 2.18.8) ([#442](https://github.com/ppat/homelab-ops-ansible/issues/442)) ([a9a3b4b](https://github.com/ppat/homelab-ops-ansible/commit/a9a3b4bd12b9bc2e2fb0a894a9da6985abe68098))
+* **configure:** update community.general (11.1.0 -> 11.1.1) ([#417](https://github.com/ppat/homelab-ops-ansible/issues/417)) ([4ee7227](https://github.com/ppat/homelab-ops-ansible/commit/4ee7227d286bc6b1ad27df2790033ceb597d8d6a))
+* **configure:** update community.general (11.1.1 -> 11.1.2) ([#430](https://github.com/ppat/homelab-ops-ansible/issues/430)) ([14f50c2](https://github.com/ppat/homelab-ops-ansible/commit/14f50c213004737468961990611111feb2424708))
+* **configure:** update community.general (11.2.0 -> 11.2.1) ([#443](https://github.com/ppat/homelab-ops-ansible/issues/443)) ([cde30bd](https://github.com/ppat/homelab-ops-ansible/commit/cde30bd9991a8acc9d0bbe561e15c35c6ca0ecbc))
+* **dev-tools:** update ansible/ansible-lint (non-major) ([#439](https://github.com/ppat/homelab-ops-ansible/issues/439)) ([946e7c5](https://github.com/ppat/homelab-ops-ansible/commit/946e7c52550d6ffe19bb7be0fb32e020917db0c4))
+* **dev-tools:** update ansible/ansible-lint (non-major) ([#448](https://github.com/ppat/homelab-ops-ansible/issues/448)) ([92bd71c](https://github.com/ppat/homelab-ops-ansible/commit/92bd71ce4849856a59becd2783e5af843d106ea9))
+* **dev-tools:** update fluxcd/flux2 (2.6.3 -> 2.6.4) ([#405](https://github.com/ppat/homelab-ops-ansible/issues/405)) ([59c8c14](https://github.com/ppat/homelab-ops-ansible/commit/59c8c14cdbd607ea5b5b34d888f61305ecaecca6))
+* **dev-tools:** update k3s-io/k3s (1.33.2+k3s1 -> 1.33.3+k3s1) ([#427](https://github.com/ppat/homelab-ops-ansible/issues/427)) ([536982c](https://github.com/ppat/homelab-ops-ansible/commit/536982c6573e49ddf4f76978f2b2dd2adca304c4))
+* **dev-tools:** update lockfile npm ([#411](https://github.com/ppat/homelab-ops-ansible/issues/411)) ([5581e4c](https://github.com/ppat/homelab-ops-ansible/commit/5581e4c68e960c3ff9b332bd586c74048e94bd78))
+* **dev-tools:** update lockfile npm ([#420](https://github.com/ppat/homelab-ops-ansible/issues/420)) ([b15b64c](https://github.com/ppat/homelab-ops-ansible/commit/b15b64cb91dc6a6b74e84655c2326b2e4de503a8))
+* **dev-tools:** update lockfile npm ([#426](https://github.com/ppat/homelab-ops-ansible/issues/426)) ([adba62e](https://github.com/ppat/homelab-ops-ansible/commit/adba62e6eb5fe2d95b40c16457967bf2f63f5b6e))
+* **dev-tools:** update lockfile poetry ([#412](https://github.com/ppat/homelab-ops-ansible/issues/412)) ([c5515f2](https://github.com/ppat/homelab-ops-ansible/commit/c5515f282eb35270aaa365a3750c4ad06a836e0b))
+* **dev-tools:** update lockfile poetry ([#421](https://github.com/ppat/homelab-ops-ansible/issues/421)) ([adea764](https://github.com/ppat/homelab-ops-ansible/commit/adea7642bd0f8b5932d6ef01c838a15ebc20a5c8))
+* **dev-tools:** update lockfile poetry ([#441](https://github.com/ppat/homelab-ops-ansible/issues/441)) ([454618c](https://github.com/ppat/homelab-ops-ansible/commit/454618cda1edf8924c478775091743d30e192db7))
+* **dev-tools:** update npm packages (non-major) ([#408](https://github.com/ppat/homelab-ops-ansible/issues/408)) ([3957ad6](https://github.com/ppat/homelab-ops-ansible/commit/3957ad6a15781c4b1cae9ec137ea15d05b2a1ab0))
+* **dev-tools:** update poetry (2.1.3 -> 2.1.4) ([#431](https://github.com/ppat/homelab-ops-ansible/issues/431)) ([0851c09](https://github.com/ppat/homelab-ops-ansible/commit/0851c094b0670f596eabeecd66c51db76f115782))
+* **dev-tools:** update poetry packages (non-major) ([#440](https://github.com/ppat/homelab-ops-ansible/issues/440)) ([e699541](https://github.com/ppat/homelab-ops-ansible/commit/e699541948b330dc6ad60575a90cefcdd2f581ca))
+* **dev-tools:** update renovatebot/renovate (41.17.2 -> 41.31.1) ([#409](https://github.com/ppat/homelab-ops-ansible/issues/409)) ([9f8ab38](https://github.com/ppat/homelab-ops-ansible/commit/9f8ab38a5138ccab961ca870ef036dfd1105ccf9))
+* **dev-tools:** update renovatebot/renovate (41.31.1 -> 41.40.0) ([#415](https://github.com/ppat/homelab-ops-ansible/issues/415)) ([e061470](https://github.com/ppat/homelab-ops-ansible/commit/e061470c2c1709f0194d4188ab11320d3654d925))
+* **dev-tools:** update renovatebot/renovate (41.40.0 -> 41.43.5) ([#425](https://github.com/ppat/homelab-ops-ansible/issues/425)) ([081b34e](https://github.com/ppat/homelab-ops-ansible/commit/081b34eb5db3546c7ee5e55dab73a610382f24c3))
+* **dev-tools:** update sirosen/texthooks (non-major) ([#419](https://github.com/ppat/homelab-ops-ansible/issues/419)) ([70dc647](https://github.com/ppat/homelab-ops-ansible/commit/70dc647f008883799d3c8f22547ac619afe4e889))
+* **dev-tools:** update sirosen/texthooks (non-major) ([#423](https://github.com/ppat/homelab-ops-ansible/issues/423)) ([dee2fec](https://github.com/ppat/homelab-ops-ansible/commit/dee2fec30be24438ccd7b5fe89ef450976b4f3e8))
+* **github-actions:** update digest actions/checkout (11bd719 -> 08eba0b) ([#437](https://github.com/ppat/homelab-ops-ansible/issues/437)) ([9fb24f7](https://github.com/ppat/homelab-ops-ansible/commit/9fb24f7ceffb7a6580ea5585c73de967ca237faa))
+* **github-actions:** update ppat/github-workflows (v2.0.0 -> v2.0.1) ([#434](https://github.com/ppat/homelab-ops-ansible/issues/434)) ([96ddac3](https://github.com/ppat/homelab-ops-ansible/commit/96ddac33786693c1fd55dbe6cecc5034bb30b811))
+* **github-actions:** update ppat/github-workflows (v2.0.1 -> v2.0.3) ([#446](https://github.com/ppat/homelab-ops-ansible/issues/446)) ([184dc90](https://github.com/ppat/homelab-ops-ansible/commit/184dc901dfd29fc5f1de6e3afb5f11f5781939fe))
+* **k3s:** update fluxcd/flux2 (v2.6.3 -> v2.6.4) ([#406](https://github.com/ppat/homelab-ops-ansible/issues/406)) ([51d02a5](https://github.com/ppat/homelab-ops-ansible/commit/51d02a5f3951a8cc83c725e31319406077eb8084))
+* **k3s:** update k3s-io/k3s (1.33.2+k3s1 -> 1.33.3+k3s1) ([#428](https://github.com/ppat/homelab-ops-ansible/issues/428)) ([c6e4ebd](https://github.com/ppat/homelab-ops-ansible/commit/c6e4ebd01c0928c7370513b5973994740ee98a45))
+* **k3s:** update kubernetes-sigs/kustomize (v5.7.0 -> v5.7.1) ([#422](https://github.com/ppat/homelab-ops-ansible/issues/422)) ([415b8df](https://github.com/ppat/homelab-ops-ansible/commit/415b8df5a3e0a317c65260a05ee5fa2bd560ddb2))
+* switch build system from poetry -> uv, bump minimum required python, ansible and ansible collections versions ([#447](https://github.com/ppat/homelab-ops-ansible/issues/447)) ([9bface2](https://github.com/ppat/homelab-ops-ansible/commit/9bface202b206c33de7a4e5cfa7110b427933c24))
+* update @semantic-release/github (11.0.3 -> 11.0.4) ([#435](https://github.com/ppat/homelab-ops-ansible/issues/435)) ([504aa88](https://github.com/ppat/homelab-ops-ansible/commit/504aa880979e49d994c4b58f9e4da01fd10d10e5))
+* update node (v22.17.0 -> v22.17.1) ([#413](https://github.com/ppat/homelab-ops-ansible/issues/413)) ([5a61d15](https://github.com/ppat/homelab-ops-ansible/commit/5a61d158fee96afc6529478f5f28f341314fc611))
+
 ## [1.14.0](https://github.com/ppat/homelab-ops-ansible/compare/v1.13.0...v1.14.0) (2025-07-06)
 
 ### ✨ Features

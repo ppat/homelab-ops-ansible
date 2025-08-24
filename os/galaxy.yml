@@ -1,7 +1,7 @@
 ---
 namespace: homelab_ops
 name: os
-version: 1.14.0
+version: 1.15.0
 readme: README.md
 authors:
 - homelab-ops@homelab-ops.com
@@ -12,7 +12,7 @@ license:
 tags: [homelab, os, ubuntu]
 dependencies:
   ansible.posix: ">1.6.0"
-  homelab_ops.packages: ">=1.14.0"
+  homelab_ops.packages: ">=1.15.0"
 
 repository: https://github.com/ppat/homelab-ops-ansible
 documentation: https://github.com/ppat/homelab-ops-ansible/blob/main/os/README.md
