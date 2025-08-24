@@ -58,7 +58,7 @@ See each role's README and the [Molecule test playbooks](molecule/) for more det
 
 ## Requirements
 
-- Ansible 2.15 or newer
+- Ansible 2.18 or newer
 - These roles must be run as root
 - `pipx` must be installed for the ansible role
 - The target filesystems must be mounted for the fstab role

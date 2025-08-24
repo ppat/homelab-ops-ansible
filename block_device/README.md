@@ -58,7 +58,7 @@ See each role's README and the [Molecule test playbooks](molecule/) for more det
 
 ## Requirements
 
-- Ansible 2.15 or newer
+- Ansible 2.18 or newer
 - These roles must be run as root
 - Required system packages for each filesystem type (e.g., `e2fsprogs` for ext4, `btrfs-progs` for btrfs, etc.)
 - `parted` for the partition role

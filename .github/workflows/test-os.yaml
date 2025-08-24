@@ -48,41 +48,40 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 60
     steps:
-    - name: Checkout
-      uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4
-      with:
-        fetch-depth: 1
-        persist-credentials: false
-
-    - name: Setup poetry
-      run: pipx install poetry==$POETRY_VERSION
-      env:
-        # renovate: datasource=pypi depName=poetry
-        POETRY_VERSION: "2.1.4"
-
-    - name: Set up python
-      uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
-      with:
-        python-version: '3.13'
-        cache: 'poetry'
-
     - name: Install system packages
       run: |
         sudo apt-get update
         sudo apt-get install -yq --no-install-recommends binfmt-support qemu-user-static parted
 
+    - name: Setup repository and tools
+      uses: ppat/homelab-ops-actions/actions/setup-repository-tools@9ddd555bfe032fe96a292eb81d3a7dd81b675099 # v0.0.3
+      with:
+        current_git_ref: ${{ github.head_ref || github.ref }}
+        current_repository: ${{ github.repository }}
+        extra_cache_path: ~/.cache/uv/
+        extra_cache_key: uv
+        # renovate: datasource=github-releases depName=jdx/mise
+        mise_version: "v2025.8.20"
+        token: ${{ secrets.GITHUB_TOKEN }}
+        tools_git_ref: main
+        tools_repository: ppat/github-workflows
+
     - name: Install python requirements
+      working-directory: ./current
       run: |
-        poetry --version
-        poetry install --no-interaction
-        poetry env info
+        uv --version
+        uv sync --frozen
+        uv run python --version
+        uv run ansible --version
+        uv run molecule --version
 
     - name: Install ansible collections
+      working-directory: ./current
       run: |
-        poetry run ansible-galaxy collection install ./os/
+        uv run ansible-galaxy collection install ./os/
 
         # install collection dependencies w/ --force to ensure that replaced from local repository
-        poetry run ansible-galaxy collection install --force ./packages/
+        uv run ansible-galaxy collection install --force ./packages/
 
     - name: Determine molecule verbosity
       # yamllint disable-line rule:indentation
@@ -136,12 +135,12 @@ jobs:
       run: |
         # use of chroot connection within molecule requires running with sudo
         # but since python virtualenv is under current user, re-use that user's virtualenv from within sudo
-        POETRY_VENV_PYTHON="$(poetry env info --executable)"
+        UV="$(which uv)"
+        UV_PYTHON="$(uv run python -c "import sys; print(sys.executable)")"
         set -x
-        sudo --preserve-env=HOME,PATH $PIPX_BIN_DIR/poetry env use $POETRY_VENV_PYTHON
-        sudo --preserve-env=HOME,PATH $PIPX_BIN_DIR/poetry run molecule $MOLECULE_PARAMS --env-file $MOLECULE_VARS_FILE test --all --no-parallel
+        sudo --preserve-env=HOME,PATH $UV run molecule $MOLECULE_PARAMS --env-file $MOLECULE_VARS_FILE test --all --no-parallel
       shell: bash
-      working-directory: ./os
+      working-directory: ./current/os
       env:
         ANSIBLE_FORCE_COLOR: 1
         ANSIBLE_COLLECTIONS_PATH: "/home/runner/.ansible/collections"

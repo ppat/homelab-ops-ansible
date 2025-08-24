@@ -11,8 +11,8 @@ license:
 - AGPL-3.0-only
 tags: [homelab, os, archive]
 dependencies:
-  community.general: ">=9.0.0"
-  ansible.posix: ">1.5.0"
+  community.general: ">=10.0.0"
+  ansible.posix: ">1.6.0"
 
 repository: https://github.com/ppat/homelab-ops-ansible
 documentation: https://github.com/ppat/homelab-ops-ansible/blob/main/archive/README.md

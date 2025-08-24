@@ -26,3 +26,8 @@ cover/
 
 # node
 node_modules/
+.ansible/
+
+# these maintained in github-workflows
+bun.lock
+package.json

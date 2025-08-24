@@ -8,8 +8,8 @@ on:
     - '.github/workflows/test-archive.yaml'
     - 'archive/**.yaml'
     - 'archive/**.yml'
-    - 'poetry.lock'
     - 'pyproject.toml'
+    - 'uv.lock'
   workflow_dispatch:
     inputs:
       log_verbosity:
@@ -42,33 +42,32 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
-    - name: Checkout
-      uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4
+    - name: Setup repository and tools
+      uses: ppat/homelab-ops-actions/actions/setup-repository-tools@9ddd555bfe032fe96a292eb81d3a7dd81b675099 # v0.0.3
       with:
-        fetch-depth: 1
-        persist-credentials: false
-
-    - name: Setup poetry
-      run: pipx install poetry==$POETRY_VERSION
-      env:
-        # renovate: datasource=pypi depName=poetry
-        POETRY_VERSION: "2.1.4"
-
-    - name: Set up python
-      uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
-      with:
-        python-version: '3.13'
-        cache: 'poetry'
+        current_git_ref: ${{ github.head_ref || github.ref }}
+        current_repository: ${{ github.repository }}
+        extra_cache_path: ~/.cache/uv/
+        extra_cache_key: uv
+        # renovate: datasource=github-releases depName=jdx/mise
+        mise_version: "v2025.8.20"
+        token: ${{ secrets.GITHUB_TOKEN }}
+        tools_git_ref: main
+        tools_repository: ppat/github-workflows
 
     - name: Install python requirements
+      working-directory: ./current
       run: |
-        poetry --version
-        poetry install --no-interaction
-        poetry env info
+        uv --version
+        uv sync --frozen
+        uv run python --version
+        uv run ansible --version
+        uv run molecule --version
 
     - name: Install ansible collections
+      working-directory: ./current
       run: |
-        poetry run ansible-galaxy collection install ./archive/
+        uv run ansible-galaxy collection install ./archive/
 
     - name: Determine molecule verbosity
       # yamllint disable-line rule:indentation
@@ -90,6 +89,7 @@ jobs:
         LOG_VERBOSITY: ${{ github.event.inputs.log_verbosity || env.non_workflow_dispatch_log_verbosity }}
 
     - name: Create molecule vars file
+      working-directory: ./current
       # yamllint disable-line rule:indentation
       run: |
         UBUNTU_TARBALL_URL=$(.github/scripts/detect-latest-ubuntu-tarball.sh)
@@ -105,8 +105,8 @@ jobs:
 
     - name: Molecule Test
       run: |
-        poetry run molecule $MOLECULE_PARAMS --env-file $MOLECULE_VARS_FILE test --all --no-parallel
-      working-directory: ./archive
+        uv run molecule $MOLECULE_PARAMS --env-file $MOLECULE_VARS_FILE test --all --no-parallel
+      working-directory: ./current/archive
       shell: bash
       env:
         ANSIBLE_FORCE_COLOR: 1
