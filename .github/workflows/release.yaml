@@ -18,7 +18,7 @@ concurrency:
 
 jobs:
   release:
-    uses: ppat/github-workflows/.github/workflows/release-semantic.yaml
+    uses: ppat/github-workflows/.github/workflows/release-semantic.yaml@main
     # uses: ppat/github-workflows/.github/workflows/release-semantic.yaml@729783ba18d0882b4ee32d5fd5c0079028473207 # v2.0.1
     with:
       dry_run: ${{ (github.event_name == 'pull_request') }}
