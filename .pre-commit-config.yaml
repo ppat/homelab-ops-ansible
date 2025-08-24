@@ -30,7 +30,7 @@ repos:
   - id: markdownlint-cli2
     args: ["--fix", "--config", ".markdownlint-cli2.yaml"]
 - repo: https://github.com/ansible/ansible-lint
-  rev: v25.8.0
+  rev: v25.8.2
   hooks:
   - id: ansible-lint
     args: ["--skip-list=yaml,jinja"]
