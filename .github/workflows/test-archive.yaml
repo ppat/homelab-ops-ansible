@@ -56,6 +56,7 @@ jobs:
         tools_repository: ppat/github-workflows
 
     - name: Install python requirements
+      working-directory: ./current
       run: |
         uv --version
         uv sync --frozen
@@ -64,6 +65,7 @@ jobs:
         uv run molecule --version
 
     - name: Install ansible collections
+      working-directory: ./current
       run: |
         uv run ansible-galaxy collection install ./archive/
 
@@ -87,6 +89,7 @@ jobs:
         LOG_VERBOSITY: ${{ github.event.inputs.log_verbosity || env.non_workflow_dispatch_log_verbosity }}
 
     - name: Create molecule vars file
+      working-directory: ./current
       # yamllint disable-line rule:indentation
       run: |
         UBUNTU_TARBALL_URL=$(.github/scripts/detect-latest-ubuntu-tarball.sh)
@@ -103,7 +106,7 @@ jobs:
     - name: Molecule Test
       run: |
         poetry run molecule $MOLECULE_PARAMS --env-file $MOLECULE_VARS_FILE test --all --no-parallel
-      working-directory: ./archive
+      working-directory: ./current/archive
       shell: bash
       env:
         ANSIBLE_FORCE_COLOR: 1

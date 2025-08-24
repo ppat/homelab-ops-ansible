@@ -61,6 +61,7 @@ jobs:
         tools_repository: ppat/github-workflows
 
     - name: Install python requirements
+      working-directory: ./current
       run: |
         uv --version
         uv sync --frozen
@@ -69,6 +70,7 @@ jobs:
         uv run molecule --version
 
     - name: Install ansible collections
+      working-directory: ./current
       run: |
         uv run ansible-galaxy collection install ./k3s/
 
@@ -139,7 +141,7 @@ jobs:
     - name: Molecule Test
       run: |
         poetry run molecule $MOLECULE_PARAMS --env-file $MOLECULE_VARS_FILE test --all --no-parallel
-      working-directory: ./k3s
+      working-directory: ./current/k3s
       shell: bash
       env:
         ANSIBLE_FORCE_COLOR: 1

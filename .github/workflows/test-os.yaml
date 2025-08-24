@@ -67,6 +67,7 @@ jobs:
         tools_repository: ppat/github-workflows
 
     - name: Install python requirements
+      working-directory: ./current
       run: |
         uv --version
         uv sync --frozen
@@ -75,6 +76,7 @@ jobs:
         uv run molecule --version
 
     - name: Install ansible collections
+      working-directory: ./current
       run: |
         uv run ansible-galaxy collection install ./os/
 
@@ -138,7 +140,7 @@ jobs:
         set -x
         sudo --preserve-env=HOME,PATH $UV run molecule $MOLECULE_PARAMS --env-file $MOLECULE_VARS_FILE test --all --no-parallel
       shell: bash
-      working-directory: ./os
+      working-directory: ./current/os
       env:
         ANSIBLE_FORCE_COLOR: 1
         ANSIBLE_COLLECTIONS_PATH: "/home/runner/.ansible/collections"

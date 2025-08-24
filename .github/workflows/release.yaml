@@ -45,6 +45,7 @@ jobs:
         tools_repository: ppat/github-workflows
 
     - name: Install python requirements
+      working-directory: ./current
       run: |
         uv --version
         uv sync --frozen
@@ -52,6 +53,7 @@ jobs:
         uv run ansible-galaxy --version
 
     - name: Transform README links for ansible-galaxy
+      working-directory: ./current
       # yamllint disable-line rule:indentation
       run: |
         # Find all README.md files in collection directories, excluding node_modules
@@ -77,6 +79,7 @@ jobs:
         done
 
     - name: Build collections
+      working-directory: ./current
       run: |
         # no dependencies on homelab_ops collections
         uv run ansible-galaxy collection build ./archive/ --output-path $OUTPUT_DIR
@@ -95,6 +98,7 @@ jobs:
 
     - name: Publish to ansible-galaxy collection
       if: ${{ github.event_name == 'workflow_dispatch' }}
+      working-directory: ./current
       # yamllint disable-line rule:indentation
       run: |
         set -eo pipefail

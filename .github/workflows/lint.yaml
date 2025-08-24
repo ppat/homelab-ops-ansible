@@ -119,6 +119,7 @@ jobs:
         tools_repository: ppat/github-workflows
 
     - name: Install python requirements
+      working-directory: ./current
       run: |
         uv --version
         uv sync --frozen
@@ -126,5 +127,6 @@ jobs:
         uv run ansible-lint --version
 
     - name: ansible-lint
+      working-directory: ./current
       run: |
         uv run ansible-lint -c .ansible-lint -i .ansible-lint-ignore --skip-list=yaml --force-color .

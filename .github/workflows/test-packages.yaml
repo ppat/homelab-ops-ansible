@@ -55,6 +55,7 @@ jobs:
         tools_repository: ppat/github-workflows
 
     - name: Install python requirements
+      working-directory: ./current
       run: |
         uv --version
         uv sync --frozen
@@ -63,6 +64,7 @@ jobs:
         uv run molecule --version
 
     - name: Install ansible collections
+      working-directory: ./current
       run: |
         uv run ansible-galaxy collection install ./packages/
 
@@ -87,7 +89,7 @@ jobs:
 
     - name: Molecule Test
       run: uv run molecule $MOLECULE_PARAMS test --all --no-parallel
-      working-directory: ./packages
+      working-directory: ./current/packages
       env:
         ANSIBLE_FORCE_COLOR: 1
         PY_COLORS: 1
