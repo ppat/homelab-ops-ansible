@@ -33,6 +33,12 @@
         "minor"
       ],
       "minimumReleaseAge": "60 days"
+    },
+    {
+      "matchPackageNames": [
+        "k3s-io/k3s"
+      ],
+      "versioning": "semver-coerced"
     }
   ]
 }
