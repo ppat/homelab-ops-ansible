@@ -95,8 +95,8 @@ jobs:
       # run: poetry run molecule $MOLECULE_PARAMS test --all --no-parallel
       # yamllint disable-line rule:indentation
       run: |
-        poetry run molecule $MOLECULE_PARAMS test --scenario-name cloud_init --no-parallel
-        poetry run molecule $MOLECULE_PARAMS test --scenario-name fstab --no-parallel
+        uv run molecule $MOLECULE_PARAMS test --scenario-name cloud_init --no-parallel
+        uv run molecule $MOLECULE_PARAMS test --scenario-name fstab --no-parallel
       working-directory: ./current/configure
       env:
         ANSIBLE_FORCE_COLOR: 1

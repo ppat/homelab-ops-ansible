@@ -88,7 +88,7 @@ jobs:
         LOG_VERBOSITY: ${{ github.event.inputs.log_verbosity || env.non_workflow_dispatch_log_verbosity }}
 
     - name: Molecule Test
-      run: poetry run molecule $MOLECULE_PARAMS test --all --no-parallel
+      run: uv run molecule $MOLECULE_PARAMS test --all --no-parallel
       working-directory: ./current/block_device
       env:
         ANSIBLE_FORCE_COLOR: 1

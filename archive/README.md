@@ -30,7 +30,7 @@ See each role's README for more detailed usage instructions and examples.
 
 ## Requirements
 
-- Ansible 2.15 or newer
+- Ansible 2.18 or newer
 - These roles must be run as root, since archives may contain filesystem paths that should be owned by root.
 
 ## License

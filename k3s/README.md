@@ -86,7 +86,7 @@ See the [Molecule test playbooks](molecule/) and the [GitHub Actions workflow](.
 
 ## Requirements
 
-- Ansible 2.15 or newer
+- Ansible 2.18 or newer
 - The target nodes must have a supported operating system for k3s (see the [k3s documentation](https://docs.k3s.io/installation/requirements#operating-systems) for details)
 
 ## License

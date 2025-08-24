@@ -11,7 +11,7 @@ license:
 - AGPL-3.0-only
 tags: [homelab, k3s, flux]
 dependencies:
-  community.general: ">=9.0.0"
+  community.general: ">=10.0.0"
   kubernetes.core: ">=5.0.0"
   homelab_ops.packages: ">=1.14.0"
 

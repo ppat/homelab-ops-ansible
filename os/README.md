@@ -39,7 +39,7 @@ See the role's README for more detailed usage instructions and examples.
 
 ## Requirements
 
-- Ansible 2.15 or newer
+- Ansible 2.18 or newer
 - The roles in this collection must be run as root
 - The target system must be running a supported version of Ubuntu Linux
 

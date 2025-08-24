@@ -4,11 +4,11 @@ package = false
 [project]
 name = "homelab-ops-ansible"
 version = "0.0.0" # This is not used.
-requires-python = ">=3.12"
+requires-python = ">=3.13"
 dependencies = [
     "ansible-core==2.18.8",
     "jmespath==1.0.1",
-    "kubernetes==33.1.0",
+    "kubernetes==33.1.0"
 ]
 
 [dependency-groups]
@@ -16,5 +16,5 @@ dev = [
     "ansible-lint==25.7.0",
     "docker==7.1.0",
     "molecule==25.7.0",
-    "molecule-plugins[docker]==23.7.0",
+    "molecule-plugins[docker]==23.7.0"
 ]

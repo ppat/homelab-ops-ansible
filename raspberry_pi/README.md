@@ -84,7 +84,7 @@ See each role's README for more detailed usage instructions and examples.
 
 ## Requirements
 
-- Ansible 2.15 or newer
+- Ansible 2.18 or newer
 - The roles in this collection must be run as root
 - The target device must be a Raspberry Pi running a supported operating system (e.g., Raspberry Pi OS, Ubuntu)
 

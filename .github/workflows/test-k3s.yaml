@@ -140,7 +140,7 @@ jobs:
 
     - name: Molecule Test
       run: |
-        poetry run molecule $MOLECULE_PARAMS --env-file $MOLECULE_VARS_FILE test --all --no-parallel
+        uv run molecule $MOLECULE_PARAMS --env-file $MOLECULE_VARS_FILE test --all --no-parallel
       working-directory: ./current/k3s
       shell: bash
       env:
