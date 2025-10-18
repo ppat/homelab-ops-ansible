@@ -21,9 +21,9 @@
     "helpers:pinGitHubActionDigests",
     "mergeConfidence:age-confidence-badges",
     "mergeConfidence:all-badges",
-    "github>ppat/renovate-presets#v0.0.4",
-    "github>ppat/renovate-presets:dev-tools#v0.0.4",
-    "github>ppat/renovate-presets:github-actions#v0.0.4",
+    "github>ppat/renovate-presets#v0.1.0",
+    "github>ppat/renovate-presets:dev-tools#v0.1.0",
+    "github>ppat/renovate-presets:github-actions#v0.1.0",
     "github>ppat/homelab-ops-ansible//.github/renovate/semantic-commit-scope",
     "github>ppat/homelab-ops-ansible//.github/renovate/exceptions-min-release-age"
   ],
