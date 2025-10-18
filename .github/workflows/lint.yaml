@@ -18,7 +18,7 @@ permissions:
 
 jobs:
   detect-changes:
-    uses: ppat/github-workflows/.github/workflows/detect-changed-files.yaml@87f6959580b69505c4b539737bb36ed9e2b4d2ad # v2.1.1
+    uses: ppat/github-workflows/.github/workflows/detect-changed-files.yaml@2c4cfff361b0cc4abade4ab28e961523f025ad33 # v2.2.0
     with:
       # yamllint disable-line rule:indentation
       files_yaml: |
@@ -47,7 +47,7 @@ jobs:
 
   commit-messages:
     if: ${{ github.event_name == 'pull_request' }}
-    uses: ppat/github-workflows/.github/workflows/lint-commit-messages.yaml@87f6959580b69505c4b539737bb36ed9e2b4d2ad # v2.1.1
+    uses: ppat/github-workflows/.github/workflows/lint-commit-messages.yaml@2c4cfff361b0cc4abade4ab28e961523f025ad33 # v2.2.0
     with:
       git_ref: ${{ github.head_ref }}
       fetch_depth: ${{ github.event.pull_request.commits || 0 }}
@@ -57,7 +57,7 @@ jobs:
   github-actions:
     needs: [detect-changes]
     if: ${{ github.event_name != 'pull_request' || fromJSON(needs.detect-changes.outputs.results).actions_any_changed == 'true' }}
-    uses: ppat/github-workflows/.github/workflows/lint-github-actions.yaml@87f6959580b69505c4b539737bb36ed9e2b4d2ad # v2.1.1
+    uses: ppat/github-workflows/.github/workflows/lint-github-actions.yaml@2c4cfff361b0cc4abade4ab28e961523f025ad33 # v2.2.0
     with:
       git_ref: ${{ github.head_ref || github.ref }}
       files: ${{ github.event_name != 'pull_request' && 'ALL' || fromJSON(needs.detect-changes.outputs.results).actions_all_changed_files }}
@@ -65,20 +65,20 @@ jobs:
   markdown:
     needs: [detect-changes]
     if: ${{ github.event_name != 'pull_request' || fromJSON(needs.detect-changes.outputs.results).markdown_any_changed == 'true' }}
-    uses: ppat/github-workflows/.github/workflows/lint-markdown.yaml@87f6959580b69505c4b539737bb36ed9e2b4d2ad # v2.1.1
+    uses: ppat/github-workflows/.github/workflows/lint-markdown.yaml@2c4cfff361b0cc4abade4ab28e961523f025ad33 # v2.2.0
     with:
       git_ref: ${{ github.head_ref || github.ref }}
       files: ${{ github.event_name != 'pull_request' && 'ALL' || fromJSON(needs.detect-changes.outputs.results).markdown_all_changed_files }}
 
   pre-commit:
-    uses: ppat/github-workflows/.github/workflows/lint-pre-commit.yaml@87f6959580b69505c4b539737bb36ed9e2b4d2ad # v2.1.1
+    uses: ppat/github-workflows/.github/workflows/lint-pre-commit.yaml@2c4cfff361b0cc4abade4ab28e961523f025ad33 # v2.2.0
     with:
       git_ref: ${{ github.head_ref || github.ref }}
 
   renovate-config-check:
     needs: [detect-changes]
     if: ${{ github.event_name != 'pull_request' || fromJSON(needs.detect-changes.outputs.results).renovate_any_changed == 'true' }}
-    uses: ppat/github-workflows/.github/workflows/lint-renovate-config-check.yaml@87f6959580b69505c4b539737bb36ed9e2b4d2ad # v2.1.1
+    uses: ppat/github-workflows/.github/workflows/lint-renovate-config-check.yaml@2c4cfff361b0cc4abade4ab28e961523f025ad33 # v2.2.0
     with:
       git_ref: ${{ github.head_ref || github.ref }}
       files: ${{ github.event_name != 'pull_request' && 'ALL' || fromJSON(needs.detect-changes.outputs.results).renovate_all_changed_files }}
@@ -86,7 +86,7 @@ jobs:
   shellcheck:
     needs: [detect-changes]
     if: ${{ github.event_name != 'pull_request' || fromJSON(needs.detect-changes.outputs.results).shellscripts_any_changed == 'true' }}
-    uses: ppat/github-workflows/.github/workflows/lint-shellcheck.yaml@87f6959580b69505c4b539737bb36ed9e2b4d2ad # v2.1.1
+    uses: ppat/github-workflows/.github/workflows/lint-shellcheck.yaml@2c4cfff361b0cc4abade4ab28e961523f025ad33 # v2.2.0
     with:
       git_ref: ${{ github.head_ref || github.ref }}
       files: ${{ github.event_name != 'pull_request' && 'ALL' || fromJSON(needs.detect-changes.outputs.results).shellscripts_all_changed_files }}
@@ -94,7 +94,7 @@ jobs:
   yaml:
     needs: [detect-changes]
     if: ${{ github.event_name != 'pull_request' || fromJSON(needs.detect-changes.outputs.results).yaml_any_changed == 'true' }}
-    uses: ppat/github-workflows/.github/workflows/lint-yaml.yaml@87f6959580b69505c4b539737bb36ed9e2b4d2ad # v2.1.1
+    uses: ppat/github-workflows/.github/workflows/lint-yaml.yaml@2c4cfff361b0cc4abade4ab28e961523f025ad33 # v2.2.0
     with:
       git_ref: ${{ github.head_ref || github.ref }}
       files: ${{ github.event_name != 'pull_request' && 'ALL' || fromJSON(needs.detect-changes.outputs.results).yaml_all_changed_files }}
