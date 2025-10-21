@@ -340,7 +340,7 @@ dev = [
     { name = "ansible-lint", specifier = "==25.7.0" },
     { name = "docker", specifier = "==7.1.0" },
     { name = "molecule", specifier = "==25.7.0" },
-    { name = "molecule-plugins", extras = ["docker"], specifier = "==23.7.0" },
+    { name = "molecule-plugins", extras = ["docker"], specifier = "==25.8.12" },
 ]
 
 [[package]]
@@ -510,14 +510,14 @@ wheels = [
 
 [[package]]
 name = "molecule-plugins"
-version = "23.7.0"
+version = "25.8.12"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "molecule" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/a4/b0/127d0831d95dca90dc24a6cb25237c0c59f0448a67e52c0513846970c424/molecule_plugins-23.7.0.tar.gz", hash = "sha256:c28b08e25c91fcc679e65d9d18d2b4bb33712aaed2fefdea72b6253c6bd19635", size = 106249, upload-time = "2025-01-23T14:00:00.226Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/65/11/b7316c96c9ecca901f3a7fd5927f3dd757e17e11a428fb83cc5349e9b063/molecule_plugins-25.8.12.tar.gz", hash = "sha256:75f32763e90275bfc24bcc0d27b9bb22ac973658bf902b2e3e8af8e2a1c32083", size = 106414, upload-time = "2025-08-12T19:57:36.628Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/df/63/bd810b2e68ce723b67d6f6f58d007baf048d4bec328de77e729d4abf4af6/molecule_plugins-23.7.0-py3-none-any.whl", hash = "sha256:5e577231c7d95d7f7dc7146f3527d4692ee30a8c0ea0e8353b15ceba75f7d28e", size = 76338, upload-time = "2025-01-23T13:59:57.444Z" },
+    { url = "https://files.pythonhosted.org/packages/a2/ee/efdf33ffb32861d9b357a4e7cff018206729703440c028b92ed64fe834b1/molecule_plugins-25.8.12-py3-none-any.whl", hash = "sha256:c5b8ceb209a5ff87326631d60408f8d08b9431b2e339dad4c620130b50279ce0", size = 76357, upload-time = "2025-08-12T19:57:35.285Z" },
 ]
 
 [package.optional-dependencies]
