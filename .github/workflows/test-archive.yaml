@@ -29,6 +29,8 @@ on:
 env:
   non_workflow_dispatch_log_verbosity: 0
   molecule_vars_file: /tmp/molecule_vars.yaml
+  # renovate: datasource=github-releases depName=astral-sh/uv
+  UV_VERSION: "0.9.3"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -52,8 +54,11 @@ jobs:
         # renovate: datasource=github-releases depName=jdx/mise
         mise_version: "v2025.10.8"
         token: ${{ secrets.GITHUB_TOKEN }}
-        tools_git_ref: main
-        tools_repository: ppat/github-workflows
+        mise_toml: |
+          [tools]
+          uv          = "${{ env.UV_VERSION }}"
+          [settings.pipx]
+          uvx         = true
 
     - name: Install python requirements
       working-directory: ./current
