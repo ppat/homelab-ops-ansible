@@ -22,7 +22,7 @@ env:
 
 jobs:
   release:
-    uses: ppat/github-workflows/.github/workflows/release-semantic.yaml@47e6b17c76bb237afb4d3469115e329b627602b7 # v3.0.0
+    uses: ppat/github-workflows/.github/workflows/release-semantic.yaml@b62897fd95e2274bfb096f275a7e5588d61bb1c3 # v3.0.1
     with:
       dry_run: ${{ (github.event_name == 'pull_request') }}
       release_branch: ${{ github.head_ref || github.ref_name }}
