@@ -31,7 +31,7 @@ env:
   non_workflow_dispatch_log_verbosity: 3
   MOLECULE_VARS_FILE: /tmp/molecule_vars.yaml
   # renovate: datasource=github-releases depName=astral-sh/uv
-  UV_VERSION: "0.9.13"
+  UV_VERSION: "0.9.15"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
