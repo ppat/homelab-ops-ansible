@@ -41,7 +41,7 @@ wheels = [
 
 [[package]]
 name = "ansible-lint"
-version = "25.12.0"
+version = "25.12.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "ansible-compat" },
@@ -62,9 +62,9 @@ dependencies = [
     { name = "wcmatch" },
     { name = "yamllint" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/15/4c/e3e33869fe2bad5d263474f61bb606272ad2b913e5004b503b1f6adc50a8/ansible_lint-25.12.0.tar.gz", hash = "sha256:84fa30130fe8771d8d8997bff09fd2a762a053ae9530d498fa3e66eb74608fe9", size = 716893, upload-time = "2025-12-02T15:47:18.115Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/0a/b1/cbbe86f424d76bb621461d131506e5778556ddf6f5eba0cf7c41db829208/ansible_lint-25.12.2.tar.gz", hash = "sha256:d4dbf2905c868d6f7b330941efc586f19a5e2b3b6826fd6a2edf0d5080329e46", size = 725323, upload-time = "2025-12-22T17:01:20.433Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/16/cb/271dd004bb9b2eef240b76c3e0bbaa24a2bd34b49ce13231810e3ffd9283/ansible_lint-25.12.0-py3-none-any.whl", hash = "sha256:df8385af857a1f509145e680850845efb783c3bf2ccb8d95acaced92e01100e3", size = 323024, upload-time = "2025-12-02T15:47:16.401Z" },
+    { url = "https://files.pythonhosted.org/packages/32/ea/d5620576753c7424a41b9d97ea050297ec2d7cc1e4fa12e44c27289726a2/ansible_lint-25.12.2-py3-none-any.whl", hash = "sha256:cafcd991c9ddfd9a13e5b56e5a4f1d9997973e0c0d6a0f6eb2b148d39f42e2c3", size = 323017, upload-time = "2025-12-22T17:01:18.698Z" },
 ]
 
 [[package]]
@@ -341,7 +341,7 @@ requires-dist = [
 
 [package.metadata.requires-dev]
 dev = [
-    { name = "ansible-lint", specifier = "==25.12.0" },
+    { name = "ansible-lint", specifier = "==25.12.2" },
     { name = "docker", specifier = "==7.1.0" },
     { name = "molecule", specifier = "==25.12.0" },
     { name = "molecule-plugins", extras = ["docker"], specifier = "==25.8.12" },
