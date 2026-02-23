@@ -9,7 +9,7 @@
     prompt: Desired k3s version
     private: false
     # renovate: datasource=github-releases depName=k3s-io/k3s extractVersion=^v?(?<version>.*)$
-    default: "1.34.4+k3s1"
+    default: "1.35.0+k3s1"
   - name: flux_version
     prompt: Desired flux version
     private: false
