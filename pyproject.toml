@@ -6,7 +6,7 @@ name = "homelab-ops-ansible"
 version = "0.0.0" # This is not used.
 requires-python = ">=3.13,<3.14"
 dependencies = [
-    "ansible-core==2.18.8",
+    "ansible-core==2.20.1",
     "jmespath==1.1.0",
     "kubernetes==34.1.0"
 ]
