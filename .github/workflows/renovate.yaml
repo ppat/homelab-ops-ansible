@@ -17,13 +17,13 @@ concurrency:
 
 jobs:
   renovate:
-    uses: ppat/github-workflows/.github/workflows/renovate.yaml@5a5a6e1b9ef08895f7a814de0eb0a8322a0bc3a0 # v3.3.1
+    uses: ppat/github-workflows/.github/workflows/renovate.yaml@b0d4d41a875d2a1a062dc3bebf2907734f6351c6 # v7.0.0
     with:
       dry_run: "${{ github.event_name	== 'pull_request' }}"
       git_ref: ${{ github.head_ref || github.ref }}
       log_level: debug
     secrets:
-      app_id: ${{ secrets.RENOVATE_APP_ID }}
+      client_id: ${{ secrets.RENOVATE_CLIENT_ID }}
       app_private_key: ${{ secrets.RENOVATE_APP_PRIVATE_KEY }}
       dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
       dockerhub_token: ${{ secrets.DOCKERHUB_TOKEN }}
