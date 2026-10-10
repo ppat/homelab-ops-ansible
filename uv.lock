@@ -1,5 +1,5 @@
 version = 1
-revision = 3
+revision = 5
 requires-python = "==3.13.*"
 resolution-markers = [
     "sys_platform == 'linux2'",
@@ -25,7 +25,7 @@ wheels = [
 
 [[package]]
 name = "ansible-core"
-version = "2.18.8"
+version = "2.21.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "cryptography" },
@@ -34,9 +34,9 @@ dependencies = [
     { name = "pyyaml" },
     { name = "resolvelib" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/9b/78/8b8680eaf7b1990a8d4c26f25cdf2b2eabaae764a3d8e5299b1d61c7c385/ansible_core-2.18.8.tar.gz", hash = "sha256:b0766215a96a47ce39933d27e1e996ca2beb54cf1b3907c742d35c913b1f78cd", size = 3088636, upload-time = "2025-08-11T19:03:12.495Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/1c/11/cb53834d320c38d739e756e2458852d6e74a6c7018a9ab9f6d4ab5e5196e/ansible_core-2.21.3.tar.gz", hash = "sha256:4194fbd82273cbacfd06d86d74d2d7168c3c4b8426c03e93562cd7217f811ae1", size = 3397615, upload-time = "2026-08-10T16:46:14.554Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/a8/59/aa2c1918224b054c9a0d93812c0b446fa8ddba155dc96c855189fae9c82b/ansible_core-2.18.8-py3-none-any.whl", hash = "sha256:b60bc23b2f11fd0559a79d10ac152b52f58a18ca1b7be0a620dfe87f34ced689", size = 2218673, upload-time = "2025-08-11T19:03:04.75Z" },
+    { url = "https://files.pythonhosted.org/packages/a3/fa/938fe0504372377af2bef42abe0d8e463fdcd011ad803eaf300e4577dd7a/ansible_core-2.21.3-py3-none-any.whl", hash = "sha256:9e7dd367f7dc5d5e9fc5ae1baf8af9c4edc09e916a73a40108a3f32e3ad93f10", size = 2446988, upload-time = "2026-08-10T16:46:12.947Z" },
 ]
 
 [[package]]
@@ -334,7 +334,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "ansible-core", specifier = "==2.18.8" },
+    { name = "ansible-core", specifier = "==2.21.3" },
     { name = "jmespath", specifier = "==1.1.0" },
     { name = "kubernetes", specifier = "==34.1.0" },
 ]
@@ -807,7 +807,7 @@ name = "selinux"
 version = "0.3.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "distro", marker = "sys_platform == 'linux' or sys_platform == 'linux2'" },
+    { name = "distro" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/25/07/51acd62e1e15e1172d46f7e32faf138725b147f8c08dbf2d512159d7a310/selinux-0.3.0.tar.gz", hash = "sha256:2a88b337ac46ad0f06f557b2806c3df62421972f766673dd8bf26732fb75a9ea", size = 13479, upload-time = "2022-12-24T16:42:13.163Z" }
 wheels = [
